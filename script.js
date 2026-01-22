@@ -41,7 +41,7 @@ async function fetchImage() {
         }
 
         // Try direct image endpoints (browser can cache these)
-        const size = '150x150';
+        const size = '420x420';
         const directUrls = [
             `https://www.roblox.com/asset-thumbnail/image?assetId=${encodeURIComponent(assetId)}&width=150&height=150`,
             `https://www.roblox.com/thumbnail/asset?assetId=${encodeURIComponent(assetId)}&size=${size}&format=png`
