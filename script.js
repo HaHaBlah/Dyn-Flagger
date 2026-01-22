@@ -9,11 +9,21 @@ async function fetchImage() {
     }
 
     const assetIds = input;
-    const apiUrl = `https://thumbnails.roblox.com/v1/assets?assetIds=${assetIds}&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false`;
+    const apiUrl = `https://thumbnails.roblox.com/v1/assets?assetIds=${assetIds}&returnPolicy=PlaceHolder&size=420x420&format=Webp&isCircular=false`;
+    
+    // Try allorigins.win CORS proxy
+    const corsProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
 
     try {
-        const response = await fetch(apiUrl);
+        container.innerHTML = '<p>Loading...</p>';
+        const response = await fetch(corsProxyUrl);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
+        console.log("API Response:", data);
 
         // Check if data exists and has data array
         if (data.data && data.data.length > 0 && data.data[0].imageUrl) {
@@ -23,7 +33,7 @@ async function fetchImage() {
             container.innerHTML = '<p style="color: red;">Asset not found or no thumbnail available</p>';
         }
     } catch (error) {
-        console.error("Error fetching image:", error);
-        container.innerHTML = '<p style="color: red;">Error fetching image. Please try again.</p>';
+        console.error("Detailed error:", error);
+        container.innerHTML = `<p style="color: red;">Error: ${error.message}</p><p style="font-size: 12px;">This API may require a backend server to proxy requests.</p>`;
     }
 }
