@@ -3,7 +3,7 @@ async function fetchImage() {
     const container = document.getElementById('imageContainer');
     
     // Replace this URL with your actual API link
-    const apiUrl = `https://dog.ceo/api/breeds/image/random`;
+    const apiUrl = `https://static.wikia.nocookie.net/ronroblox/images/6/60/RoN_MainPage.png/revision/latest?cb=20221127205504`;
 
     try {
         const response = await fetch(apiUrl);
