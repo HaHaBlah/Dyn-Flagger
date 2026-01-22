@@ -9,7 +9,7 @@ async function fetchImage() {
     }
 
     const assetIds = input;
-    const apiUrl = `https://thumbnails.roblox.com/v1/assets?assetIds=${assetIds}&returnPolicy=PlaceHolder&size=420x420&format=Webp&isCircular=false`;
+    const apiUrl = `https://thumbnails.roblox.com/v1/assets?assetIds=${assetIds}&returnPolicy=PlaceHolder&size=420x420&format=Png&isCircular=false`;
     
     // Try allorigins.win CORS proxy
     const corsProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
