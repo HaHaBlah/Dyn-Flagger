@@ -12,6 +12,47 @@
     <button onclick="fetchImage()">Get Image</button>
     <div id="imageContainer">
     </div>
+    <div class="container">
+        <h2>Decal to Texture ID</h2>
+        <input type="text" id="assetInput" placeholder="Enter Decal ID (e.g. 123456)">
+        <button onclick="convertAsset()">Convert</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function convertAsset() {
+            const id = document.getElementById('assetInput').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!id) return alert("Please enter an ID");
+
+            resultDiv.innerText = "Converting...";
+
+            // We use corsproxy.io to bypass the browser's CORS block
+            const proxyUrl = "https://corsproxy.io/?";
+            const targetUrl = `https://assetdelivery.roblox.com/v1/asset/?id=${id}`;
+
+            try {
+                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+                const xmlText = await response.text();
+
+                // Roblox returns XML. We look for the <url> tag which contains the Image ID
+                const match = xmlText.match(/<url>.*?id=(\d+)<\/url>/);
+
+                if (match && match[1]) {
+                    const textureId = match[1];
+                    resultDiv.innerHTML = `
+                    <p>Success! Texture ID: <span style="color:green">${textureId}</span></p>
+                    <img src="https://www.roblox.com/asset-thumbnail/image?assetId=${textureId}&width=420&height=420" style="width:200px; border-radius:4px;">
+                `;
+                } else {
+                    resultDiv.innerHTML = "<span style='color:red'>Failed: Could not find Image ID in asset data.</span>";
+                }
+            } catch (error) {
+                resultDiv.innerHTML = "<span style='color:red'>Error: Proxy failed or asset is private.</span>";
+            }
+        }
+    </script>
     <script src="script.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
