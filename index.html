@@ -30,7 +30,7 @@
 
             // We use corsproxy.io to bypass the browser's CORS block
             const proxyUrl = "https://corsproxy.io/?";
-            const targetUrl = `https://assetdelivery.roblox.com/v1/asset/?id=${id}`;
+            const targetUrl = `https://assetdelivery.roblox.com/toolbox-service/v1/asset/?id=${id}`;
 
             try {
                 const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
