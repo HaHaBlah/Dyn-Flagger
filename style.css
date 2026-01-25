@@ -1,10 +1,19 @@
+:root {
+    --ideology-tree-size: 4px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+body{
+    font-family: "Source Sans 3", sans-serif;
+}
 /* Container & Reset */
 .ideologies ul {
     padding-top: 20px;
     position: relative;
     display: flex;
     justify-content: center;
-    padding-left: 0;/*setting list indent to 0*/
+    padding-left: 0;
+    /*setting list indent to 0*/
 }
 
 .ideologies li {
@@ -22,7 +31,7 @@
     position: absolute;
     top: 0;
     right: 50%;
-    border-top: 2px solid #333;
+    border-top: var(--ideology-tree-size) solid #13171D;
     width: 50%;
     height: 20px;
 }
@@ -30,7 +39,7 @@
 .ideologies li::after {
     right: auto;
     left: 50%;
-    border-left: 2px solid #333;
+    border-left: var(--ideology-tree-size) solid #13171D;
 }
 
 /* Remove connectors from single child/edges */
@@ -45,16 +54,11 @@
 
 .ideologies li:first-child::before,
 .ideologies li:last-child::after {
-    border: 0 none;
+    border: none;
 }
 
 .ideologies li:last-child::before {
-    border-right: 2px solid #333;
-    border-radius: 0 5px 0 0;
-}
-
-.ideologies li:first-child::after {
-    border-radius: 5px 0 0 0;
+    border-right: var(--ideology-tree-size) solid #13171D;
 }
 
 /* Vertical connectors from parent */
@@ -63,19 +67,32 @@
     position: absolute;
     top: 0;
     left: 50%;
-    border-left: 2px solid #333;
+    border-left: var(--ideology-tree-size) solid #13171D;
     width: 0;
     height: 20px;
 }
 
+.ideologies .btn {
+    width: 130px;
+}
+
 /* Button Styling */
 .btn {
-    border: 1px solid #ff4d00;
-    background: #1a1a1a;
+    border: 3px solid #ff4d00;
+    background-color: #1E242B;
     color: white;
-    padding: 10px 20px;
+    padding: 5px 10px;
     text-decoration: none;
     display: inline-block;
     font-weight: bold;
-    border-radius: 4px;
+    appearance: none;
+    background-image: none;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn:hover {
+    background-color: #15191E;
+    color: white;
 }
