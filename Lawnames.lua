@@ -1,4 +1,4 @@
-lawNames = {
+local lawNames = {
 	["Faction"] = { 
 		Name = "Party Loyalty",
 		Types = { "Minimum", "Low" , "Standard", "High", "Maximum"}
