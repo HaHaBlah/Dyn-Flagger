@@ -4,42 +4,45 @@
 <head>
     <title>Dyn Flagger</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="favicon.ico" />
+    <link rel="icon" type="image/png" href="images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-    <h1>Image Fetcher</h1>
-    <input type="text" id="userInput" placeholder="Enter something...">
-    <button onclick="fetchImage()">Get Image</button>
-    <div id="imageContainer">
-    </div>
+    <div class="main-content">
+        <h1>Image Fetcher</h1>
+        <input type="text" id="userInput" placeholder="Enter something...">
+        <button onclick="fetchImage()">Get Image</button>
+        <div id="imageContainer">
+        </div>
 
-    <div class="ideologies">
-        <ul>
-            <li>
-                <button type="button" class="btn">Non-Aligned</button>
-                <ul>
-                    <li>
-                        <button type="button" class="btn">Socialism</button>
-                        <ul>
-                            <li><button type="button" class="btn">Communism</button></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <button type="button" class="btn">Liberalism</button>
-                        <ul>
-                            <li><button type="button" class="btn">Democracy</button></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <button type="button" class="btn">Nationalism</button>
-                        <ul>
-                            <li><button type="button" class="btn">Fascism</button></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        <div class="ideologies">
+            <ul>
+                <li>
+                    <button type="button" class="btn">Non-Aligned</button>
+                    <ul>
+                        <li>
+                            <button type="button" class="btn">Socialism</button>
+                            <ul>
+                                <li><button type="button" class="btn">Communism</button></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <button type="button" class="btn">Liberalism</button>
+                            <ul>
+                                <li><button type="button" class="btn">Democracy</button></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <button type="button" class="btn">Nationalism</button>
+                            <ul>
+                                <li><button type="button" class="btn">Fascism</button></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <script src="script.js"></script>
