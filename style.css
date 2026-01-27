@@ -107,14 +107,26 @@ body {
 }
 
 .btn-allowed {
-    border: green;
+    border-color: green;
 }
 
 .btn-not-allowed {
-    border: red;
+    border-color: red;
 }
 
-.btn-half-allowed {}
+.btn-half-allowed {
+    border-top-color: green;
+    border-bottom-color: green;
+    border-left-color: #7C6938;
+    border-right-color: #7C6938;
+}
+
+.btn-half-not-allowed {
+    border-top-color: red;
+    border-bottom-color: red;
+    border-left-color: #7C6938;
+    border-right-color: #7C6938;
+}
 
 /* SCROLLBAR */
 
