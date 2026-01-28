@@ -95,20 +95,20 @@ function extractTable(tableNode) {
   return obj;
 }
 
-// Update your code:
-loadAllModules().then(allModules => {
+// Export the extracted data
+export async function getFandomData() {
+  const allModules = await loadAllModules();
   const extractedData = {};
 
   for (const [name, source] of Object.entries(allModules)) {
     try {
       const ast = luaparse.parse(source);
-      extractedData[name] = extractDataFromAST(ast, name);
-      console.log(`${name} extracted:`, extractedData[name]);
+      extractedData[name] = extractDataFromAST(ast);
+      console.log(`${name} extracted successfully`);
     } catch (error) {
       console.error(`Error parsing ${name}:`, error);
     }
   }
 
-  // Now you have clean, usable data objects
-  console.log('Extracted data:', extractedData);
-});
+  return extractedData;
+}
