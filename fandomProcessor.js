@@ -58,6 +58,24 @@ function extractValue(node) {
     case 'NilLiteral':
       return null;
 
+    case 'BinaryExpression':
+      // Evaluate the binary expression (e.g., 111 + 111)
+      const left = extractValue(node.left);
+      const right = extractValue(node.right);
+
+      if (typeof left === 'number' && typeof right === 'number') {
+        switch (node.operator) {
+          case '+': return left + right;
+          case '-': return left - right;
+          case '*': return left * right;
+          case '/': return left / right;
+          case '%': return left % right;
+          case '^': return Math.pow(left, right);
+          default: return null;
+        }
+      }
+      return null;
+
     case 'TableConstructorExpression':
       return extractTable(node);
 
@@ -102,9 +120,9 @@ export async function getFandomData() {
 
   for (const [name, source] of Object.entries(allModules)) {
     try {
-      const ast = luaparse.parse(source);
-      extractedData[name] = extractDataFromAST(ast);
-      console.log(`${name} extracted successfully`);
+      const ast = luaparse.parse(source); //lua to ast/json
+      extractedData[name] = extractDataFromAST(ast); //ast to js
+      //console.log(`${name} extracted successfully`);
     } catch (error) {
       console.error(`Error parsing ${name}:`, error);
     }

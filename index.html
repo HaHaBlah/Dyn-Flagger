@@ -16,42 +16,71 @@
 </head>
 
 <body>
-    <div class="main-content">
-        <h1>Image Fetcher</h1>
-        <input type="text" id="userInput" placeholder="Enter something...">
-        <button onclick="fetchImage()">Get Image</button>
-        <div id="imageContainer">
-        </div>
-
-        <div class="ideologies">
-            <ul>
-                <li>
-                    <button type="button" class="btn">Non-Aligned</button>
-                    <ul>
-                        <li>
-                            <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
-                            <ul>
-                                <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
-                            <ul>
-                                <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
-                            <ul>
-                                <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button></li>
-                            </ul>
-                        </li>
+    <div class="rail-container">
+        <aside class="left-rail">
+            <button class="left-rail-toggle"><svg></svg></button>
+            <div class="left-rail-content">
+                <div class="tabs-wrapper">
+                    <button class="tablinks active" onclick="switchTab(event, 'Nations')">Nations</button>
+                    <button class="tablinks" onclick="switchTab(event, 'Releasables')">Releasables</button>
+                    <button class="tablinks" onclick="switchTab(event, 'Formables')">Formables</button>
+                </div>
+                <div id="Nations" class="tabcontent tabcontent-visible">
+                    <ul class="nations-list">
+                        <li><button><span class="flag-image"><img src="https://static.wikia.nocookie.net/ronroblox/images/a/a3/Afghanistan_Flag.png/revision/latest/scale-to-width-down/22"></span><span>Afghanistan</span></button></li>
                     </ul>
-                </li>
-            </ul>
-        </div>
+                </div>
+                <div id="Releasables" class="tabcontent tabcontent-hidden">
+                    <ul class="nations-list">
+                        <li><button><span class="flag-image"><img src="https://static.wikia.nocookie.net/ronroblox/images/a/a3/Afghanistan_Flag.png/revision/latest/scale-to-width-down/22"></span><span>Afghanistan</span></button></li>
+                    </ul>
+                </div>
+                <div id="Formables" class="tabcontent tabcontent-hidden">
+                    <ul class="nations-list">
+                        <li><button><span class="flag-image"><img src="https://static.wikia.nocookie.net/ronroblox/images/a/a3/Afghanistan_Flag.png/revision/latest/scale-to-width-down/22"></span><span>Afghanistan</span></button></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+        <div class="main-content">
+            <h1>Image Fetcher</h1>
+            <input type="text" id="userInput" placeholder="Enter something...">
+            <button onclick="fetchImage()">Get Image</button>
+            <div id="imageContainer">
+            </div>
 
-        <footer></footer>
+            <div class="ideologies">
+                <ul>
+                    <li>
+                        <button type="button" class="btn">Non-Aligned</button>
+                        <ul>
+                            <li>
+                                <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                <ul>
+                                    <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
+                                <ul>
+                                    <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
+                                <ul>
+                                    <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <footer></footer>
+        </div>
     </div>
 
     <script type="module" src="./script.js"></script>

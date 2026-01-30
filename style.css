@@ -145,3 +145,66 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+/*Rails, basically the country selection on the left*/
+.rail-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min-content;
+    grid-template-rows: max-content;
+    margin: auto;
+}
+
+.left-rail {
+    position: relative;
+    width: 336px;
+    padding: 0 18px;
+}
+
+.left-rail-content {}
+
+/*tabs*/
+.tabs-wrapper {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tabs-wrapper button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tabs-wrapper button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tabs-wrapper button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+.tabcontent-hidden {
+    display: none;
+}
+
+.tabcontent-visible {
+    display: block;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
