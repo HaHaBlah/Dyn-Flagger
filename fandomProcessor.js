@@ -1,53 +1,76 @@
 import luaparse from 'luaparse';
 
 const fandomModules = {
-  Lawnames: "/api/module/Lawnames",
-  Flagdata: "/api/module/Flagdata",
-  Nationdata: "/api/module/Nationdata",
-  Tagdata: "/api/module/Tagdata"
+  Lawnames: "Lawnames",
+  Flagdata: "Flagdata",
+  Nationdata: "Nationdata",
+  Tagdata: "Tagdata"
 }
 
-// fetch lua modules
-async function loadAllModules() {
-  const modulePromises = Object.entries(fandomModules).map(async ([name, url]) => {
-    const response = await fetch(url);
+// Cache for resolved file URLs
+const fileUrlCache = {};
+
+// Resolve Fandom file references to actual image URLs
+export async function resolveFileUrl(fileReference) {
+  if (!fileReference) {
+    return fileReference;
+  }
+  
+  if (fileUrlCache[fileReference]) {
+    return fileUrlCache[fileReference];
+  }
+
+  try {
+    const response = await fetch(`/api/resolve-file?file=${encodeURIComponent(fileReference)}`);
     const data = await response.json();
-    return [name, data.source];
+    
+    if (data.url) {
+      fileUrlCache[fileReference] = data.url;
+      return data.url;
+    }
+  } catch (error) {
+    console.error(`Error resolving file ${fileReference}:`, error);
+  }
+  
+  return fileReference;
+}
+
+// fetch lua modules directly from fandom
+async function loadAllModules() {
+  const modulePromises = Object.entries(fandomModules).map(async ([name, moduleName]) => {
+    const url = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${moduleName}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return [name, data.source];
+    } catch (error) {
+      console.error(`Error fetching ${name}:`, error);
+      throw error;
+    }
   });
 
   const moduleEntries = await Promise.all(modulePromises);
   return Object.fromEntries(moduleEntries);
 }
 
-
-// Function to convert Lua AST to usable data
-function extractDataFromAST(ast) {
-  const result = {};
-
-  ast.body.forEach(statement => {
-    if (statement.type === 'AssignmentStatement' || statement.type === 'LocalStatement') {
-      const varName = statement.variables[0].name;
-      const value = extractValue(statement.init[0]);
-      result[varName] = value;
-    }
-  });
-
-  return result;
-}
-
 // Recursively extract values from AST nodes
-function extractValue(node) {
+async function extractValue(node) {
   if (!node) return null;
 
   switch (node.type) {
     case 'StringLiteral':
       // Handle both value and raw (quoted string)
-      if (node.value !== null) return node.value;
-      if (node.raw) {
-        // Remove quotes: "text" or 'text'
-        return node.raw.slice(1, -1);
+      let stringValue = null;
+      if (node.value !== null) stringValue = node.value;
+      else if (node.raw) {
+        stringValue = node.raw.slice(1, -1);
       }
-      return null;
+
+      // Resolve file URLs
+      if (stringValue?.startsWith('File:')) {
+        return await resolveFileUrl(stringValue);
+      }
+      return stringValue;
 
     case 'NumericLiteral':
       return node.value;
@@ -59,9 +82,8 @@ function extractValue(node) {
       return null;
 
     case 'BinaryExpression':
-      // Evaluate the binary expression (e.g., 111 + 111)
-      const left = extractValue(node.left);
-      const right = extractValue(node.right);
+      const left = await extractValue(node.left);
+      const right = await extractValue(node.right);
 
       if (typeof left === 'number' && typeof right === 'number') {
         switch (node.operator) {
@@ -77,7 +99,7 @@ function extractValue(node) {
       return null;
 
     case 'TableConstructorExpression':
-      return extractTable(node);
+      return await extractTable(node);
 
     default:
       return null;
@@ -85,30 +107,24 @@ function extractValue(node) {
 }
 
 // Convert table constructor to JS object/array
-function extractTable(tableNode) {
+async function extractTable(tableNode) {
   const obj = {};
-  let hasNumericKey = false;
-  let maxIndex = 0;
 
-  tableNode.fields.forEach((field, idx) => {
+  for (const field of tableNode.fields) {
     let key, value;
 
     if (field.type === 'TableKey') {
-      key = extractValue(field.key);
-      value = extractValue(field.value);
+      key = await extractValue(field.key);
+      value = await extractValue(field.value);
       obj[key] = value;
     } else if (field.type === 'TableKeyString') {
-      // Key is an identifier (unquoted), use it directly
       key = field.key.name;
-      value = extractValue(field.value);
+      value = await extractValue(field.value);
       obj[key] = value;
     } else if (field.type === 'TableValue') {
-      // Array-style entry
-      hasNumericKey = true;
-      maxIndex = idx + 1;
-      obj[idx + 1] = extractValue(field.value);
+      obj[tableNode.fields.indexOf(field) + 1] = await extractValue(field.value);
     }
-  });
+  }
 
   return obj;
 }
@@ -120,13 +136,27 @@ export async function getFandomData() {
 
   for (const [name, source] of Object.entries(allModules)) {
     try {
-      const ast = luaparse.parse(source); //lua to ast/json
-      extractedData[name] = extractDataFromAST(ast); //ast to js
-      //console.log(`${name} extracted successfully`);
+      const ast = luaparse.parse(source);
+      extractedData[name] = await extractDataFromAST(ast);
     } catch (error) {
       console.error(`Error parsing ${name}:`, error);
     }
   }
 
   return extractedData;
+}
+
+// Function to convert Lua AST to usable data
+async function extractDataFromAST(ast) {
+  const result = {};
+
+  for (const statement of ast.body) {
+    if (statement.type === 'AssignmentStatement' || statement.type === 'LocalStatement') {
+      const varName = statement.variables[0].name;
+      const value = await extractValue(statement.init[0]);
+      result[varName] = value;
+    }
+  }
+
+  return result;
 }
