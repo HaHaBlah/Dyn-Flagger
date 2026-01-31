@@ -28,14 +28,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../.wrangler/tmp/bundle-wCHPNk/strip-cf-connecting-ip-header.js
+// ../.wrangler/tmp/bundle-ZkqH32/strip-cf-connecting-ip-header.js
 function stripCfConnectingIPHeader(input, init) {
   const request = new Request(input, init);
   request.headers.delete("CF-Connecting-IP");
   return request;
 }
 var init_strip_cf_connecting_ip_header = __esm({
-  "../.wrangler/tmp/bundle-wCHPNk/strip-cf-connecting-ip-header.js"() {
+  "../.wrangler/tmp/bundle-ZkqH32/strip-cf-connecting-ip-header.js"() {
     __name(stripCfConnectingIPHeader, "stripCfConnectingIPHeader");
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -50,7 +50,7 @@ var init_strip_cf_connecting_ip_header = __esm({
 // ../node_modules/luaparse/luaparse.js
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_9912267433432252();
+    init_functionsRoutes_0_39038948727892664();
     init_strip_cf_connecting_ip_header();
     (function(root, name, factory) {
       "use strict";
@@ -2307,7 +2307,7 @@ async function extractDataFromAST(ast) {
 var import_luaparse, fandomModules;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_9912267433432252();
+    init_functionsRoutes_0_39038948727892664();
     init_strip_cf_connecting_ip_header();
     import_luaparse = __toESM(require_luaparse());
     fandomModules = {
@@ -2357,7 +2357,7 @@ async function onRequest(context) {
 var cachedFandomData, cacheTime, CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_9912267433432252();
+    init_functionsRoutes_0_39038948727892664();
     init_strip_cf_connecting_ip_header();
     init_fandomProcessor();
     cachedFandomData = null;
@@ -2437,16 +2437,16 @@ async function onRequest2(context) {
 }
 var init_fandom_image = __esm({
   "api/fandom-image.js"() {
-    init_functionsRoutes_0_9912267433432252();
+    init_functionsRoutes_0_39038948727892664();
     init_strip_cf_connecting_ip_header();
     __name(onRequest2, "onRequest");
   }
 });
 
-// ../.wrangler/tmp/pages-y2p1DF/functionsRoutes-0.9912267433432252.mjs
+// ../.wrangler/tmp/pages-AXRjkU/functionsRoutes-0.39038948727892664.mjs
 var routes;
-var init_functionsRoutes_0_9912267433432252 = __esm({
-  "../.wrangler/tmp/pages-y2p1DF/functionsRoutes-0.9912267433432252.mjs"() {
+var init_functionsRoutes_0_39038948727892664 = __esm({
+  "../.wrangler/tmp/pages-AXRjkU/functionsRoutes-0.39038948727892664.mjs"() {
     init_fandom_data();
     init_fandom_image();
     routes = [
@@ -2468,20 +2468,20 @@ var init_functionsRoutes_0_9912267433432252 = __esm({
   }
 });
 
-// ../.wrangler/tmp/bundle-wCHPNk/middleware-loader.entry.ts
-init_functionsRoutes_0_9912267433432252();
+// ../.wrangler/tmp/bundle-ZkqH32/middleware-loader.entry.ts
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 
-// ../.wrangler/tmp/bundle-wCHPNk/middleware-insertion-facade.js
-init_functionsRoutes_0_9912267433432252();
+// ../.wrangler/tmp/bundle-ZkqH32/middleware-insertion-facade.js
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_9912267433432252();
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 
 // ../node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_9912267433432252();
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 function lexer(str) {
   var tokens = [];
@@ -2929,7 +2929,7 @@ var cloneResponse = /* @__PURE__ */ __name((response) => (
 ), "cloneResponse");
 
 // ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-init_functionsRoutes_0_9912267433432252();
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
   try {
@@ -2949,7 +2949,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 var middleware_ensure_req_body_drained_default = drainBody;
 
 // ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
-init_functionsRoutes_0_9912267433432252();
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 function reduceError(e) {
   return {
@@ -2973,7 +2973,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-wCHPNk/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-ZkqH32/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -2981,7 +2981,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
 var middleware_insertion_facade_default = pages_template_worker_default;
 
 // ../node_modules/wrangler/templates/middleware/common.ts
-init_functionsRoutes_0_9912267433432252();
+init_functionsRoutes_0_39038948727892664();
 init_strip_cf_connecting_ip_header();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
@@ -3007,7 +3007,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-wCHPNk/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-ZkqH32/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -3105,4 +3105,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
-//# sourceMappingURL=functionsWorker-0.25750021581760907.mjs.map
+//# sourceMappingURL=functionsWorker-0.4558792201139962.mjs.map

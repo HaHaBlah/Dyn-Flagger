@@ -20,11 +20,16 @@
         <aside class="left-rail">
             <button class="left-rail-toggle"><svg></svg></button>
             <div class="left-rail-content">
+
+                <span>Search:</span><input type="text" id="nations-search-filter" onkeyup="nationsSearchFilter()" placeholder="Search for nations.."
+                    title="Type in a nation">
+
                 <div class="tabs-wrapper">
                     <button class="tablinks active" onclick="switchTab(event, 'Nations')">Nations</button>
                     <button class="tablinks" onclick="switchTab(event, 'Releasables')">Releasables</button>
                     <button class="tablinks" onclick="switchTab(event, 'Formables')">Formables</button>
                 </div>
+
                 <div id="Nations" class="tabcontent tabcontent-visible">
                     <ul class="nations-list">
                     </ul>
