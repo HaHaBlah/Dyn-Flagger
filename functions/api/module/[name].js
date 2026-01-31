@@ -1,4 +1,4 @@
-export async function onRequest(context) {
+/*export async function onRequest(context) {
   const { params } = context;
   const moduleName = params.name;
   
@@ -20,4 +20,4 @@ export async function onRequest(context) {
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+}*/
