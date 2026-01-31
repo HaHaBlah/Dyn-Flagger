@@ -1,5 +1,5 @@
 let Lawnames, Flagdata, Nationdata, Tagdata;
-import { resolveFileUrl } from './fandomProcessor.js';
+import { getFandomImageUrl } from './fandomProcessor.js';
 
 // Fetch processed fandom data from server
 async function loadFandomData() {
@@ -54,43 +54,69 @@ async function generateNationsList() {
     }
 
     const nationsLists = document.getElementsByClassName("nations-list");
-    const imageScale = 22;
+    const imageScale = 30;
+
+    // Helper function to create list item (synchronous DOM creation)
+    function createListItem(countryName, scaledUrl) {
+        const li = document.createElement("li");
+        const button = document.createElement("button");
+        const flagSpan = document.createElement("span");
+        flagSpan.classList.add("flag-image");
+        const flagImg = document.createElement("img");
+
+        flagImg.src = scaledUrl;
+        flagSpan.appendChild(flagImg);
+
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = countryName;
+        button.appendChild(flagSpan);
+        button.appendChild(nameSpan);
+        li.appendChild(button);
+        
+        return li;
+    }
+
+    // Helper function to scale URL
+    function scaleUrl(resolvedUrl) {
+        return resolvedUrl.includes('scale-to-width-down')
+            ? resolvedUrl.replace(/scale-to-width-down\/\d+/, `scale-to-width-down/${imageScale}`)
+            : resolvedUrl.replace(/\/revision\/latest/, `/revision/latest/scale-to-width-down/${imageScale}`);
+    }
 
     for (let list of nationsLists) {
-        if (list.parentElement.id === "Nations") {
-            for (let country in Nationdata.nationdata) {
-                if (Nationdata.nationdata[country].nation !== true) {
-                    continue;
-                }
-                const li = document.createElement("li");
-                const button = document.createElement("button");
-                const flagSpan = document.createElement("span");
-                flagSpan.classList.add("flag-image");
-                const flagImg = document.createElement("img");
+        const parentId = list.parentElement.id;
+        let countries = [];
 
-                const resolvedUrl = await resolveFileUrl('File:' + country + '_Flag.png');
-                //baseUrl = new URL(resolvedUrl).origin;
-                console.log('Resolved URL:', resolvedUrl);
-                //console.log('Base URL:', baseUrl);
-
-                // Get base URL and add scale-to-width-down parameter
-                //const scaledUrl = baseUrl// + '/scale-to-width-down/' + imageScale;
-
-                flagImg.src = resolvedUrl;//scaledUrl;
-                flagSpan.appendChild(flagImg);
-
-                const nameSpan = document.createElement("span");
-                nameSpan.textContent = country;
-                button.appendChild(flagSpan);
-                button.appendChild(nameSpan);
-                li.appendChild(button);
-                list.appendChild(li);
-            }
-        } else if (list.parentElement.id === "Releasables") {
-
-        } else if (list.parentElement.id === "Formables") {
-
+        if (parentId === "Nations") {
+            countries = Object.keys(Nationdata.nationdata)
+                .filter(country => Nationdata.nationdata[country].nation === true)
+                .sort();
+                
+        } else if (parentId === "Releasables") {
+            countries = Object.keys(Nationdata.nationdata)
+                .filter(country => Nationdata.nationdata[country].nation === false)
+                .sort();
+                
+        } else if (parentId === "Formables") {
+            countries = Object.values(Tagdata.Tags)
+                .filter(formable => formable.FormableName)
+                .map(formable => formable.FormableName)
+                .sort();
         }
+
+        // Fetch all image URLs in parallel
+        const urlPromises = countries.map(country => 
+            getFandomImageUrl(country + '_Flag.png')
+        );
+        
+        const resolvedUrls = await Promise.all(urlPromises);
+
+        // Create and append all list items with their resolved URLs
+        countries.forEach((country, index) => {
+            const scaledUrl = scaleUrl(resolvedUrls[index]);
+            const li = createListItem(country, scaledUrl);
+            list.appendChild(li);
+        });
     }
 }
 

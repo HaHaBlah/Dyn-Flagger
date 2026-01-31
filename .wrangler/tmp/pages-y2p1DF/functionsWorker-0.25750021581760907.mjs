@@ -28,14 +28,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../.wrangler/tmp/bundle-Ugahcn/strip-cf-connecting-ip-header.js
+// ../.wrangler/tmp/bundle-wCHPNk/strip-cf-connecting-ip-header.js
 function stripCfConnectingIPHeader(input, init) {
   const request = new Request(input, init);
   request.headers.delete("CF-Connecting-IP");
   return request;
 }
 var init_strip_cf_connecting_ip_header = __esm({
-  "../.wrangler/tmp/bundle-Ugahcn/strip-cf-connecting-ip-header.js"() {
+  "../.wrangler/tmp/bundle-wCHPNk/strip-cf-connecting-ip-header.js"() {
     __name(stripCfConnectingIPHeader, "stripCfConnectingIPHeader");
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -50,7 +50,7 @@ var init_strip_cf_connecting_ip_header = __esm({
 // ../node_modules/luaparse/luaparse.js
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_3416367474695612();
+    init_functionsRoutes_0_9912267433432252();
     init_strip_cf_connecting_ip_header();
     (function(root, name, factory) {
       "use strict";
@@ -2198,25 +2198,6 @@ var require_luaparse = __commonJS({
 });
 
 // ../fandomProcessor.js
-async function resolveFileUrl(fileReference) {
-  if (!fileReference) {
-    return fileReference;
-  }
-  if (fileUrlCache[fileReference]) {
-    return fileUrlCache[fileReference];
-  }
-  try {
-    const response = await fetch(`/api/resolve-file?file=${encodeURIComponent(fileReference)}`);
-    const data = await response.json();
-    if (data.url) {
-      fileUrlCache[fileReference] = data.url;
-      return data.url;
-    }
-  } catch (error) {
-    console.error(`Error resolving file ${fileReference}:`, error);
-  }
-  return fileReference;
-}
 async function loadAllModules() {
   const modulePromises = Object.entries(fandomModules).map(async ([name, moduleName]) => {
     const url = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${moduleName}`;
@@ -2323,10 +2304,10 @@ async function extractDataFromAST(ast) {
   }
   return result;
 }
-var import_luaparse, fandomModules, fileUrlCache;
+var import_luaparse, fandomModules;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_3416367474695612();
+    init_functionsRoutes_0_9912267433432252();
     init_strip_cf_connecting_ip_header();
     import_luaparse = __toESM(require_luaparse());
     fandomModules = {
@@ -2335,8 +2316,6 @@ var init_fandomProcessor = __esm({
       Nationdata: "Nationdata",
       Tagdata: "Tagdata"
     };
-    fileUrlCache = {};
-    __name(resolveFileUrl, "resolveFileUrl");
     __name(loadAllModules, "loadAllModules");
     __name(extractValue, "extractValue");
     __name(extractTable, "extractTable");
@@ -2378,7 +2357,7 @@ async function onRequest(context) {
 var cachedFandomData, cacheTime, CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_3416367474695612();
+    init_functionsRoutes_0_9912267433432252();
     init_strip_cf_connecting_ip_header();
     init_fandomProcessor();
     cachedFandomData = null;
@@ -2388,11 +2367,88 @@ var init_fandom_data = __esm({
   }
 });
 
-// ../.wrangler/tmp/pages-FP7VkJ/functionsRoutes-0.3416367474695612.mjs
+// api/fandom-image.js
+async function onRequest2(context) {
+  const { request } = context;
+  const url = new URL(request.url);
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    });
+  }
+  const filename = url.searchParams.get("filename");
+  const wikiDomain = url.searchParams.get("wiki") || "ronroblox";
+  if (!filename) {
+    return new Response(JSON.stringify({ error: "Filename parameter required" }), {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  }
+  try {
+    const extensionMatch = filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i);
+    const extension = extensionMatch ? extensionMatch[1] : "png";
+    const baseFilename = filename.replace(/\.(png|jpg|jpeg|gif|svg|webp)$/i, "");
+    const fullFilename = `${baseFilename}.${extension}`;
+    const fandomApiUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/file/File:${encodeURIComponent(fullFilename)}`;
+    const response = await fetch(fandomApiUrl);
+    if (!response.ok) {
+      throw new Error(`Fandom API returned ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.preferred && data.preferred.url) {
+      return new Response(JSON.stringify({
+        url: data.preferred.url,
+        width: data.preferred.width,
+        height: data.preferred.height,
+        mediatype: data.preferred.mediatype,
+        fullData: data
+        // Include full data if needed
+      }), {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "public, max-age=3600"
+          // Cache for 1 hour
+        }
+      });
+    } else {
+      throw new Error("Preferred URL not found in response");
+    }
+  } catch (error) {
+    console.error(`Error fetching Fandom image for ${filename}:`, error);
+    return new Response(JSON.stringify({
+      error: error.message,
+      filename
+    }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  }
+}
+var init_fandom_image = __esm({
+  "api/fandom-image.js"() {
+    init_functionsRoutes_0_9912267433432252();
+    init_strip_cf_connecting_ip_header();
+    __name(onRequest2, "onRequest");
+  }
+});
+
+// ../.wrangler/tmp/pages-y2p1DF/functionsRoutes-0.9912267433432252.mjs
 var routes;
-var init_functionsRoutes_0_3416367474695612 = __esm({
-  "../.wrangler/tmp/pages-FP7VkJ/functionsRoutes-0.3416367474695612.mjs"() {
+var init_functionsRoutes_0_9912267433432252 = __esm({
+  "../.wrangler/tmp/pages-y2p1DF/functionsRoutes-0.9912267433432252.mjs"() {
     init_fandom_data();
+    init_fandom_image();
     routes = [
       {
         routePath: "/api/fandom-data",
@@ -2400,25 +2456,32 @@ var init_functionsRoutes_0_3416367474695612 = __esm({
         method: "",
         middlewares: [],
         modules: [onRequest]
+      },
+      {
+        routePath: "/api/fandom-image",
+        mountPath: "/api",
+        method: "",
+        middlewares: [],
+        modules: [onRequest2]
       }
     ];
   }
 });
 
-// ../.wrangler/tmp/bundle-Ugahcn/middleware-loader.entry.ts
-init_functionsRoutes_0_3416367474695612();
+// ../.wrangler/tmp/bundle-wCHPNk/middleware-loader.entry.ts
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 
-// ../.wrangler/tmp/bundle-Ugahcn/middleware-insertion-facade.js
-init_functionsRoutes_0_3416367474695612();
+// ../.wrangler/tmp/bundle-wCHPNk/middleware-insertion-facade.js
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 
 // ../node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 function lexer(str) {
   var tokens = [];
@@ -2866,7 +2929,7 @@ var cloneResponse = /* @__PURE__ */ __name((response) => (
 ), "cloneResponse");
 
 // ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
   try {
@@ -2886,7 +2949,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 var middleware_ensure_req_body_drained_default = drainBody;
 
 // ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 function reduceError(e) {
   return {
@@ -2910,7 +2973,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-Ugahcn/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-wCHPNk/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -2918,7 +2981,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
 var middleware_insertion_facade_default = pages_template_worker_default;
 
 // ../node_modules/wrangler/templates/middleware/common.ts
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
@@ -2944,7 +3007,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-Ugahcn/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-wCHPNk/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -3042,4 +3105,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
-//# sourceMappingURL=functionsWorker-0.956993438818216.mjs.map
+//# sourceMappingURL=functionsWorker-0.25750021581760907.mjs.map

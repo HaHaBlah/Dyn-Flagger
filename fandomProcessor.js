@@ -10,29 +10,34 @@ const fandomModules = {
 // Cache for resolved file URLs
 const fileUrlCache = {};
 
-// Resolve Fandom file references to actual image URLs
-export async function resolveFileUrl(fileReference) {
-  if (!fileReference) {
-    return fileReference;
-  }
-  
-  if (fileUrlCache[fileReference]) {
-    return fileUrlCache[fileReference];
-  }
-
+/**
+ * Fetches the preferred image URL from Fandom via your Cloudflare Workers proxy
+ * @param {string} filename - The filename (e.g., "Afghanistan_Flag.png")
+ * @param {string} [wikiDomain='ronroblox'] - The Fandom wiki domain
+ * @returns {Promise<string>} The preferred image URL
+ */
+export async function getFandomImageUrl(filename, wikiDomain = 'ronroblox') {
   try {
-    const response = await fetch(`/api/resolve-file?file=${encodeURIComponent(fileReference)}`);
+    // Call your Cloudflare Workers endpoint
+    const response = await fetch(
+      `/api/fandom-image?filename=${encodeURIComponent(filename)}&wiki=${encodeURIComponent(wikiDomain)}`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image data: ${response.status}`);
+    }
+    
     const data = await response.json();
     
-    if (data.url) {
-      fileUrlCache[fileReference] = data.url;
-      return data.url;
+    if (data.error) {
+      throw new Error(data.error);
     }
+    
+    return data.url;
   } catch (error) {
-    console.error(`Error resolving file ${fileReference}:`, error);
+    console.error(`Error fetching Fandom image URL for ${filename}:`, error);
+    throw error;
   }
-  
-  return fileReference;
 }
 
 // fetch lua modules directly from fandom

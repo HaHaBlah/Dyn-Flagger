@@ -1,4 +1,6 @@
-/*export async function onRequest(context) {
+/*Deprecated. Relocated to functions/api/fandom-data.js
+
+export async function onRequest(context) {
   const { params } = context;
   const moduleName = params.name;
   

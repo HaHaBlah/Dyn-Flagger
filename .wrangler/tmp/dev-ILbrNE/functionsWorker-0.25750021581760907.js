@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/bundle-n8AhkQ/strip-cf-connecting-ip-header.js
+// .wrangler/tmp/bundle-NFUJfm/strip-cf-connecting-ip-header.js
 function stripCfConnectingIPHeader(input, init) {
   const request = new Request(input, init);
   request.headers.delete("CF-Connecting-IP");
@@ -16,7 +16,7 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
   }
 });
 
-// .wrangler/tmp/pages-FP7VkJ/functionsWorker-0.956993438818216.mjs
+// .wrangler/tmp/pages-y2p1DF/functionsWorker-0.25750021581760907.mjs
 var __create = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -53,7 +53,7 @@ function stripCfConnectingIPHeader2(input, init) {
 }
 __name(stripCfConnectingIPHeader2, "stripCfConnectingIPHeader");
 var init_strip_cf_connecting_ip_header = __esm({
-  "../.wrangler/tmp/bundle-Ugahcn/strip-cf-connecting-ip-header.js"() {
+  "../.wrangler/tmp/bundle-wCHPNk/strip-cf-connecting-ip-header.js"() {
     __name2(stripCfConnectingIPHeader2, "stripCfConnectingIPHeader");
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -66,7 +66,7 @@ var init_strip_cf_connecting_ip_header = __esm({
 });
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_3416367474695612();
+    init_functionsRoutes_0_9912267433432252();
     init_strip_cf_connecting_ip_header();
     (function(root, name, factory) {
       "use strict";
@@ -2294,26 +2294,6 @@ var require_luaparse = __commonJS({
     });
   }
 });
-async function resolveFileUrl(fileReference) {
-  if (!fileReference) {
-    return fileReference;
-  }
-  if (fileUrlCache[fileReference]) {
-    return fileUrlCache[fileReference];
-  }
-  try {
-    const response = await fetch(`/api/resolve-file?file=${encodeURIComponent(fileReference)}`);
-    const data = await response.json();
-    if (data.url) {
-      fileUrlCache[fileReference] = data.url;
-      return data.url;
-    }
-  } catch (error) {
-    console.error(`Error resolving file ${fileReference}:`, error);
-  }
-  return fileReference;
-}
-__name(resolveFileUrl, "resolveFileUrl");
 async function loadAllModules() {
   const modulePromises = Object.entries(fandomModules).map(async ([name, moduleName]) => {
     const url = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${moduleName}`;
@@ -2427,10 +2407,9 @@ async function extractDataFromAST(ast) {
 __name(extractDataFromAST, "extractDataFromAST");
 var import_luaparse;
 var fandomModules;
-var fileUrlCache;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_3416367474695612();
+    init_functionsRoutes_0_9912267433432252();
     init_strip_cf_connecting_ip_header();
     import_luaparse = __toESM(require_luaparse());
     fandomModules = {
@@ -2439,8 +2418,6 @@ var init_fandomProcessor = __esm({
       Nationdata: "Nationdata",
       Tagdata: "Tagdata"
     };
-    fileUrlCache = {};
-    __name2(resolveFileUrl, "resolveFileUrl");
     __name2(loadAllModules, "loadAllModules");
     __name2(extractValue, "extractValue");
     __name2(extractTable, "extractTable");
@@ -2483,7 +2460,7 @@ var cacheTime;
 var CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_3416367474695612();
+    init_functionsRoutes_0_9912267433432252();
     init_strip_cf_connecting_ip_header();
     init_fandomProcessor();
     cachedFandomData = null;
@@ -2492,10 +2469,86 @@ var init_fandom_data = __esm({
     __name2(onRequest, "onRequest");
   }
 });
+async function onRequest2(context) {
+  const { request } = context;
+  const url = new URL(request.url);
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    });
+  }
+  const filename = url.searchParams.get("filename");
+  const wikiDomain = url.searchParams.get("wiki") || "ronroblox";
+  if (!filename) {
+    return new Response(JSON.stringify({ error: "Filename parameter required" }), {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  }
+  try {
+    const extensionMatch = filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i);
+    const extension = extensionMatch ? extensionMatch[1] : "png";
+    const baseFilename = filename.replace(/\.(png|jpg|jpeg|gif|svg|webp)$/i, "");
+    const fullFilename = `${baseFilename}.${extension}`;
+    const fandomApiUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/file/File:${encodeURIComponent(fullFilename)}`;
+    const response = await fetch(fandomApiUrl);
+    if (!response.ok) {
+      throw new Error(`Fandom API returned ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.preferred && data.preferred.url) {
+      return new Response(JSON.stringify({
+        url: data.preferred.url,
+        width: data.preferred.width,
+        height: data.preferred.height,
+        mediatype: data.preferred.mediatype,
+        fullData: data
+        // Include full data if needed
+      }), {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "public, max-age=3600"
+          // Cache for 1 hour
+        }
+      });
+    } else {
+      throw new Error("Preferred URL not found in response");
+    }
+  } catch (error) {
+    console.error(`Error fetching Fandom image for ${filename}:`, error);
+    return new Response(JSON.stringify({
+      error: error.message,
+      filename
+    }), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+  }
+}
+__name(onRequest2, "onRequest2");
+var init_fandom_image = __esm({
+  "api/fandom-image.js"() {
+    init_functionsRoutes_0_9912267433432252();
+    init_strip_cf_connecting_ip_header();
+    __name2(onRequest2, "onRequest");
+  }
+});
 var routes;
-var init_functionsRoutes_0_3416367474695612 = __esm({
-  "../.wrangler/tmp/pages-FP7VkJ/functionsRoutes-0.3416367474695612.mjs"() {
+var init_functionsRoutes_0_9912267433432252 = __esm({
+  "../.wrangler/tmp/pages-y2p1DF/functionsRoutes-0.9912267433432252.mjs"() {
     init_fandom_data();
+    init_fandom_image();
     routes = [
       {
         routePath: "/api/fandom-data",
@@ -2503,17 +2556,24 @@ var init_functionsRoutes_0_3416367474695612 = __esm({
         method: "",
         middlewares: [],
         modules: [onRequest]
+      },
+      {
+        routePath: "/api/fandom-image",
+        mountPath: "/api",
+        method: "",
+        middlewares: [],
+        modules: [onRequest2]
       }
     ];
   }
 });
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 function lexer(str) {
   var tokens = [];
@@ -2969,7 +3029,7 @@ var cloneResponse = /* @__PURE__ */ __name2((response) => (
     response
   )
 ), "cloneResponse");
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
@@ -2987,7 +3047,7 @@ var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx
   }
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 function reduceError(e) {
   return {
@@ -3016,7 +3076,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = pages_template_worker_default;
-init_functionsRoutes_0_3416367474695612();
+init_functionsRoutes_0_9912267433432252();
 init_strip_cf_connecting_ip_header();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
@@ -3181,7 +3241,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-n8AhkQ/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-NFUJfm/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -3213,7 +3273,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-n8AhkQ/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-NFUJfm/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -3311,4 +3371,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=functionsWorker-0.956993438818216.js.map
+//# sourceMappingURL=functionsWorker-0.25750021581760907.js.map
