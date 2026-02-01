@@ -54,7 +54,7 @@ async function generateNationsList() {
     }
 
     const nationsLists = document.getElementsByClassName("nations-list");
-    const imageScale = 30;
+    const imageScale = 36;
 
     // Helper function to create list item (synchronous DOM creation)
     function createListItem(countryName, scaledUrl) {
@@ -99,7 +99,8 @@ async function generateNationsList() {
 
         } else if (parentId === "Formables") {
             countries = Object.values(Tagdata.Tags)
-                .filter(formable => formable.FormableName)
+                .filter(formable => formable.FormableName) /*excludes missions*/
+                .filter(formable => !formable.Removed) /*excludes removed formables*/
                 .map(formable => formable.FormableName)
                 .sort();
         }
@@ -112,6 +113,7 @@ async function generateNationsList() {
         const resolvedUrls = await Promise.all(urlPromises);
 
         // Create and append all list items with their resolved URLs
+        list.innerHTML = ''; // Clear loading gif or existing content
         countries.forEach((country, index) => {
             const scaledUrl = scaleUrl(resolvedUrls[index]);
             const li = createListItem(country, scaledUrl);
