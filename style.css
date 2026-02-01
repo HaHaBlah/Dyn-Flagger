@@ -151,17 +151,48 @@ body {
 }
 
 /*Rails, basically the country selection on the left*/
+.page-container {
+    min-width: auto;
+}
+
 .rail-container {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) min-content;
-    grid-template-rows: max-content;
-    margin: auto;
+    grid-template: min-content 1fr min-content / 15rem minmax(0, 1fr);
+    grid-template-areas:
+        'header header'
+        'leftRail pageContent'
+        'footer footer';
+}
+
+footer{
+    grid-area: footer;
+    margin-top: 24px;
+    padding: 12px 0;
+    border-top: 1px solid var(--button-color);
+    text-align: center;
+    font-size: 0.875rem;
+    color: #888;
+}
+
+header {
+    grid-area: header;
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--button-color);
+}
+.main-content {
+    grid-area: pageContent;
+    width: 100%;
+    height: 100%;
 }
 
 .left-rail {
     position: relative;
-    width: 336px;
+    width: 350px;
     padding: 0 18px;
+    grid-area: leftRail;
+    overflow-anchor: none;
 }
 
 .left-rail-content {
@@ -203,6 +234,8 @@ body {
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+    overflow-y: auto;
+    max-height: calc(90vh - 3.125rem - (24px * 2));
 }
 
 .tabcontent-hidden {
@@ -218,8 +251,6 @@ body {
 
 /*nationslist buttons*/
 .nations-list {
-    max-height: 600px;
-    overflow-y: auto;
     padding-left: 0;
     margin: 0;
     display: block;
@@ -254,4 +285,16 @@ body {
     margin-right: 10px;
     vertical-align: middle;
     padding: 2px;
+}
+
+/*Political Laws*/
+.laws-selection {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.laws-selection .btn {
+    flex: 1;
+    margin: 5px;
+    white-space: nowrap;
 }

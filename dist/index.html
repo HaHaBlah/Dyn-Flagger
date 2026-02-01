@@ -6,83 +6,114 @@
     <link rel="icon" type="image/png" href="/assets/favicon-CK0sXGom.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- Open Graph Meta Tags. Aka discord embeds. -->
     <meta property="og:title" content="Dyn Flagger" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dyn-flagger.pages.dev/" />
     <meta property="og:image" content="https://i.imgur.com/NQS7FDH.png" />
     <meta property="og:description" content="A tool to post dynamic/national flags. 
     Format errors begone." />
-  <script type="module" crossorigin src="/assets/index-D-5v22gV.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-PC7OGshs.css">
+  <script type="module" crossorigin src="/assets/index-Cd_QLsz_.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DnxSKUuP.css">
 </head>
 
 <body>
-    <div class="rail-container">
-        <aside class="left-rail">
-            <button class="left-rail-toggle"><svg></svg></button>
-            <div class="left-rail-content">
+    <header>Rise of Nations Dyn-Flagger</header>
+    <div class="page-container">
+        <div class="rail-container">
+            <aside class="left-rail">
+                <button class="left-rail-toggle"><svg></svg></button>
+                <div class="left-rail-content">
 
-                <span>Search:</span><input type="text" id="nations-search-filter" onkeyup="nationsSearchFilter()" placeholder="Search for nations.."
-                    title="Type in a nation">
+                    <div class="search-bar"><span>Search:</span><input type="text" id="nations-search-filter"
+                            onkeyup="nationsSearchFilter()" placeholder="Search for nations.." title="Type in a nation">
+                    </div>
 
-                <div class="tabs-wrapper">
-                    <button class="tablinks active" onclick="switchTab(event, 'Nations')">Nations</button>
-                    <button class="tablinks" onclick="switchTab(event, 'Releasables')">Releasables</button>
-                    <button class="tablinks" onclick="switchTab(event, 'Formables')">Formables</button>
-                </div>
+                    <div class="tabs-wrapper">
+                        <button class="tablinks active" onclick="switchTab(event, 'Nations')">Nations</button>
+                        <button class="tablinks" onclick="switchTab(event, 'Releasables')">Releasables</button>
+                        <button class="tablinks" onclick="switchTab(event, 'Formables')">Formables</button>
+                    </div>
 
-                <div id="Nations" class="tabcontent tabcontent-visible">
-                    <ul class="nations-list">
-                    </ul>
-                </div>
-                <div id="Releasables" class="tabcontent tabcontent-hidden">
-                    <ul class="nations-list">
-                    </ul>
-                </div>
-                <div id="Formables" class="tabcontent tabcontent-hidden">
-                    <ul class="nations-list">
-                    </ul>
-                </div>
-            </div>
-        </aside>
-        <div class="main-content">
-            <h1>Image Fetcher</h1>
-            <input type="text" id="userInput" placeholder="Enter something...">
-            <button onclick="fetchImage()">Get Image</button>
-            <div id="imageContainer">
-            </div>
-
-            <div class="ideologies">
-                <ul>
-                    <li>
-                        <button type="button" class="btn">Non-Aligned</button>
-                        <ul>
-                            <li>
-                                <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
-                                <ul>
-                                    <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
-                                <ul>
-                                    <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
-                                <ul>
-                                    <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button></li>
-                                </ul>
-                            </li>
+                    <div id="Nations" class="tabcontent tabcontent-visible">
+                        <ul class="nations-list">
                         </ul>
+                    </div>
+                    <div id="Releasables" class="tabcontent tabcontent-hidden">
+                        <ul class="nations-list">
+                        </ul>
+                    </div>
+                    <div id="Formables" class="tabcontent tabcontent-hidden">
+                        <ul class="nations-list">
+                        </ul>
+                    </div>
+                </div>
+            </aside>
+            <div class="main-content">
+                <h1>Image Fetcher</h1>
+                <input type="text" id="userInput" placeholder="Enter something...">
+                <button onclick="fetchImage()">Get Image</button>
+                <div id="imageContainer">
+                </div>
+
+                <div class="ideologies">
+                    <ul>
+                        <li>
+                            <button type="button" class="btn">Non-Aligned</button>
+                            <ul>
+                                <li>
+                                    <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                    <ul>
+                                        <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
+                                    <ul>
+                                        <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
+                                    <ul>
+                                        <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="laws-selection">
+                    <button class="btn">Conscription</button>
+                    <button class="btn">Elective Assembly</button>
+                    <button class="btn">Party Loyalty</button>
+                    <button class="btn">Firearm Regulation</button>
+                    <button class="btn">Collective Theory</button>
+                    <button class="btn">Democracy Style</button>
+                    <button class="btn">State Doctrine</button>
+                    <button class="btn">Industrial Specialization</button>
+                    <button class="btn">Population Growth</button>
+                </div>
+            </div>
+
+            <footer>
+                <p><a href="https://github.com/HaHaBlah/Dyn-Flagger">Source Code</a> | by HaHaBlah @ 2026</p>
+                <p>Updates based on the following wiki modules:</p>
+                <ul>
+                    <li><a href="https://ronroblox.fandom.com/wiki/Module:Lawnames" target="_blank">Module:Lawnames</a>
+                    </li>
+                    <li><a href="https://ronroblox.fandom.com/wiki/Module:Nationdata"
+                            target="_blank">Module:Nationdata</a>
+                    </li>
+                    <li><a href="https://ronroblox.fandom.com/wiki/Module:Tagdata" target="_blank">Module:Tagdata</a>
+                    </li>
+                    <li><a href="https://ronroblox.fandom.com/wiki/Module:Flagdata" target="_blank">Module:Flagdata</a>
                     </li>
                 </ul>
-            </div>
-
-            <footer></footer>
+            </footer>
         </div>
     </div>
 

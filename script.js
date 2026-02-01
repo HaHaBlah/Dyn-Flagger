@@ -151,3 +151,8 @@ loadFandomData();
 window.switchTab = switchTab;
 window.generateNationsList = generateNationsList;
 window.nationsSearchFilter = nationsSearchFilter;
+
+// Toggle sidebar functionality
+document.querySelector('.left-rail-toggle').addEventListener('click', function() {
+    document.querySelector('.rail-container').classList.toggle('sidebar-open');
+});
