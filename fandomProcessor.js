@@ -7,9 +7,6 @@ const fandomModules = {
   Tagdata: "Tagdata"
 }
 
-// Cache for resolved file URLs
-const fileUrlCache = {};
-
 /**
  * Fetches the preferred image URL from Fandom via your Cloudflare Workers proxy
  * @param {string} filename - The filename (e.g., "Afghanistan_Flag.png")

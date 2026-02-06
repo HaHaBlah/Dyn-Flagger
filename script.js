@@ -1,34 +1,46 @@
 let Lawnames, Flagdata, Nationdata, Tagdata;
+let dataLoadedPromise = null; // Promise to track when data is loaded
 import { getFandomImageUrl } from './fandomProcessor.js';
 
-// Fetch processed fandom data from server
+/** 
+* Fetch processed fandom data from server
+*/
 async function loadFandomData() {
-    try {
-        const response = await fetch('/api/fandom-data');
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    // Create a promise that other functions can await
+    dataLoadedPromise = (async () => {
+        try {
+            const response = await fetch('/api/fandom-data');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-        const fandomModules = await response.json();
+            const fandomModules = await response.json();
 
-        Lawnames = fandomModules.Lawnames;
-        Flagdata = fandomModules.Flagdata;
-        Nationdata = fandomModules.Nationdata;
-        Tagdata = fandomModules.Tagdata;
+            Lawnames = fandomModules.Lawnames;
+            Flagdata = fandomModules.Flagdata;
+            Nationdata = fandomModules.Nationdata;
+            Tagdata = fandomModules.Tagdata;
 
-        console.log(Lawnames);
-        console.log(Flagdata);
-        console.log(Nationdata);
-        console.log(Tagdata);
+            console.log('✅ Data loaded successfully!');
+            console.log(Lawnames);
+            console.log(Flagdata);
+            console.log(Nationdata);
+            console.log(Tagdata);
 
-        if (Lawnames?.lawNames?.Elective_Assembly?.Name) {
-            const Conscription = Lawnames.lawNames.Elective_Assembly.Name;
-            console.log(Conscription);
+            if (Lawnames?.lawNames?.Elective_Assembly?.Name) {
+                const Conscription = Lawnames.lawNames.Elective_Assembly.Name;
+                console.log(Conscription);
+            }
+
+            // Call both functions after data is loaded
+            await generateLawsList();
+            await generateNationsList();
+
+        } catch (error) {
+            console.error('Error loading fandom data:', error);
+            throw error;
         }
+    })();
 
-        // Only call this after data is loaded
-        generateNationsList();
-    } catch (error) {
-        console.error('Error loading fandom data:', error);
-    }
+    return dataLoadedPromise;
 }
 
 function switchTab(evt, cityName) {
@@ -47,10 +59,14 @@ function switchTab(evt, cityName) {
     evt.currentTarget.className += " active";
 }
 
+/**
+ * Populates class="nations-list" elements with nation/formable data
+ */
 async function generateNationsList() {
-    if (!Nationdata?.nationdata) {
-        console.warn('Nationdata not loaded yet');
-        return;
+    // Wait for data if not loaded yet
+    if (!Nationdata?.nationdata && dataLoadedPromise) {
+        console.log('⏳ Waiting for data to load...');
+        await dataLoadedPromise;
     }
 
     const nationsLists = document.getElementsByClassName("nations-list");
@@ -60,10 +76,10 @@ async function generateNationsList() {
     function createListItem(countryName, scaledUrl) {
         const li = document.createElement("li");
         const button = document.createElement("button");
+
         const flagSpan = document.createElement("span");
         flagSpan.classList.add("flag-image");
         const flagImg = document.createElement("img");
-
         flagImg.src = scaledUrl;
         flagSpan.appendChild(flagImg);
 
@@ -122,6 +138,9 @@ async function generateNationsList() {
     }
 }
 
+/** 
+* Filter nations-list using search bar
+*/
 export function nationsSearchFilter() {
     // Declare variables
     var input, filter, lists, i, j, li, span, txtValue;
@@ -146,15 +165,52 @@ export function nationsSearchFilter() {
     }
 }
 
+async function generateLawsList(subsection) {
+    //const lawsSelection = subsection.getElementsByClassName("laws-selection");
+    if (!Lawnames?.lawNames && dataLoadedPromise) {
+        await dataLoadedPromise;
+    }
+    const lawsSelection = document.querySelector(".laws-selection");
+
+    console.log(lawsSelection);
+
+    // Check if element exists
+    if (!lawsSelection) {
+        console.error("Element with class 'laws-selection' not found");
+        return;
+    }
+
+    // Check if data is loaded
+    if (!Lawnames || !Lawnames.lawNames) {
+        console.error("Lawnames data not loaded yet");
+        return;
+    }
+
+    // Clear existing content
+    lawsSelection.innerHTML = '';
+
+    function createButtonItem(lawName) {
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.textContent = lawName;
+        return button;
+    }
+
+    const sortedLaws = Object.entries(Lawnames.lawNames)
+        .sort((a, b) => a[1].Name.localeCompare(b[1].Name));
+
+    //Assembly 
+    for (let [lawKey, law] of sortedLaws) {
+        const button = createButtonItem(law.Name);
+        lawsSelection.appendChild(button);
+    }
+}
+
 // Load data when page loads
 loadFandomData();
 
 // Global scopes for inline onclick handlers
 window.switchTab = switchTab;
+window.generateLawsList = generateLawsList;
 window.generateNationsList = generateNationsList;
 window.nationsSearchFilter = nationsSearchFilter;
-
-// Toggle sidebar functionality
-document.querySelector('.left-rail-toggle').addEventListener('click', function() {
-    document.querySelector('.rail-container').classList.toggle('sidebar-open');
-});
