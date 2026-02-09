@@ -87,6 +87,7 @@ async function generateNationsList() {
         nameSpan.textContent = countryName;
         button.appendChild(flagSpan);
         button.appendChild(nameSpan);
+        button.addEventListener("click", () => onNationsListButtonClick(countryName));
         li.appendChild(button);
 
         return li;
@@ -205,6 +206,169 @@ async function generateLawsList(subsection) {
         lawsSelection.appendChild(button);
     }
 }
+
+let flagSpecifications = {
+    NationName: "",
+    Flags: []
+};
+
+function addFlag(flagData = {}) {
+    const newFlag = {
+        FlagName: flagData.FlagName || "",
+        FlagID: flagData.FlagID || flagSpecifications.Flags.length,
+        Description: flagData.Description || "",
+        Ideologies: flagData.Ideologies || [],
+        Laws: flagData.Laws || {}, // Changed to object
+        NOTIdeologies: flagData.NOTIdeologies || [],
+        NOTLaws: flagData.NOTLaws || {} // Changed to object
+    };
+    flagSpecifications.Flags.push(newFlag);
+    return newFlag;
+}
+
+function removeFlag(index) {
+    flagSpecifications.Flags.splice(index, 1);
+}
+
+function updateDisplay() {
+    console.log("Current Flag Specifications:", flagSpecifications);
+
+    // Update nation name
+    const nationNameInput = document.querySelector("#nation-name");
+    if (nationNameInput) {
+        nationNameInput.value = flagSpecifications.NationName;
+    }
+
+    // Get the container where flags should be inserted
+    const mainContent = document.querySelector(".main-content");
+    const newFlagButton = document.querySelector(".new-flag-button");
+
+    // Remove all existing flag divs
+    const existingFlags = document.querySelectorAll(".flag");
+    existingFlags.forEach(flag => flag.remove());
+
+    // Create a flag div for each flag in flagSpecifications.Flags
+    flagSpecifications.Flags.forEach((flag, index) => {
+        const flagDiv = createFlagElement(flag, index);
+        // Insert before the new-flag-button
+        mainContent.insertBefore(flagDiv, newFlagButton);
+    });
+}
+
+function createFlagElement(flagData, index) {
+    const flagDiv = document.createElement("div");
+    flagDiv.classList.add("flag");
+    flagDiv.dataset.flagIndex = index;
+    
+    flagDiv.innerHTML = `
+        <button class="collapse-flag-overview-button">
+            <div class="flag-overview">
+                <div class="flag-overview-left">
+                    <img id="nation-flag" src="images/Unknown Flag.png">
+                    <p id="flag-name">${flagData.FlagName || 'Flag Name'}</p>
+                </div>
+                <div class="flag-overview-right">
+                    <div><span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.length}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title">Laws: </span>${Object.keys(flagData.Laws).length}<span class="flag-overview-content"></span></div>
+                </div>
+            </div>
+        </button>
+        <div class="flag-contents">
+            <button class="delete-flag-button">Delete Flag</button>
+            
+            <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input flag-name-input" value="${flagData.FlagName}"></div>
+            <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input flag-image-input" value="${flagData.FlagID}"></div>
+            <div class="flag-label"><span class="flag-title">Description/Sources: </span><input class="flag-input flag-description-input" value="${flagData.Description}"></div>
+            
+            <div class="ideologies">
+                <ul>
+                    <li>
+                        <button type="button" class="btn">Non-Aligned</button>
+                        <ul>
+                            <li>
+                                <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                <ul>
+                                    <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
+                                <ul>
+                                    <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
+                                <ul>
+                                    <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="laws">
+                <div class="laws-selection">
+                    <img src="https://media.tenor.com/3xTqDrUgvvIAAAAi/error-404.gif" alt="Loading..." class="loading-gif">
+                </div>
+                <div class="laws-name"></div>
+                <div class="laws-level"></div>
+            </div>
+        </div>
+    `;
+    
+    // Add event listener for delete button
+    const deleteButton = flagDiv.querySelector(".delete-flag-button");
+    deleteButton.addEventListener("click", () => {
+        removeFlag(index);
+        updateDisplay();
+    });
+    
+    // Add event listeners for input fields to update flagSpecifications
+    const nameInput = flagDiv.querySelector(".flag-name-input");
+    nameInput.addEventListener("input", (e) => {
+        flagSpecifications.Flags[index].FlagName = e.target.value;
+        updateDisplay();
+    });
+    
+    const imageInput = flagDiv.querySelector(".flag-image-input");
+    imageInput.addEventListener("input", (e) => {
+        flagSpecifications.Flags[index].FlagID = e.target.value;
+        updateDisplay();
+    });
+    
+    const descInput = flagDiv.querySelector(".flag-description-input");
+    descInput.addEventListener("input", (e) => {
+        flagSpecifications.Flags[index].Description = e.target.value;
+        updateDisplay();
+    });
+    
+    return flagDiv;
+}
+
+/**
+* Handle nation button click to set flagSpecifications.NationName
+*/
+function onNationsListButtonClick(countryName) {
+    flagSpecifications.NationName = countryName;
+    updateDisplay();
+}
+
+function translateLawLevelstoText(law, level) { }
+
+// Initialize event listeners after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Add event listener for new flag button
+    const newFlagButton = document.querySelector(".new-flag-button button");
+    if (newFlagButton) {
+        newFlagButton.addEventListener("click", () => {
+            addFlag();
+            updateDisplay();
+        });
+    }
+});
 
 // Load data when page loads
 loadFandomData();

@@ -13,16 +13,20 @@
     <meta property="og:image" content="https://i.imgur.com/NQS7FDH.png" />
     <meta property="og:description" content="A tool to post dynamic/national flags. 
     Format errors begone." />
-  <script type="module" crossorigin src="/assets/index-D6Sae0BV.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-B8j_ORDs.css">
+  <script type="module" crossorigin src="/assets/index-Dl9mPYwG.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DbU9ik92.css">
 </head>
 
 <body>
     <div class="page-container">
+
         <header>Rise of Nations Dyn Flagger</header>
+
         <div class="rail-container">
+
             <aside class="left-rail">
-                <button class="left-rail-toggle"><svg></svg></button>
+                <!-- <p>Select Nation</p> -->
+                <button class="left-rail-toggle"><img src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'%20standalone='no'?%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20fill='%23000000'%20version='1.1'%20id='Layer_1'%20width='505.716'%20height='267.58099'%20viewBox='0%200%2063.2145%2033.447624'%20enable-background='new%200%200%20100%20100'%20xml:space='preserve'%20sodipodi:docname='menu-arrow.svg'%20inkscape:version='1.3%20(0e150ed6c4,%202023-07-21)'%20xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape'%20xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:svg='http://www.w3.org/2000/svg'%3e%3cdefs%20id='defs1'%20/%3e%3csodipodi:namedview%20id='namedview1'%20pagecolor='%23505050'%20bordercolor='%23ffffff'%20borderopacity='1'%20inkscape:showpageshadow='0'%20inkscape:pageopacity='0'%20inkscape:pagecheckerboard='1'%20inkscape:deskcolor='%23505050'%20inkscape:zoom='0.97125'%20inkscape:cx='400'%20inkscape:cy='317.63192'%20inkscape:window-width='1920'%20inkscape:window-height='991'%20inkscape:window-x='-9'%20inkscape:window-y='-9'%20inkscape:window-maximized='1'%20inkscape:current-layer='Layer_1'%20/%3e&%2310;%3cg%20id='g1'%20transform='translate(-18.658625,-34.725238)'%3e&%2310;%20%3cpath%20d='M%2078.466,35.559%2050.15,63.633%2022.078,35.317%20c%20-0.777,-0.785%20-2.044,-0.789%20-2.828,-0.012%20-0.784,0.777%20-0.789,2.044%20-0.012,2.827%20L%2048.432,67.58%20c%200.365,0.368%200.835,0.563%201.312,0.589%200.139,0.008%200.278,-10e-4%200.415,-0.021%200.054,0.008%200.106,0.021%200.16,0.022%200.544,0.029%201.099,-0.162%201.515,-0.576%20L%2081.281,38.398%20c%200.785,-0.777%200.79,-2.043%200.012,-2.828%20-0.778,-0.785%20-2.044,-0.789%20-2.827,-0.011%20z'%20id='path1'%20/%3e&%2310;%3c/g%3e&%2310;%3c/svg%3e"></button>
                 <div class="left-rail-content">
 
                     <div class="search-bar"><span>Search:</span><input type="text" id="nations-search-filter"
@@ -31,7 +35,8 @@
 
                     <div class="tabs-wrapper">
                         <button class="tablinks active" onclick="switchTab(event, 'Nations')">Nations</button>
-                        <button class="tablinks" onclick="switchTab(event, 'Releasables')">Releasables</button>
+                        <button style="border-left: 1px solid black; border-right: 1px solid black;" class="tablinks"
+                            onclick="switchTab(event, 'Releasables')">Releasables</button>
                         <button class="tablinks" onclick="switchTab(event, 'Formables')">Formables</button>
                     </div>
 
@@ -55,48 +60,97 @@
                     </div>
                 </div>
             </aside>
+
             <div class="main-content">
-                <h1>Image Fetcher</h1>
-                <input type="text" id="userInput" placeholder="Enter something...">
-                <button onclick="fetchImage()">Get Image</button>
-                <div id="imageContainer">
+
+                <div class="nation-overview">
+                    <img id="nation-flag" src="/assets/Unknown%20Flag-Csi4Lygo.png">
+                    <input id="nation-name">
                 </div>
 
-                <div class="ideologies">
-                    <ul>
-                        <li>
-                            <button type="button" class="btn">Non-Aligned</button>
+                <div class="flag">
+                    <button class="collapse-flag-overview-button">
+                        <div class="flag-overview">
+                            <div class="flag-overview-left">
+                                <img id="nation-flag" src="/assets/Unknown%20Flag-Csi4Lygo.png">
+                                <p id="flag-name">Flag Name</p>
+                            </div>
+                            <div class="flag-overview-right">
+                                <div><span class="flag-overview-title">Flag ID: </span>1241345<span
+                                        class="flag-overview-content"></span></div>
+                                <div><span class="flag-overview-title">Flag ID: </span>1241345<span
+                                        class="flag-overview-content"></span></div>
+                                <div><span class="flag-overview-title">Flag ID: </span>1241345<span
+                                        class="flag-overview-content"></span></div>
+                            </div>
+                        </div>
+                    </button>
+                    <div class="flag-contents">
+
+                    <button class="delete-flag-button">Delete Flag</button>
+
+                        <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input"></div>
+                        <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input">
+                        </div>
+                        <div class="flag-label"><span class="flag-title">Description/Sources: </span><input
+                                class="flag-input"></div>
+                        <div class="ideologies">
                             <ul>
                                 <li>
-                                    <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                    <button type="button" class="btn">Non-Aligned</button>
                                     <ul>
-                                        <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button>
+                                        <li>
+                                            <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                            <ul>
+                                                <li><button style="color: #F37B7B;" type="button"
+                                                        class="btn">Communism</button>
+                                                </li>
+                                            </ul>
                                         </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
-                                    <ul>
-                                        <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button>
+                                        <li>
+                                            <button style="color: #B5B6F3;" type="button"
+                                                class="btn">Liberalism</button>
+                                            <ul>
+                                                <li><button style="color: #7B7BF3;" type="button"
+                                                        class="btn">Democracy</button>
+                                                </li>
+                                            </ul>
                                         </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
-                                    <ul>
-                                        <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button>
+                                        <li>
+                                            <button style="color: #B8B8B9;" type="button"
+                                                class="btn">Nationalism</button>
+                                            <ul>
+                                                <li><button style="color: #7B7B7B;" type="button"
+                                                        class="btn">Fascism</button>
+                                                </li>
+                                            </ul>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
-                        </li>
-                    </ul>
+                        </div>
+
+                        <div class="laws">
+                            <div class="laws-selection">
+                                <img src="https://media.tenor.com/3xTqDrUgvvIAAAAi/error-404.gif" alt="Loading..."
+                                    class="loading-gif">
+                            </div>
+                            <div class="laws-name"></div>
+                            <div class="laws-level"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="laws-selection">
-                    <img src="https://media.tenor.com/3xTqDrUgvvIAAAAi/error-404.gif" alt="Loading..."
-                        class="loading-gif">
+
+
+
+                <div class="new-flag-button"><button><svg>
+                            <line x1="16" y1="4" x2="16" y2="32" stroke="black" stroke-width="10"></line>
+                            <line y1="16" x2="32" y2="16" stroke="black" stroke-width="10"></line>
+                        </svg>
+                        Add New Flag</button>
                 </div>
-                <div class="laws-level"></div>
+
+                <div class="output">Output goes here<div class="output-text">Code Examplellllliiiii\t\t     t</div></div>
             </div>
 
             <footer>

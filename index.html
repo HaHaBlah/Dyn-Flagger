@@ -18,9 +18,13 @@
 
 <body>
     <div class="page-container">
+
         <header>Rise of Nations Dyn Flagger</header>
+
         <div class="rail-container">
+
             <aside class="left-rail">
+                <!-- <p>Select Nation</p> -->
                 <button class="left-rail-toggle"><img src="images/menu-arrow.svg"></button>
                 <div class="left-rail-content">
 
@@ -30,7 +34,8 @@
 
                     <div class="tabs-wrapper">
                         <button class="tablinks active" onclick="switchTab(event, 'Nations')">Nations</button>
-                        <button class="tablinks" onclick="switchTab(event, 'Releasables')">Releasables</button>
+                        <button style="border-left: 1px solid black; border-right: 1px solid black;" class="tablinks"
+                            onclick="switchTab(event, 'Releasables')">Releasables</button>
                         <button class="tablinks" onclick="switchTab(event, 'Formables')">Formables</button>
                     </div>
 
@@ -54,48 +59,97 @@
                     </div>
                 </div>
             </aside>
+
             <div class="main-content">
-                <h1>Image Fetcher</h1>
-                <input type="text" id="userInput" placeholder="Enter something...">
-                <button onclick="fetchImage()">Get Image</button>
-                <div id="imageContainer">
+
+                <div class="nation-overview">
+                    <img id="nation-flag" src="images/Unknown Flag.png">
+                    <input id="nation-name">
                 </div>
 
-                <div class="ideologies">
-                    <ul>
-                        <li>
-                            <button type="button" class="btn">Non-Aligned</button>
+                <div class="flag">
+                    <button class="collapse-flag-overview-button">
+                        <div class="flag-overview">
+                            <div class="flag-overview-left">
+                                <img id="nation-flag" src="images/Unknown Flag.png">
+                                <p id="flag-name">Flag Name</p>
+                            </div>
+                            <div class="flag-overview-right">
+                                <div><span class="flag-overview-title">Flag ID: </span>1241345<span
+                                        class="flag-overview-content"></span></div>
+                                <div><span class="flag-overview-title">Flag ID: </span>1241345<span
+                                        class="flag-overview-content"></span></div>
+                                <div><span class="flag-overview-title">Flag ID: </span>1241345<span
+                                        class="flag-overview-content"></span></div>
+                            </div>
+                        </div>
+                    </button>
+                    <div class="flag-contents">
+
+                    <button class="delete-flag-button">Delete Flag</button>
+
+                        <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input"></div>
+                        <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input">
+                        </div>
+                        <div class="flag-label"><span class="flag-title">Description/Sources: </span><input
+                                class="flag-input"></div>
+                        <div class="ideologies">
                             <ul>
                                 <li>
-                                    <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                    <button type="button" class="btn">Non-Aligned</button>
                                     <ul>
-                                        <li><button style="color: #F37B7B;" type="button" class="btn">Communism</button>
+                                        <li>
+                                            <button style="color: #F3B6B6;" type="button" class="btn">Socialism</button>
+                                            <ul>
+                                                <li><button style="color: #F37B7B;" type="button"
+                                                        class="btn">Communism</button>
+                                                </li>
+                                            </ul>
                                         </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <button style="color: #B5B6F3;" type="button" class="btn">Liberalism</button>
-                                    <ul>
-                                        <li><button style="color: #7B7BF3;" type="button" class="btn">Democracy</button>
+                                        <li>
+                                            <button style="color: #B5B6F3;" type="button"
+                                                class="btn">Liberalism</button>
+                                            <ul>
+                                                <li><button style="color: #7B7BF3;" type="button"
+                                                        class="btn">Democracy</button>
+                                                </li>
+                                            </ul>
                                         </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <button style="color: #B8B8B9;" type="button" class="btn">Nationalism</button>
-                                    <ul>
-                                        <li><button style="color: #7B7B7B;" type="button" class="btn">Fascism</button>
+                                        <li>
+                                            <button style="color: #B8B8B9;" type="button"
+                                                class="btn">Nationalism</button>
+                                            <ul>
+                                                <li><button style="color: #7B7B7B;" type="button"
+                                                        class="btn">Fascism</button>
+                                                </li>
+                                            </ul>
                                         </li>
                                     </ul>
                                 </li>
                             </ul>
-                        </li>
-                    </ul>
+                        </div>
+
+                        <div class="laws">
+                            <div class="laws-selection">
+                                <img src="https://media.tenor.com/3xTqDrUgvvIAAAAi/error-404.gif" alt="Loading..."
+                                    class="loading-gif">
+                            </div>
+                            <div class="laws-name"></div>
+                            <div class="laws-level"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="laws-selection">
-                    <img src="https://media.tenor.com/3xTqDrUgvvIAAAAi/error-404.gif" alt="Loading..."
-                        class="loading-gif">
+
+
+
+                <div class="new-flag-button"><button><svg>
+                            <line x1="16" y1="4" x2="16" y2="32" stroke="black" stroke-width="10"></line>
+                            <line y1="16" x2="32" y2="16" stroke="black" stroke-width="10"></line>
+                        </svg>
+                        Add New Flag</button>
                 </div>
-                <div class="laws-level"></div>
+
+                <div class="output">Output goes here<div class="output-text">Code Examplellllliiiii\t\t     t</div></div>
             </div>
 
             <footer>

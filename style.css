@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap'); */
 
 :root {
     --ideology-tree-size: 7px;
@@ -6,6 +7,8 @@
     --button-hover-color: #0E1115;
     --button-active-color: #5B5E61;
     --background-color: #2c353d;
+    --background-secondary-color: #272F38;
+    --input-color: #15191E;
 }
 
 a {
@@ -17,9 +20,14 @@ a:hover {
 }
 
 body {
-    font-family: "Source Sans 3", sans-serif;
     color: white;
     background-image: url(images/AllFlags.jpg);
+    margin: 0;
+}
+
+* {
+    font-family: "Source Sans 3", sans-serif;
+    box-sizing: border-box;
 }
 
 button {
@@ -151,7 +159,7 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-    background: #272F38;
+    background: var(--background-secondary-color);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -168,7 +176,8 @@ button {
 
 /*Rails, basically the country selection on the left*/
 .page-container {
-    min-width: auto;
+    padding: 12px clamp(12px, 4.2vw, 48px);
+
 }
 
 .rail-container {
@@ -193,7 +202,7 @@ footer {
     text-align: center;
     font-size: 0.875rem;
     color: #888;
-    background-color: var(--background-color);
+    background-color: var(--background-secondary-color);
 }
 
 footer a {
@@ -210,7 +219,7 @@ header {
     margin-bottom: 24px;
     padding-bottom: 12px;
     border-bottom: 1px solid var(--button-color);
-    background-color: var(--background-color);
+    background-color: var(--background-secondary-color);
     font-size: clamp(12px, 4.2vw, 48px);
 }
 
@@ -218,17 +227,21 @@ header {
     grid-area: pageContent;
     width: 100%;
     height: 100%;
-    background-color: var(--background-color);
+    background-color: var(--background-secondary-color);
 }
 
 .left-rail {
     position: relative;
     width: fit-content;
     min-width: min-content;
-    padding: 0 18px;
     grid-area: leftRail;
     overflow-anchor: none;
     transition: width 0.3s, padding 0.3s;
+    background-color: var(--background-color);
+}
+
+.left-rail-content *::-webkit-scrollbar-track {
+    background: var(--background-color);
 }
 
 .left-rail.is-hidden {
@@ -257,7 +270,7 @@ header {
     justify-content: flex-start;
     padding: 0 0 0 12px;
     position: absolute;
-    right: 0;
+    right: 100%;
     top: 0px;
     transition: width .3s;
     width: 26px;
@@ -298,10 +311,6 @@ header {
     text-align: center;
 }
 
-/* .search-bar input::placeholder {
-    text-align: center;
-} */
-
 /*tabs*/
 .tabs-wrapper {
     overflow: hidden;
@@ -313,7 +322,7 @@ header {
     background-color: #2c353d;
     color: white;
     float: left;
-    border-right: 1px solid var(--button-color);
+    /* border-right: 1px solid var(--button-color); */
     outline: none;
     padding: 14px 16px;
     font-size: 17px;
@@ -338,7 +347,7 @@ header {
     padding: 6px;
     padding-right: 10px;
     border-top: none;
-    overflow-y: auto;
+    overflow-y: scroll;
     max-height: calc(90vh - 3.125rem - (24px * 2));
 }
 
@@ -414,4 +423,84 @@ header {
     flex: 1;
     margin: 5px;
     white-space: nowrap;
+}
+
+/* Nation Overview */
+.nation-overview {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 12px;
+}
+
+.nation-overview #nation-flag {
+    min-width: 200px;
+    width: 15vw;
+    height: auto;
+}
+
+input {
+    background-color: var(--button-color);
+    border: none;
+    color: white;
+    outline: none;
+}
+
+/* Flag Overview */
+.flag { 
+    border: 6px solid var(--button-color);
+    margin: 20px;
+    border-collapse: collapse;
+    transition: 0.3s;
+    background-color: var(--background-color);
+}
+
+.collapse-flag-overview-button {
+    width: 100%;
+    padding: 0;
+    color: white;
+    font: inherit;
+}
+.flag-overview {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px;
+    background-color: var(--button-color);
+    /* justify-content: space-between; */
+    /* border-bottom: 2px solid var(--button-color); */
+}
+
+.flag-overview-left {
+    align-items: center;
+    text-align: center;
+}
+
+.flag-overview-left img {
+    width: 150px;
+    height: auto;
+}
+
+.flag-overview-left p{
+    margin: 0;
+}
+
+.flag-overview-right {
+    padding-left: 20px;
+    justify-content: center;
+}
+
+/* Flag Contents */
+.flag-contents {
+    padding: 10px;
+    justify-content: center;
+    border-top: 6px solid var(--button-color);
+}
+
+.flag-contents.ishidden {
+    display: none;
+}
+
+/* Code Output */
+.output-text{
+    font-family: "Roboto Mono", monospace;
 }
