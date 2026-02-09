@@ -166,18 +166,26 @@ export function nationsSearchFilter() {
     }
 }
 
-async function generateLawsList(subsection) {
-    //const lawsSelection = subsection.getElementsByClassName("laws-selection");
+async function generateLawsList(flagDiv) {
+    // Wait for data if not loaded yet
     if (!Lawnames?.lawNames && dataLoadedPromise) {
         await dataLoadedPromise;
     }
-    const lawsSelection = document.querySelector(".laws-selection");
+
+    // If no flagDiv provided, return early
+    if (!flagDiv) {
+        console.error("No flag div provided to generateLawsList");
+        return;
+    }
+
+    // Get the laws-selection element within this specific flag div
+    const lawsSelection = flagDiv.querySelector(".laws-selection");
 
     console.log(lawsSelection);
 
     // Check if element exists
     if (!lawsSelection) {
-        console.error("Element with class 'laws-selection' not found");
+        console.error("Element with class 'laws-selection' not found in flag div");
         return;
     }
 
@@ -255,11 +263,31 @@ function updateDisplay() {
     });
 }
 
+function updateFlagOverview(flagDiv, index) {
+    const flagData = flagSpecifications.Flags[index];
+
+    // Update the overview section without recreating the entire element
+    const flagNameElement = flagDiv.querySelector(".flag-overview-left #flag-name");
+    if (flagNameElement) {
+        flagNameElement.textContent = flagData.FlagName || 'Flag Name';
+    }
+
+    const overviewRightDivs = flagDiv.querySelectorAll(".flag-overview-right > div");
+    if (overviewRightDivs.length >= 3) {
+        // Update Flag ID
+        overviewRightDivs[0].innerHTML = `<span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span>`;
+        // Update Ideologies count
+        overviewRightDivs[1].innerHTML = `<span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.length}<span class="flag-overview-content"></span>`;
+        // Update Laws count
+        overviewRightDivs[2].innerHTML = `<span class="flag-overview-title">Laws: </span>${Object.keys(flagData.Laws).length}<span class="flag-overview-content"></span>`;
+    }
+}
+
 function createFlagElement(flagData, index) {
     const flagDiv = document.createElement("div");
     flagDiv.classList.add("flag");
     flagDiv.dataset.flagIndex = index;
-    
+
     flagDiv.innerHTML = `
         <button class="collapse-flag-overview-button">
             <div class="flag-overview">
@@ -318,33 +346,34 @@ function createFlagElement(flagData, index) {
             </div>
         </div>
     `;
-    
+
     // Add event listener for delete button
     const deleteButton = flagDiv.querySelector(".delete-flag-button");
     deleteButton.addEventListener("click", () => {
         removeFlag(index);
         updateDisplay();
     });
-    
+
     // Add event listeners for input fields to update flagSpecifications
     const nameInput = flagDiv.querySelector(".flag-name-input");
     nameInput.addEventListener("input", (e) => {
         flagSpecifications.Flags[index].FlagName = e.target.value;
-        updateDisplay();
+        updateFlagOverview(flagDiv, index);
     });
-    
+
     const imageInput = flagDiv.querySelector(".flag-image-input");
     imageInput.addEventListener("input", (e) => {
         flagSpecifications.Flags[index].FlagID = e.target.value;
-        updateDisplay();
+        updateFlagOverview(flagDiv, index);
     });
-    
+
     const descInput = flagDiv.querySelector(".flag-description-input");
     descInput.addEventListener("input", (e) => {
         flagSpecifications.Flags[index].Description = e.target.value;
-        updateDisplay();
     });
-    
+
+    generateLawsList(flagDiv);
+
     return flagDiv;
 }
 
@@ -372,6 +401,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load data when page loads
 loadFandomData();
+addFlag();
+updateDisplay();
 
 // Global scopes for inline onclick handlers
 window.switchTab = switchTab;
