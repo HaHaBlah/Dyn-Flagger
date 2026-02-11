@@ -140,16 +140,9 @@ button {
 
 .btn-half-allowed {
     border-top-color: green;
-    border-bottom-color: green;
-    border-left-color: #7C6938;
-    border-right-color: #7C6938;
-}
-
-.btn-half-not-allowed {
-    border-top-color: red;
+    border-left-color: green;
     border-bottom-color: red;
-    border-left-color: #7C6938;
-    border-right-color: #7C6938;
+    border-right-color: red;
 }
 
 /* SCROLLBAR */

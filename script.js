@@ -1,6 +1,7 @@
 let Lawnames, Flagdata, Nationdata, Tagdata;
 let dataLoadedPromise = null; // Promise to track when data is loaded
 import { getFandomImageUrl } from './fandomProcessor.js';
+import unknownFlag from './images/Unknown Flag.png';
 
 /** 
 * Fetch processed fandom data from server
@@ -260,7 +261,7 @@ function updateDisplay() {
     // Update or create flags
     flagSpecifications.Flags.forEach((flagData, index) => {
         const existingFlag = existingFlags[index];
-        
+
         if (existingFlag) {
             // Update existing flag
             updateFlagElement(existingFlag, flagData, index);
@@ -294,19 +295,61 @@ function updateFlagElement(flagDiv, flagData, index) {
 
     // Update ideology button states
     const ideologyButtons = flagDiv.querySelectorAll(".ideologies button");
+    const hasIdeologies = flagData.Ideologies.length > 0;
+
     ideologyButtons.forEach(button => {
         const ideology = button.textContent;
-        const isSelected = flagData.Ideologies.includes(ideology);
-        const isNotSelected = flagData.NOTIdeologies.includes(ideology);
-        
-        button.classList.toggle("selected-ideology", isSelected);
-        button.classList.toggle("not-selected-ideology", isNotSelected);
+        const isInIdeologies = flagData.Ideologies.includes(ideology);
+
+        // Remove all classes first
+        button.classList.remove("btn-allowed", "btn-not-allowed");
+
+        // Add appropriate class only if Ideologies array is not empty
+        if (hasIdeologies) {
+            if (isInIdeologies) {
+                button.classList.add("btn-allowed");
+            } else {
+                button.classList.add("btn-not-allowed");
+            }
+        }
     });
+
+    // Update laws-selection button states
+    updateLawsSelectionButtons(flagDiv, flagData);
 
     // Update overview
     updateFlagOverview(flagDiv, index);
 }
 
+function updateLawsSelectionButtons(flagDiv, flagData) {
+    const lawsSelectionButtons = flagDiv.querySelectorAll(".laws-selection button");
+
+    lawsSelectionButtons.forEach(button => {
+        const lawName = button.textContent;
+        const lawCode = getLawCodeFromName(lawName);
+
+        if (!lawCode) return;
+
+        const lawsArray = flagData.Laws[lawCode];
+        const notLawsArray = flagData.NOTLaws[lawCode];
+
+        const hasLaws = Array.isArray(lawsArray) && lawsArray.length > 0;
+        const hasNotLaws = Array.isArray(notLawsArray) && notLawsArray.length > 0;
+
+        // Remove all classes first
+        button.classList.remove("btn-allowed", "btn-not-allowed", "btn-half-allowed");
+
+        // Apply appropriate class
+        if (hasLaws && hasNotLaws) {
+            button.classList.add("btn-half-allowed");
+        } else if (hasLaws) {
+            button.classList.add("btn-allowed");
+        } else if (hasNotLaws) {
+            button.classList.add("btn-not-allowed");
+        }
+        // If neither, no class is added
+    });
+}
 
 function updateFlagOverview(flagDiv, index) {
     const flagData = flagSpecifications.Flags[index];
@@ -380,7 +423,7 @@ function createFlagElement(flagData, index) {
         <button class="collapse-flag-overview-button">
             <div class="flag-overview">
                 <div class="flag-overview-left">
-                    <img id="nation-flag" src="images/Unknown Flag.png">
+                    <img id="nation-flag" src="${unknownFlag}">
                     <p id="flag-name">${flagData.FlagName || 'Flag Name'}</p>
                 </div>
                 <div class="flag-overview-right">
@@ -472,17 +515,17 @@ function createFlagElement(flagData, index) {
             if (ideologies.includes(ideology)) {
                 // Remove from Ideologies
                 flagSpecifications.Flags[index].Ideologies = ideologies.filter(i => i !== ideology);
-                e.target.classList.remove("selected-ideology");
+                e.target.classList.remove("btn-allowed");
             } else if (notIdeologies.includes(ideology)) {
                 // Remove from NOTIdeologies
                 flagSpecifications.Flags[index].NOTIdeologies = notIdeologies.filter(i => i !== ideology);
-                e.target.classList.remove("not-selected-ideology");
+                e.target.classList.remove("btn-not-allowed");
             } else {
                 // Add to Ideologies
                 flagSpecifications.Flags[index].Ideologies.push(ideology);
-                e.target.classList.add("selected-ideology");
+                e.target.classList.add("btn-allowed");
             }
-            updateFlagOverview(flagDiv, index);
+            updateFlagElement(flagDiv, flagSpecifications.Flags[index], index);
         }
     });
 
@@ -519,18 +562,11 @@ function generateLawsLevels(flagDiv, LawText) {
         button.classList.add("btn");
         button.textContent = levelText;
 
-        // Check if this level is already selected in Laws or NOTLaws
-        const laws = flagSpecifications.Flags[flagIndex].Laws[LawCode];
-        const notLaws = flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
-
-        if (Array.isArray(laws) && laws.includes(levelKey)) {
-            button.classList.add("selected-law");
-        } else if (Array.isArray(notLaws) && notLaws.includes(levelKey)) {
-            button.classList.add("not-selected-law");
-        }
-
         newLawsLevelsDiv.appendChild(button);
     }
+
+    // Update button states based on Laws/NOTLaws
+    updateLawsLevelButtons(newLawsLevelsDiv, flagIndex, LawCode);
 
     // Add single event listener to the new element
     newLawsLevelsDiv.addEventListener("click", (e) => {
@@ -555,17 +591,13 @@ function generateLawsLevels(flagDiv, LawText) {
                 const index = lawArray.indexOf(levelKey);
                 lawArray.splice(index, 1);
                 notLawArray.push(levelKey);
-                e.target.classList.remove("selected-law");
-                e.target.classList.add("not-selected-law");
             } else if (notLawArray.includes(levelKey)) {
                 // Remove from NOTLaws (back to unselected)
                 const index = notLawArray.indexOf(levelKey);
                 notLawArray.splice(index, 1);
-                e.target.classList.remove("not-selected-law");
             } else {
                 // Add to Laws
                 lawArray.push(levelKey);
-                e.target.classList.add("selected-law");
             }
 
             // Clean up empty arrays
@@ -578,8 +610,44 @@ function generateLawsLevels(flagDiv, LawText) {
                 delete flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
             }
 
+            // Update button states
+            updateLawsLevelButtons(newLawsLevelsDiv, flagIndex, LawCode);
+
+            // Update laws-selection buttons
+            updateLawsSelectionButtons(flagDiv, flagSpecifications.Flags[flagIndex]);
+
             updateFlagOverview(flagDiv, flagIndex);
         }
+    });
+}
+
+function updateLawsLevelButtons(lawsLevelsDiv, flagIndex, LawCode) {
+    const buttons = lawsLevelsDiv.querySelectorAll("button");
+    const lawsArray = flagSpecifications.Flags[flagIndex].Laws[LawCode];
+    const notLawsArray = flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
+
+    const hasLaws = Array.isArray(lawsArray) && lawsArray.length > 0;
+    const hasNotLaws = Array.isArray(notLawsArray) && notLawsArray.length > 0;
+
+    buttons.forEach(button => {
+        const levelText = button.textContent;
+        const levelKey = translateLawTexttoLevel(Lawnames.lawNames[LawCode].Name, levelText);
+
+        // Remove all classes first
+        button.classList.remove("btn-allowed", "btn-not-allowed");
+
+        if (hasLaws) {
+            // If Laws array has items
+            if (lawsArray.includes(levelKey)) {
+                button.classList.add("btn-allowed");
+            } else {
+                button.classList.add("btn-not-allowed");
+            }
+        } else if (hasNotLaws && notLawsArray.includes(levelKey)) {
+            // If Laws array is empty and this button is in NOTLaws
+            button.classList.add("btn-not-allowed");
+        }
+        // Otherwise, no class is added
     });
 }
 
@@ -629,14 +697,22 @@ function getLawCodeFromName(lawName) {
     return null;
 }
 
-// Initialize event listeners after DOM is loaded
+//Buttons and inputs that already exist on page load
 document.addEventListener('DOMContentLoaded', () => {
-    // Add event listener for new flag button
+    //new flag button
     const newFlagButton = document.querySelector(".new-flag-button button");
     if (newFlagButton) {
         newFlagButton.addEventListener("click", () => {
             addFlag();
             updateDisplay();
+        });
+    }
+
+    //nation name input
+    const nationNameInput = document.querySelector("#nation-name");
+    if (nationNameInput) {
+        nationNameInput.addEventListener("input", (e) => {
+            flagSpecifications.NationName = e.target.value;
         });
     }
 });
