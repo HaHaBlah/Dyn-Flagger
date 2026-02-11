@@ -19,19 +19,12 @@ async function loadFandomData() {
             Nationdata = fandomModules.Nationdata;
             Tagdata = fandomModules.Tagdata;
 
-            console.log('✅ Data loaded successfully!');
             console.log(Lawnames);
             console.log(Flagdata);
             console.log(Nationdata);
             console.log(Tagdata);
 
-            if (Lawnames?.lawNames?.Elective_Assembly?.Name) {
-                const Conscription = Lawnames.lawNames.Elective_Assembly.Name;
-                console.log(Conscription);
-            }
-
             // Call both functions after data is loaded
-            await generateLawsList();
             await generateNationsList();
 
         } catch (error) {
@@ -220,15 +213,20 @@ let flagSpecifications = {
     Flags: []
 };
 
+/**
+ * Defines a new flag with default or provided values and adds it to flagSpecifications.Flags
+ * @param {*} flagData 
+ * @returns 
+ */
 function addFlag(flagData = {}) {
     const newFlag = {
         FlagName: flagData.FlagName || "",
-        FlagID: flagData.FlagID || flagSpecifications.Flags.length,
+        FlagID: flagData.FlagID || "",
         Description: flagData.Description || "",
         Ideologies: flagData.Ideologies || [],
-        Laws: flagData.Laws || {}, // Changed to object
+        Laws: flagData.Laws || {},
         NOTIdeologies: flagData.NOTIdeologies || [],
-        NOTLaws: flagData.NOTLaws || {} // Changed to object
+        NOTLaws: flagData.NOTLaws || {}
     };
     flagSpecifications.Flags.push(newFlag);
     return newFlag;
@@ -273,13 +271,57 @@ function updateFlagOverview(flagDiv, index) {
     }
 
     const overviewRightDivs = flagDiv.querySelectorAll(".flag-overview-right > div");
-    if (overviewRightDivs.length >= 3) {
-        // Update Flag ID
+    if (overviewRightDivs.length >= 5) {
+
+        // Laws
+        let lawsHTML = '<span class="flag-overview-title">Laws: </span>';
+        const lawEntries = [];
+
+        for (let lawCode in flagData.Laws) {
+            const lawName = getLawNameFromCode(lawCode);
+            const selectedLevels = flagData.Laws[lawCode];
+
+            if (Array.isArray(selectedLevels) && selectedLevels.length > 0) {
+                const levelTexts = selectedLevels.map(levelKey =>
+                    translateLawLeveltoText(lawCode, levelKey)
+                );
+                lawEntries.push(`${lawName}: ${levelTexts.join(', ')}`);
+            }
+        }
+        lawsHTML += lawEntries.length > 0 ? '<br>' + lawEntries.join('<br>') : 'None';
+
+
+        // NOTLaws 
+        let notLawsHTML = '<span class="flag-overview-title">NOT Laws: </span>';
+        const notLawEntries = [];
+
+        for (let lawCode in flagData.NOTLaws) {
+            const lawName = getLawNameFromCode(lawCode);
+            const notSelectedLevels = flagData.NOTLaws[lawCode];
+
+            if (Array.isArray(notSelectedLevels) && notSelectedLevels.length > 0) {
+                const levelTexts = notSelectedLevels.map(levelKey =>
+                    translateLawLeveltoText(lawCode, levelKey)
+                );
+                notLawEntries.push(`${lawName}: ${levelTexts.join(', ')}`);
+            }
+        }
+        notLawsHTML += notLawEntries.length > 0 ? '<br>' + notLawEntries.join('<br>') : 'None';
+
+        //Flag ID
         overviewRightDivs[0].innerHTML = `<span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span>`;
-        // Update Ideologies count
-        overviewRightDivs[1].innerHTML = `<span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.length}<span class="flag-overview-content"></span>`;
-        // Update Laws count
-        overviewRightDivs[2].innerHTML = `<span class="flag-overview-title">Laws: </span>${Object.keys(flagData.Laws).length}<span class="flag-overview-content"></span>`;
+
+        //Ideologies
+        overviewRightDivs[1].innerHTML = `<span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.join(', ')}<span class="flag-overview-content"></span>`;
+
+        //Laws
+        overviewRightDivs[2].innerHTML = lawsHTML + '<span class="flag-overview-content"></span>';
+
+        //NOTLaws
+        overviewRightDivs[3].innerHTML = notLawsHTML + '<span class="flag-overview-content"></span>';
+
+        //Description
+        overviewRightDivs[4].innerHTML = `<span class="flag-overview-title">Description: </span>${flagData.Description}<span class="flag-overview-content"></span>`;
     }
 }
 
@@ -297,8 +339,10 @@ function createFlagElement(flagData, index) {
                 </div>
                 <div class="flag-overview-right">
                     <div><span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span></div>
-                    <div><span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.length}<span class="flag-overview-content"></span></div>
-                    <div><span class="flag-overview-title">Laws: </span>${Object.keys(flagData.Laws).length}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title">Laws: </span>${Object.keys(flagData.Laws)}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title">NOT Laws: </span>${Object.keys(flagData.NOTLaws)}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title">Description: </span>${flagData.Description}<span class="flag-overview-content"></span></div>
                 </div>
             </div>
         </button>
@@ -370,11 +414,127 @@ function createFlagElement(flagData, index) {
     const descInput = flagDiv.querySelector(".flag-description-input");
     descInput.addEventListener("input", (e) => {
         flagSpecifications.Flags[index].Description = e.target.value;
+        updateFlagOverview(flagDiv, index);
+    });
+
+    const ideologiesDiv = flagDiv.querySelector(".ideologies");
+    ideologiesDiv.addEventListener("click", (e) => {
+        if (e.target && e.target.tagName === "BUTTON") {
+            const ideology = e.target.textContent;
+            const ideologies = flagSpecifications.Flags[index].Ideologies;
+            const notIdeologies = flagSpecifications.Flags[index].NOTIdeologies;
+            if (ideologies.includes(ideology)) {
+                // Remove from Ideologies
+                flagSpecifications.Flags[index].Ideologies = ideologies.filter(i => i !== ideology);
+                e.target.classList.remove("selected-ideology");
+            } else if (notIdeologies.includes(ideology)) {
+                // Remove from NOTIdeologies
+                flagSpecifications.Flags[index].NOTIdeologies = notIdeologies.filter(i => i !== ideology);
+                e.target.classList.remove("not-selected-ideology");
+            } else {
+                // Add to Ideologies
+                flagSpecifications.Flags[index].Ideologies.push(ideology);
+                e.target.classList.add("selected-ideology");
+            }
+            updateFlagOverview(flagDiv, index);
+        }
+    });
+
+    const lawsSelectionDiv = flagDiv.querySelector(".laws-selection");
+    lawsSelectionDiv.addEventListener("click", (e) => {
+        if (e.target && e.target.tagName === "BUTTON") {
+            const lawName = e.target.textContent;
+            generateLawsLevels(flagDiv, lawName);
+        }
     });
 
     generateLawsList(flagDiv);
 
     return flagDiv;
+}
+
+function generateLawsLevels(flagDiv, LawText) {
+    const lawsNameDiv = flagDiv.querySelector(".laws-name");
+    const lawsLevelsDiv = flagDiv.querySelector(".laws-level");
+
+    const LawCode = getLawCodeFromName(LawText);
+    lawsNameDiv.innerHTML = LawText;
+
+    // Clear existing content AND remove old event listeners by cloning
+    const newLawsLevelsDiv = lawsLevelsDiv.cloneNode(false);
+    lawsLevelsDiv.parentNode.replaceChild(newLawsLevelsDiv, lawsLevelsDiv);
+
+    const flagIndex = parseInt(flagDiv.dataset.flagIndex, 10);
+
+    // Create buttons and set their initial state
+    for (let levelKey in Lawnames.lawNames[LawCode].Types) {
+        const levelText = Lawnames.lawNames[LawCode].Types[levelKey];
+        const button = document.createElement("button");
+        button.classList.add("btn");
+        button.textContent = levelText;
+
+        // Check if this level is already selected in Laws or NOTLaws
+        const laws = flagSpecifications.Flags[flagIndex].Laws[LawCode];
+        const notLaws = flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
+
+        if (Array.isArray(laws) && laws.includes(levelKey)) {
+            button.classList.add("selected-law");
+        } else if (Array.isArray(notLaws) && notLaws.includes(levelKey)) {
+            button.classList.add("not-selected-law");
+        }
+
+        newLawsLevelsDiv.appendChild(button);
+    }
+
+    // Add single event listener to the new element
+    newLawsLevelsDiv.addEventListener("click", (e) => {
+        if (e.target && e.target.tagName === "BUTTON") {
+            const levelText = e.target.textContent;
+            const levelKey = translateLawTexttoLevel(LawText, levelText);
+
+            // Initialize as arrays if they don't exist
+            if (!flagSpecifications.Flags[flagIndex].Laws[LawCode]) {
+                flagSpecifications.Flags[flagIndex].Laws[LawCode] = [];
+            }
+            if (!flagSpecifications.Flags[flagIndex].NOTLaws[LawCode]) {
+                flagSpecifications.Flags[flagIndex].NOTLaws[LawCode] = [];
+            }
+
+            const lawArray = flagSpecifications.Flags[flagIndex].Laws[LawCode];
+            const notLawArray = flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
+
+            // Three-state toggle: unselected -> Laws -> NOTLaws -> unselected
+            if (lawArray.includes(levelKey)) {
+                // Move from Laws to NOTLaws
+                const index = lawArray.indexOf(levelKey);
+                lawArray.splice(index, 1);
+                notLawArray.push(levelKey);
+                e.target.classList.remove("selected-law");
+                e.target.classList.add("not-selected-law");
+            } else if (notLawArray.includes(levelKey)) {
+                // Remove from NOTLaws (back to unselected)
+                const index = notLawArray.indexOf(levelKey);
+                notLawArray.splice(index, 1);
+                e.target.classList.remove("not-selected-law");
+            } else {
+                // Add to Laws
+                lawArray.push(levelKey);
+                e.target.classList.add("selected-law");
+            }
+
+            // Clean up empty arrays
+            if (lawArray.length === 0 && notLawArray.length === 0) {
+                delete flagSpecifications.Flags[flagIndex].Laws[LawCode];
+                delete flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
+            } else if (lawArray.length === 0) {
+                delete flagSpecifications.Flags[flagIndex].Laws[LawCode];
+            } else if (notLawArray.length === 0) {
+                delete flagSpecifications.Flags[flagIndex].NOTLaws[LawCode];
+            }
+
+            updateFlagOverview(flagDiv, flagIndex);
+        }
+    });
 }
 
 /**
@@ -385,7 +545,43 @@ function onNationsListButtonClick(countryName) {
     updateDisplay();
 }
 
-function translateLawLevelstoText(law, level) { }
+function translateLawLeveltoText(lawcode, level) {
+    if (Lawnames.lawNames[lawcode]) {
+        const lawLevels = Lawnames.lawNames[lawcode].Types;
+        return lawLevels[level];
+    }
+    return "Law Not Found";
+}
+
+function translateLawTexttoLevel(lawText, levelText) {
+    for (let lawKey in Lawnames.lawNames) {
+        if (Lawnames.lawNames[lawKey].Name === lawText) {
+            const lawLevels = Lawnames.lawNames[lawKey].Types;
+            for (let levelKey in lawLevels) {
+                if (lawLevels[levelKey] === levelText) {
+                    return levelKey;
+                }
+            }
+        }
+    }
+    console.log("Law Not Found for", lawText, levelText);
+    return "Law Not Found";
+}
+
+function getLawNameFromCode(lawCode) {
+    if (Lawnames.lawNames[lawCode]) {
+        return Lawnames.lawNames[lawCode].Name;
+    }
+}
+
+function getLawCodeFromName(lawName) {
+    for (let lawKey in Lawnames.lawNames) {
+        if (Lawnames.lawNames[lawKey].Name === lawName) {
+            return lawKey;
+        }
+    }
+    return null;
+}
 
 // Initialize event listeners after DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {

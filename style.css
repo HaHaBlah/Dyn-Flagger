@@ -348,7 +348,7 @@ header {
     padding-right: 10px;
     border-top: none;
     overflow-y: scroll;
-    max-height: calc(90vh - 3.125rem - (24px * 2));
+    max-height: 900px;
 }
 
 .tabcontent-hidden {
@@ -421,7 +421,25 @@ header {
 
 .laws-selection .btn {
     flex: 1;
-    margin: 5px;
+    margin: 2.5px;
+    white-space: nowrap;
+}
+
+.laws-name{
+    font-weight: bold;
+    margin-bottom: 4px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.laws-level{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.laws-level .btn {
+    flex: 1;
+    margin: 2.5px;
     white-space: nowrap;
 }
 
@@ -487,6 +505,7 @@ input {
 .flag-overview-right {
     padding-left: 20px;
     justify-content: center;
+    text-align: left;
 }
 
 /* Flag Contents */
