@@ -31,7 +31,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 // ../node_modules/luaparse/luaparse.js
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_4872618833864857();
+    init_functionsRoutes_0_38040947253402013();
     (function(root, name, factory) {
       "use strict";
       var objectTypes = {
@@ -2182,7 +2182,7 @@ async function extractDataFromAST(ast) {
 var import_luaparse, fandomModules2;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_4872618833864857();
+    init_functionsRoutes_0_38040947253402013();
     import_luaparse = __toESM(require_luaparse());
     fandomModules2 = {
       Lawnames: "Lawnames",
@@ -2231,7 +2231,7 @@ async function onRequest(context) {
 var cachedFandomData, cacheTime, CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_4872618833864857();
+    init_functionsRoutes_0_38040947253402013();
     init_fandomProcessor();
     cachedFandomData = null;
     cacheTime = null;
@@ -2310,7 +2310,7 @@ async function onRequest2(context) {
 }
 var init_fandom_image = __esm({
   "api/fandom-image.js"() {
-    init_functionsRoutes_0_4872618833864857();
+    init_functionsRoutes_0_38040947253402013();
     __name(onRequest2, "onRequest");
   }
 });
@@ -2370,15 +2370,15 @@ async function onRequest3(context) {
 }
 var init_fandom_module = __esm({
   "api/fandom-module.js"() {
-    init_functionsRoutes_0_4872618833864857();
+    init_functionsRoutes_0_38040947253402013();
     __name(onRequest3, "onRequest");
   }
 });
 
-// ../.wrangler/tmp/pages-uUYZbT/functionsRoutes-0.4872618833864857.mjs
+// ../.wrangler/tmp/pages-MpOrIW/functionsRoutes-0.38040947253402013.mjs
 var routes;
-var init_functionsRoutes_0_4872618833864857 = __esm({
-  "../.wrangler/tmp/pages-uUYZbT/functionsRoutes-0.4872618833864857.mjs"() {
+var init_functionsRoutes_0_38040947253402013 = __esm({
+  "../.wrangler/tmp/pages-MpOrIW/functionsRoutes-0.38040947253402013.mjs"() {
     init_fandom_data();
     init_fandom_image();
     init_fandom_module();
@@ -2408,17 +2408,17 @@ var init_functionsRoutes_0_4872618833864857 = __esm({
   }
 });
 
-// ../.wrangler/tmp/bundle-tiCtJj/middleware-loader.entry.ts
-init_functionsRoutes_0_4872618833864857();
+// ../.wrangler/tmp/bundle-J9dWh3/middleware-loader.entry.ts
+init_functionsRoutes_0_38040947253402013();
 
-// ../.wrangler/tmp/bundle-tiCtJj/middleware-insertion-facade.js
-init_functionsRoutes_0_4872618833864857();
+// ../.wrangler/tmp/bundle-J9dWh3/middleware-insertion-facade.js
+init_functionsRoutes_0_38040947253402013();
 
 // ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_4872618833864857();
+init_functionsRoutes_0_38040947253402013();
 
 // ../node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_4872618833864857();
+init_functionsRoutes_0_38040947253402013();
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -2865,7 +2865,7 @@ var cloneResponse = /* @__PURE__ */ __name((response) => (
 ), "cloneResponse");
 
 // ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-init_functionsRoutes_0_4872618833864857();
+init_functionsRoutes_0_38040947253402013();
 var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
@@ -2884,7 +2884,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 var middleware_ensure_req_body_drained_default = drainBody;
 
 // ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
-init_functionsRoutes_0_4872618833864857();
+init_functionsRoutes_0_38040947253402013();
 function reduceError(e) {
   return {
     name: e?.name,
@@ -2907,7 +2907,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-tiCtJj/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-J9dWh3/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -2915,7 +2915,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
 var middleware_insertion_facade_default = pages_template_worker_default;
 
 // ../node_modules/wrangler/templates/middleware/common.ts
-init_functionsRoutes_0_4872618833864857();
+init_functionsRoutes_0_38040947253402013();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -2940,7 +2940,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-tiCtJj/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-J9dWh3/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -3040,4 +3040,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
-//# sourceMappingURL=functionsWorker-0.6381790063842914.mjs.map
+//# sourceMappingURL=functionsWorker-0.08318431421207917.mjs.map

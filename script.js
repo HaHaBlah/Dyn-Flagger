@@ -248,23 +248,69 @@ function updateDisplay() {
     // Get the container where flags should be inserted
     const mainContent = document.querySelector(".main-content");
     const newFlagButton = document.querySelector(".new-flag-button");
-
-    // Remove all existing flag divs
     const existingFlags = document.querySelectorAll(".flag");
-    existingFlags.forEach(flag => flag.remove());
 
-    // Create a flag div for each flag in flagSpecifications.Flags
-    flagSpecifications.Flags.forEach((flag, index) => {
-        const flagDiv = createFlagElement(flag, index);
-        // Insert before the new-flag-button
-        mainContent.insertBefore(flagDiv, newFlagButton);
+    // Remove flags that shouldn't exist anymore
+    existingFlags.forEach((flagDiv, domIndex) => {
+        if (domIndex >= flagSpecifications.Flags.length) {
+            flagDiv.remove();
+        }
+    });
+
+    // Update or create flags
+    flagSpecifications.Flags.forEach((flagData, index) => {
+        const existingFlag = existingFlags[index];
+        
+        if (existingFlag) {
+            // Update existing flag
+            updateFlagElement(existingFlag, flagData, index);
+        } else {
+            // Create new flag
+            const flagDiv = createFlagElement(flagData, index);
+            mainContent.insertBefore(flagDiv, newFlagButton);
+        }
     });
 }
+
+function updateFlagElement(flagDiv, flagData, index) {
+    // Update dataset
+    flagDiv.dataset.flagIndex = index;
+
+    // Update all input values
+    const nameInput = flagDiv.querySelector(".flag-name-input");
+    if (nameInput && nameInput.value !== flagData.FlagName) {
+        nameInput.value = flagData.FlagName;
+    }
+
+    const imageInput = flagDiv.querySelector(".flag-image-input");
+    if (imageInput && imageInput.value !== flagData.FlagID) {
+        imageInput.value = flagData.FlagID;
+    }
+
+    const descInput = flagDiv.querySelector(".flag-description-input");
+    if (descInput && descInput.value !== flagData.Description) {
+        descInput.value = flagData.Description;
+    }
+
+    // Update ideology button states
+    const ideologyButtons = flagDiv.querySelectorAll(".ideologies button");
+    ideologyButtons.forEach(button => {
+        const ideology = button.textContent;
+        const isSelected = flagData.Ideologies.includes(ideology);
+        const isNotSelected = flagData.NOTIdeologies.includes(ideology);
+        
+        button.classList.toggle("selected-ideology", isSelected);
+        button.classList.toggle("not-selected-ideology", isNotSelected);
+    });
+
+    // Update overview
+    updateFlagOverview(flagDiv, index);
+}
+
 
 function updateFlagOverview(flagDiv, index) {
     const flagData = flagSpecifications.Flags[index];
 
-    // Update the overview section without recreating the entire element
     const flagNameElement = flagDiv.querySelector(".flag-overview-left #flag-name");
     if (flagNameElement) {
         flagNameElement.textContent = flagData.FlagName || 'Flag Name';
