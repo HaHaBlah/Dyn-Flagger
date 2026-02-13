@@ -813,7 +813,6 @@ async function updateOutput() {
     <br>${flagLines}
     <br>},
     <br>\`\`\`
-    <br>
     <br>--[[
     <br># __Description/Sources__
     <br>${descriptions}
