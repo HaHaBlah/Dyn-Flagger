@@ -65,7 +65,6 @@
     <br>${i}
     <br>},
     <br>\`\`\`
-    <br>
     <br>--[[
     <br># __Description/Sources__
     <br>${a}

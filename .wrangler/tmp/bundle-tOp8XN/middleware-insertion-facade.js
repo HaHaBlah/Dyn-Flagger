@@ -1,8 +1,8 @@
-				import worker, * as OTHER_EXPORTS from "C:\\Users\\asus\\OneDrive\\Desktop\\Projects\\Dyn-Flagger\\.wrangler\\tmp\\pages-Bi7ewK\\functionsWorker-0.21862009293304796.mjs";
+				import worker, * as OTHER_EXPORTS from "C:\\Users\\asus\\OneDrive\\Desktop\\Projects\\Dyn-Flagger\\.wrangler\\tmp\\pages-oTdcYj\\functionsWorker-0.07045407963205308.mjs";
 				import * as __MIDDLEWARE_0__ from "C:\\Users\\asus\\OneDrive\\Desktop\\Projects\\Dyn-Flagger\\node_modules\\wrangler\\templates\\middleware\\middleware-ensure-req-body-drained.ts";
 import * as __MIDDLEWARE_1__ from "C:\\Users\\asus\\OneDrive\\Desktop\\Projects\\Dyn-Flagger\\node_modules\\wrangler\\templates\\middleware\\middleware-miniflare3-json-error.ts";
 
-				export * from "C:\\Users\\asus\\OneDrive\\Desktop\\Projects\\Dyn-Flagger\\.wrangler\\tmp\\pages-Bi7ewK\\functionsWorker-0.21862009293304796.mjs";
+				export * from "C:\\Users\\asus\\OneDrive\\Desktop\\Projects\\Dyn-Flagger\\.wrangler\\tmp\\pages-oTdcYj\\functionsWorker-0.07045407963205308.mjs";
 				const MIDDLEWARE_TEST_INJECT = "__INJECT_FOR_TESTING_WRANGLER_MIDDLEWARE__";
 				export const __INTERNAL_WRANGLER_MIDDLEWARE__ = [
 					
