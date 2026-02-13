@@ -13,12 +13,12 @@ export async function onRequest(context) {
         });
     }
 
-    // Get filename from query parameter
-    const filename = url.searchParams.get('filename');
-    const wikiDomain = url.searchParams.get('wiki') || 'ronroblox';
+    // Get imageID from query parameter
+    const imageID = url.searchParams.get('assetid');
+    const size = url.searchParams.get('size') || '700x700';
 
-    if (!filename) {
-        return new Response(JSON.stringify({ error: 'I parameter required' }), {
+    if (!imageID) {
+        return new Response(JSON.stringify({ error: 'assetid parameter required' }), {
             status: 400,
             headers: {
                 'Content-Type': 'application/json',
@@ -28,36 +28,22 @@ export async function onRequest(context) {
     }
 
     try {
-        // Extract the extension
-        const extensionMatch = filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i);
-        const extension = extensionMatch ? extensionMatch[1] : 'png';
+        const robloxThumbnailApiUrl = `https://thumbnails.roblox.com/v1/assets?assetIds=${encodeURIComponent(imageID)}&size=${encodeURIComponent(size)}&format=Png&isCircular=false`;
 
-        // Remove extension from filename
-        const baseFilename = filename.replace(/\.(png|jpg|jpeg|gif|svg|webp)$/i, '');
-
-        // Construct the full filename with proper extension
-        const fullFilename = `${baseFilename}.${extension}`;
-
-        // Construct the Fandom API URL
-        const fandomApiUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/file/File:${encodeURIComponent(fullFilename)}`;
-
-        // Fetch from Fandom API (server-side, no CORS issues)
-        const response = await fetch(fandomApiUrl);
+        // Fetch from Roblox Thumbnails API (server-side, no CORS issues)
+        const response = await fetch(robloxThumbnailApiUrl);
 
         if (!response.ok) {
-            throw new Error(`Fandom API returned ${response.status}`);
+            throw new Error(`Roblox API returned ${response.status}`);
         }
 
         const data = await response.json();
 
         // Extract the preferred URL
-        if (data.preferred && data.preferred.url) {
+        if (data.data && data.data[0] && data.data[0].imageUrl) {
             return new Response(JSON.stringify({
-                url: data.preferred.url,
-                width: data.preferred.width,
-                height: data.preferred.height,
-                mediatype: data.preferred.mediatype,
-                fullData: data // Include full data if needed
+                imageUrl: data.data[0].imageUrl,
+                fullData: data
             }), {
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,10 +56,10 @@ export async function onRequest(context) {
         }
 
     } catch (error) {
-        console.error(`Error fetching Fandom image for ${filename}:`, error);
+        console.error(`Error fetching Roblox Thumbnail image for ${imageID}:`, error);
         return new Response(JSON.stringify({
             error: error.message,
-            filename: filename
+            imageID: imageID
         }), {
             status: 500,
             headers: {

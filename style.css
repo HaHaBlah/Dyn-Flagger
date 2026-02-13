@@ -9,6 +9,9 @@
     --background-color: #2c353d;
     --background-secondary-color: #272F38;
     --input-color: #15191E;
+    --ron-green: #A0FF57;
+    --ron-red: #FC734A;
+    --ron-yellow: #7C6938;
 }
 
 a {
@@ -34,6 +37,17 @@ button {
     border: none;
     box-shadow: none;
     cursor: pointer;
+    background-color: var(--button-color);
+    color: white;
+}
+
+button:hover {
+    background-color: var(--button-hover-color);
+    color: white;
+}
+
+button:active {
+    background-color: var(--button-active-color);
 }
 
 /* Container & Reset */
@@ -108,7 +122,7 @@ button {
 
 /* Button Styling */
 .btn {
-    border: 3px solid #7C6938;
+    border: 3px solid var(--ron-yellow);
     background-color: var(--button-color);
     color: white;
     padding: 5px 10px;
@@ -131,18 +145,18 @@ button {
 }
 
 .btn-allowed {
-    border-color: green;
+    border-color: var(--ron-green);
 }
 
 .btn-not-allowed {
-    border-color: red;
+    border-color: var(--ron-red);
 }
 
 .btn-half-allowed {
-    border-top-color: green;
-    border-left-color: green;
-    border-bottom-color: red;
-    border-right-color: red;
+    border-top-color: var(--ron-green);
+    border-left-color: var(--ron-green);
+    border-bottom-color: var(--ron-red);
+    border-right-color: var(--ron-red);
 }
 
 /* SCROLLBAR */
@@ -218,6 +232,7 @@ header {
 
 .main-content {
     grid-area: pageContent;
+    padding: 12px 20px;
     width: 100%;
     height: 100%;
     background-color: var(--background-secondary-color);
@@ -418,14 +433,14 @@ header {
     white-space: nowrap;
 }
 
-.laws-name{
+.laws-name {
     font-weight: bold;
     margin-bottom: 4px;
     text-align: center;
     margin-top: 15px;
 }
 
-.laws-level{
+.laws-level {
     display: flex;
     flex-wrap: wrap;
 }
@@ -441,7 +456,6 @@ header {
     align-items: center;
     justify-content: center;
     text-align: center;
-    margin: 12px;
 }
 
 .nation-overview #nation-flag {
@@ -458,12 +472,12 @@ input {
 }
 
 /* Flag Overview */
-.flag { 
+.flag {
     border: 6px solid var(--button-color);
-    margin: 20px;
     border-collapse: collapse;
     transition: 0.3s;
     background-color: var(--background-color);
+    margin-top: 20px;
 }
 
 .collapse-flag-overview-button {
@@ -472,6 +486,16 @@ input {
     color: white;
     font: inherit;
 }
+
+.flag-overview:hover {
+    background-color: var(--button-hover-color);
+    color: white;
+}
+
+.flag-overview:active {
+    background-color: var(--button-active-color);
+}
+
 .flag-overview {
     display: flex;
     flex-wrap: wrap;
@@ -486,12 +510,12 @@ input {
     text-align: center;
 }
 
-.flag-overview-left img {
+.dyn-flag {
     width: 150px;
     height: auto;
 }
 
-.flag-overview-left p{
+.flag-overview-left p {
     margin: 0;
 }
 
@@ -508,11 +532,34 @@ input {
     border-top: 6px solid var(--button-color);
 }
 
-.flag-contents.ishidden {
+.flag-contents.is-hidden {
     display: none;
 }
 
 /* Code Output */
-.output-text{
-    font-family: "Roboto Mono", monospace;
+.output {
+    overflow: auto;
+    background-color: var(--background-color);
+    height: 150px;
+}
+
+#copy-output-btn.output-btn-copied {
+    background-color: var(--ron-green);
+    color: black;
+}
+
+#copy-output-btn {
+    cursor: pointer;
+    background-color: var(--button-color);
+    color: white;
+}
+
+#output-text {
+    font-family: 'Roboto Mono', monospace;
+    padding: 20px;
+}
+
+/* Temp class */
+.ron-red{
+    color: var(--ron-red);
 }

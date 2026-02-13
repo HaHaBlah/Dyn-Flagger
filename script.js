@@ -1,7 +1,13 @@
 let Lawnames, Flagdata, Nationdata, Tagdata;
 let dataLoadedPromise = null; // Promise to track when data is loaded
 import { getFandomImageUrl } from './fandomProcessor.js';
+import { getRobloxThumbnailURL } from './robloxProcessor.js';
 import unknownFlag from './images/Unknown Flag.png';
+
+let flagSpecifications = {
+    NationName: "",
+    Flags: []
+};
 
 /** 
 * Fetch processed fandom data from server
@@ -209,11 +215,6 @@ async function generateLawsList(flagDiv) {
     }
 }
 
-let flagSpecifications = {
-    NationName: "",
-    Flags: []
-};
-
 /**
  * Defines a new flag with default or provided values and adds it to flagSpecifications.Flags
  * @param {*} flagData 
@@ -226,7 +227,6 @@ function addFlag(flagData = {}) {
         Description: flagData.Description || "",
         Ideologies: flagData.Ideologies || [],
         Laws: flagData.Laws || {},
-        NOTIdeologies: flagData.NOTIdeologies || [],
         NOTLaws: flagData.NOTLaws || {}
     };
     flagSpecifications.Flags.push(newFlag);
@@ -235,183 +235,6 @@ function addFlag(flagData = {}) {
 
 function removeFlag(index) {
     flagSpecifications.Flags.splice(index, 1);
-}
-
-function updateDisplay() {
-    console.log("Current Flag Specifications:", flagSpecifications);
-
-    // Update nation name
-    const nationNameInput = document.querySelector("#nation-name");
-    if (nationNameInput) {
-        nationNameInput.value = flagSpecifications.NationName;
-    }
-
-    // Get the container where flags should be inserted
-    const mainContent = document.querySelector(".main-content");
-    const newFlagButton = document.querySelector(".new-flag-button");
-    const existingFlags = document.querySelectorAll(".flag");
-
-    // Remove flags that shouldn't exist anymore
-    existingFlags.forEach((flagDiv, domIndex) => {
-        if (domIndex >= flagSpecifications.Flags.length) {
-            flagDiv.remove();
-        }
-    });
-
-    // Update or create flags
-    flagSpecifications.Flags.forEach((flagData, index) => {
-        const existingFlag = existingFlags[index];
-
-        if (existingFlag) {
-            // Update existing flag
-            updateFlagElement(existingFlag, flagData, index);
-        } else {
-            // Create new flag
-            const flagDiv = createFlagElement(flagData, index);
-            mainContent.insertBefore(flagDiv, newFlagButton);
-        }
-    });
-}
-
-function updateFlagElement(flagDiv, flagData, index) {
-    // Update dataset
-    flagDiv.dataset.flagIndex = index;
-
-    // Update all input values
-    const nameInput = flagDiv.querySelector(".flag-name-input");
-    if (nameInput && nameInput.value !== flagData.FlagName) {
-        nameInput.value = flagData.FlagName;
-    }
-
-    const imageInput = flagDiv.querySelector(".flag-image-input");
-    if (imageInput && imageInput.value !== flagData.FlagID) {
-        imageInput.value = flagData.FlagID;
-    }
-
-    const descInput = flagDiv.querySelector(".flag-description-input");
-    if (descInput && descInput.value !== flagData.Description) {
-        descInput.value = flagData.Description;
-    }
-
-    // Update ideology button states
-    const ideologyButtons = flagDiv.querySelectorAll(".ideologies button");
-    const hasIdeologies = flagData.Ideologies.length > 0;
-
-    ideologyButtons.forEach(button => {
-        const ideology = button.textContent;
-        const isInIdeologies = flagData.Ideologies.includes(ideology);
-
-        // Remove all classes first
-        button.classList.remove("btn-allowed", "btn-not-allowed");
-
-        // Add appropriate class only if Ideologies array is not empty
-        if (hasIdeologies) {
-            if (isInIdeologies) {
-                button.classList.add("btn-allowed");
-            } else {
-                button.classList.add("btn-not-allowed");
-            }
-        }
-    });
-
-    // Update laws-selection button states
-    updateLawsSelectionButtons(flagDiv, flagData);
-
-    // Update overview
-    updateFlagOverview(flagDiv, index);
-}
-
-function updateLawsSelectionButtons(flagDiv, flagData) {
-    const lawsSelectionButtons = flagDiv.querySelectorAll(".laws-selection button");
-
-    lawsSelectionButtons.forEach(button => {
-        const lawName = button.textContent;
-        const lawCode = getLawCodeFromName(lawName);
-
-        if (!lawCode) return;
-
-        const lawsArray = flagData.Laws[lawCode];
-        const notLawsArray = flagData.NOTLaws[lawCode];
-
-        const hasLaws = Array.isArray(lawsArray) && lawsArray.length > 0;
-        const hasNotLaws = Array.isArray(notLawsArray) && notLawsArray.length > 0;
-
-        // Remove all classes first
-        button.classList.remove("btn-allowed", "btn-not-allowed", "btn-half-allowed");
-
-        // Apply appropriate class
-        if (hasLaws && hasNotLaws) {
-            button.classList.add("btn-half-allowed");
-        } else if (hasLaws) {
-            button.classList.add("btn-allowed");
-        } else if (hasNotLaws) {
-            button.classList.add("btn-not-allowed");
-        }
-        // If neither, no class is added
-    });
-}
-
-function updateFlagOverview(flagDiv, index) {
-    const flagData = flagSpecifications.Flags[index];
-
-    const flagNameElement = flagDiv.querySelector(".flag-overview-left #flag-name");
-    if (flagNameElement) {
-        flagNameElement.textContent = flagData.FlagName || 'Flag Name';
-    }
-
-    const overviewRightDivs = flagDiv.querySelectorAll(".flag-overview-right > div");
-    if (overviewRightDivs.length >= 5) {
-
-        // Laws
-        let lawsHTML = '<span class="flag-overview-title">Laws: </span>';
-        const lawEntries = [];
-
-        for (let lawCode in flagData.Laws) {
-            const lawName = getLawNameFromCode(lawCode);
-            const selectedLevels = flagData.Laws[lawCode];
-
-            if (Array.isArray(selectedLevels) && selectedLevels.length > 0) {
-                const levelTexts = selectedLevels.map(levelKey =>
-                    translateLawLeveltoText(lawCode, levelKey)
-                );
-                lawEntries.push(`${lawName}: ${levelTexts.join(', ')}`);
-            }
-        }
-        lawsHTML += lawEntries.length > 0 ? '<br>' + lawEntries.join('<br>') : 'None';
-
-
-        // NOTLaws 
-        let notLawsHTML = '<span class="flag-overview-title">NOT Laws: </span>';
-        const notLawEntries = [];
-
-        for (let lawCode in flagData.NOTLaws) {
-            const lawName = getLawNameFromCode(lawCode);
-            const notSelectedLevels = flagData.NOTLaws[lawCode];
-
-            if (Array.isArray(notSelectedLevels) && notSelectedLevels.length > 0) {
-                const levelTexts = notSelectedLevels.map(levelKey =>
-                    translateLawLeveltoText(lawCode, levelKey)
-                );
-                notLawEntries.push(`${lawName}: ${levelTexts.join(', ')}`);
-            }
-        }
-        notLawsHTML += notLawEntries.length > 0 ? '<br>' + notLawEntries.join('<br>') : 'None';
-
-        //Flag ID
-        overviewRightDivs[0].innerHTML = `<span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span>`;
-
-        //Ideologies
-        overviewRightDivs[1].innerHTML = `<span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.join(', ')}<span class="flag-overview-content"></span>`;
-
-        //Laws
-        overviewRightDivs[2].innerHTML = lawsHTML + '<span class="flag-overview-content"></span>';
-
-        //NOTLaws
-        overviewRightDivs[3].innerHTML = notLawsHTML + '<span class="flag-overview-content"></span>';
-
-        //Description
-        overviewRightDivs[4].innerHTML = `<span class="flag-overview-title">Description: </span>${flagData.Description}<span class="flag-overview-content"></span>`;
-    }
 }
 
 function createFlagElement(flagData, index) {
@@ -423,14 +246,14 @@ function createFlagElement(flagData, index) {
         <button class="collapse-flag-overview-button">
             <div class="flag-overview">
                 <div class="flag-overview-left">
-                    <img id="nation-flag" src="${unknownFlag}">
+                    <img class="dyn-flag" src="${unknownFlag}">
                     <p id="flag-name">${flagData.FlagName || 'Flag Name'}</p>
                 </div>
                 <div class="flag-overview-right">
                     <div><span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span></div>
                     <div><span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies}<span class="flag-overview-content"></span></div>
                     <div><span class="flag-overview-title">Laws: </span>${Object.keys(flagData.Laws)}<span class="flag-overview-content"></span></div>
-                    <div><span class="flag-overview-title">NOT Laws: </span>${Object.keys(flagData.NOTLaws)}<span class="flag-overview-content"></span></div>
+                    <div><span class="flag-overview-title ron-red">NOT Laws: </span>${Object.keys(flagData.NOTLaws)}<span class="flag-overview-content"></span></div>
                     <div><span class="flag-overview-title">Description: </span>${flagData.Description}<span class="flag-overview-content"></span></div>
                 </div>
             </div>
@@ -480,6 +303,13 @@ function createFlagElement(flagData, index) {
         </div>
     `;
 
+    // Toggle flag contents visibility
+    const collapseButton = flagDiv.querySelector(".collapse-flag-overview-button");
+    const flagContents = flagDiv.querySelector(".flag-contents");
+    collapseButton.addEventListener("click", () => {
+        flagContents.classList.toggle("is-hidden");
+    });
+
     // Add event listener for delete button
     const deleteButton = flagDiv.querySelector(".delete-flag-button");
     deleteButton.addEventListener("click", () => {
@@ -511,15 +341,10 @@ function createFlagElement(flagData, index) {
         if (e.target && e.target.tagName === "BUTTON") {
             const ideology = e.target.textContent;
             const ideologies = flagSpecifications.Flags[index].Ideologies;
-            const notIdeologies = flagSpecifications.Flags[index].NOTIdeologies;
             if (ideologies.includes(ideology)) {
                 // Remove from Ideologies
                 flagSpecifications.Flags[index].Ideologies = ideologies.filter(i => i !== ideology);
                 e.target.classList.remove("btn-allowed");
-            } else if (notIdeologies.includes(ideology)) {
-                // Remove from NOTIdeologies
-                flagSpecifications.Flags[index].NOTIdeologies = notIdeologies.filter(i => i !== ideology);
-                e.target.classList.remove("btn-not-allowed");
             } else {
                 // Add to Ideologies
                 flagSpecifications.Flags[index].Ideologies.push(ideology);
@@ -659,6 +484,7 @@ function onNationsListButtonClick(countryName) {
     updateDisplay();
 }
 
+// Law functions start here //
 function translateLawLeveltoText(lawcode, level) {
     if (Lawnames.lawNames[lawcode]) {
         const lawLevels = Lawnames.lawNames[lawcode].Types;
@@ -696,6 +522,322 @@ function getLawCodeFromName(lawName) {
     }
     return null;
 }
+// Law functions end here //
+
+function updateFlagElement(flagDiv, flagData, index) {
+    // Update dataset
+    flagDiv.dataset.flagIndex = index;
+
+    // Update all input values
+    const nameInput = flagDiv.querySelector(".flag-name-input");
+    if (nameInput && nameInput.value !== flagData.FlagName) {
+        nameInput.value = flagData.FlagName;
+    }
+
+    const imageInput = flagDiv.querySelector(".flag-image-input");
+    if (imageInput && imageInput.value !== flagData.FlagID) {
+        imageInput.value = flagData.FlagID;
+    }
+
+    const descInput = flagDiv.querySelector(".flag-description-input");
+    if (descInput && descInput.value !== flagData.Description) {
+        descInput.value = flagData.Description;
+    }
+
+    // Update ideology button states
+    const ideologyButtons = flagDiv.querySelectorAll(".ideologies button");
+    const hasIdeologies = flagData.Ideologies.length > 0;
+
+    ideologyButtons.forEach(button => {
+        const ideology = button.textContent;
+        const isInIdeologies = flagData.Ideologies.includes(ideology);
+
+        // Remove all classes first
+        button.classList.remove("btn-allowed", "btn-not-allowed");
+
+        // Add appropriate class only if Ideologies array is not empty
+        if (hasIdeologies) {
+            if (isInIdeologies) {
+                button.classList.add("btn-allowed");
+            } else {
+                button.classList.add("btn-not-allowed");
+            }
+        }
+    });
+
+    // Update laws-selection button states
+    updateLawsSelectionButtons(flagDiv, flagData);
+
+    // Update overview
+    updateFlagOverview(flagDiv, index);
+}
+
+function updateLawsSelectionButtons(flagDiv, flagData) {
+    const lawsSelectionButtons = flagDiv.querySelectorAll(".laws-selection button");
+
+    lawsSelectionButtons.forEach(button => {
+        const lawName = button.textContent;
+        const lawCode = getLawCodeFromName(lawName);
+
+        if (!lawCode) return;
+
+        const lawsArray = flagData.Laws[lawCode];
+        const notLawsArray = flagData.NOTLaws[lawCode];
+
+        const hasLaws = Array.isArray(lawsArray) && lawsArray.length > 0;
+        const hasNotLaws = Array.isArray(notLawsArray) && notLawsArray.length > 0;
+
+        // Remove all classes first
+        button.classList.remove("btn-allowed", "btn-not-allowed", "btn-half-allowed");
+
+        // Apply appropriate class
+        if (hasLaws && hasNotLaws) {
+            button.classList.add("btn-half-allowed");
+        } else if (hasLaws) {
+            button.classList.add("btn-allowed");
+        } else if (hasNotLaws) {
+            button.classList.add("btn-not-allowed");
+        }
+        // If neither, no class is added
+    });
+}
+
+function updateFlagOverview(flagDiv, index) {
+    const flagData = flagSpecifications.Flags[index];
+
+    const flagNameElement = flagDiv.querySelector(".flag-overview-left #flag-name");
+    if (flagNameElement) {
+        flagNameElement.textContent = flagData.FlagName || 'Flag Name';
+    }
+
+    const flagImageElement = flagDiv.querySelector(".flag-overview-left .dyn-flag");
+    if (flagImageElement) {
+        getRobloxThumbnailURL(flagData.FlagID, '700x700').then((url) => {
+            if (flagData.FlagID != "") {
+                flagImageElement.src = url;
+            }
+        }).catch((error) => {
+            flagImageElement.src = unknownFlag;
+            console.error(`Error fetching roblox thumbnail flag for image id: ${flagData.FlagID}:`, error);
+        });
+    }
+
+    const overviewRightDivs = flagDiv.querySelectorAll(".flag-overview-right > div");
+    if (overviewRightDivs.length >= 5) {
+
+        // Laws
+        let lawsHTML = '<span class="flag-overview-title">Laws: </span>';
+        const lawEntries = [];
+
+        for (let lawCode in flagData.Laws) {
+            const lawName = getLawNameFromCode(lawCode);
+            const selectedLevels = flagData.Laws[lawCode];
+
+            if (Array.isArray(selectedLevels) && selectedLevels.length > 0) {
+                const levelTexts = selectedLevels.map(levelKey =>
+                    translateLawLeveltoText(lawCode, levelKey)
+                );
+                lawEntries.push(`${lawName}: ${levelTexts.join(', ')}`);
+            }
+        }
+        lawsHTML += lawEntries.length > 0 ? '<br>' + lawEntries.join('<br>') : 'None';
+
+
+        // NOTLaws 
+        let notLawsHTML = '<span class="flag-overview-title ron-red">NOT Laws: </span>';
+        const notLawEntries = [];
+
+        for (let lawCode in flagData.NOTLaws) {
+            const lawName = getLawNameFromCode(lawCode);
+            const notSelectedLevels = flagData.NOTLaws[lawCode];
+
+            if (Array.isArray(notSelectedLevels) && notSelectedLevels.length > 0) {
+                const levelTexts = notSelectedLevels.map(levelKey =>
+                    translateLawLeveltoText(lawCode, levelKey)
+                );
+                notLawEntries.push(`${lawName}: ${levelTexts.join(', ')}`);
+            }
+        }
+        notLawsHTML += notLawEntries.length > 0 ? '<br>' + notLawEntries.join('<br>') : 'None';
+
+        //Flag ID
+        overviewRightDivs[0].innerHTML = `<span class="flag-overview-title">Flag ID: </span>${flagData.FlagID}<span class="flag-overview-content"></span>`;
+
+        //Ideologies
+        overviewRightDivs[1].innerHTML = `<span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.join(', ')}<span class="flag-overview-content"></span>`;
+
+        //Laws
+        overviewRightDivs[2].innerHTML = lawsHTML + '<span class="flag-overview-content"></span>';
+
+        //NOTLaws
+        overviewRightDivs[3].innerHTML = notLawsHTML + '<span class="flag-overview-content ron-red"></span>';
+
+        //Description
+        overviewRightDivs[4].innerHTML = `<span class="flag-overview-title">Description: </span>${flagData.Description}<span class="flag-overview-content"></span>`;
+
+        updateOutput();
+    }
+}
+
+function updateDisplay() {
+    console.log("Current Flag Specifications:", flagSpecifications);
+
+    // Update nation name and image
+    const nationNameInput = document.querySelector("#nation-name");
+    const nationFlag = document.querySelector("#nation-flag");
+    if (nationNameInput) {
+        nationNameInput.value = flagSpecifications.NationName;
+
+        getFandomImageUrl(flagSpecifications.NationName + '_Flag.png').then((url) => {
+            if (flagSpecifications.NationName != "" && nationFlag) {
+                nationFlag.src = url;
+            }
+        }).catch((error) => {
+            nationFlag.src = unknownFlag;
+            console.error(`Error fetching nation flag for ${flagSpecifications.NationName}:`, error);
+        });
+    }
+
+    // Get the container where flags should be inserted
+    const mainContent = document.querySelector(".main-content");
+    const newFlagButton = document.querySelector(".new-flag-button");
+    const existingFlags = document.querySelectorAll(".flag");
+
+    // Remove flags that shouldn't exist anymore
+    existingFlags.forEach((flagDiv, domIndex) => {
+        if (domIndex >= flagSpecifications.Flags.length) {
+            flagDiv.remove();
+        }
+    });
+
+    // Update or create flags
+    flagSpecifications.Flags.forEach((flagData, index) => {
+        const existingFlag = existingFlags[index];
+
+        if (existingFlag) {
+            // Update existing flag
+            updateFlagElement(existingFlag, flagData, index);
+        } else {
+            // Create new flag
+            const flagDiv = createFlagElement(flagData, index);
+            mainContent.insertBefore(flagDiv, newFlagButton);
+        }
+    });
+    updateOutput();
+}
+
+async function updateOutput() {
+    const tab = '&nbsp;&nbsp;&nbsp;&nbsp;';
+    const outputText = document.querySelector('#output-text');
+
+    function buildSingleFlag(flag) {
+        const id = flag.FlagID ? `rbxassetid://${flag.FlagID}` : '';
+        const name = flag.FlagName || '';
+
+        const hasIdeologies = flag.Ideologies && flag.Ideologies.length > 0;
+        const hasLaws = flag.Laws && Object.keys(flag.Laws).length > 0;
+        const hasNOTLaws = flag.NOTLaws && Object.keys(flag.NOTLaws).length > 0;
+        const hasRequirements = hasIdeologies || hasLaws || hasNOTLaws;
+
+        if (!hasRequirements) {
+            return `${tab}["${name}"] = {ID = "${id}",},`;
+        }
+
+        let lines = [];
+        lines.push(`${tab}["${name}"] = {ID = "${id}",`);
+        lines.push(`${tab}${tab}Requirements = {`);
+
+        if (hasIdeologies) {
+            const ideologyArray = flag.Ideologies.map(i => `"${i}"`).join(', ');
+            lines.push(`${tab}${tab}${tab}${tab}["Ideology"] = '[${ideologyArray}]',`);
+        }
+
+        if (hasLaws) {
+            const lawObj = {};
+            for (let lawCode in flag.Laws) {
+                lawObj[lawCode] = flag.Laws[lawCode];
+            }
+            lines.push(`${tab}${tab}${tab}${tab}["Political_Law"] = '${JSON.stringify(lawObj)}',`);
+        }
+
+        if (hasNOTLaws) {
+            const notLawObj = {};
+            for (let lawCode in flag.NOTLaws) {
+                notLawObj[lawCode] = flag.NOTLaws[lawCode];
+            }
+            lines.push(`${tab}${tab}${tab}${tab}["NOT_Political_Law"] = '${JSON.stringify(notLawObj)}',`);
+        }
+
+        lines.push(`${tab}${tab}},`);
+        lines.push(`${tab}},`);
+
+        return lines.join('<br>');
+    }
+
+    const descriptions = flagSpecifications.Flags
+        .filter(f => f.Description)
+        .map(f => `**${f.FlagName}:** ${f.Description}`)
+        .join('<br>');
+
+    const flagLines = flagSpecifications.Flags
+        .filter(f => f.FlagName && f.FlagID)
+        .map(f => buildSingleFlag(f))
+        .join('<br>');
+
+    // Resolve all thumbnail URLs in parallel
+    const validFlags = flagSpecifications.Flags.filter(f => f.FlagName && f.FlagID);
+    const imageUrls = await Promise.all(
+        validFlags.map(f =>
+            getRobloxThumbnailURL(f.FlagID, '700x700').catch(() => null)
+        )
+    );
+
+    // Build image links, 3 per line
+    const imageLinks = validFlags
+        .map((f, i) => imageUrls[i] ? `[${f.FlagName}](${imageUrls[i]})` : null)
+        .filter(Boolean);
+
+    const imagesBlock = imageLinks
+        .reduce((lines, link, i) => {
+            const lineIndex = Math.floor(i / 3);
+            if (!lines[lineIndex]) lines[lineIndex] = [];
+            lines[lineIndex].push(link);
+            return lines;
+        }, [])
+        .map(line => line.join(', '))
+        .join('<br>');
+
+    const luaOutput =
+        `\`\`\`lua
+    <br>["${flagSpecifications.NationName}"] = {
+    <br>${flagLines}
+    <br>},
+    <br>\`\`\`
+    <br>
+    <br>--[[
+    <br># __Description/Sources__
+    <br>${descriptions}
+    <br># __Images__
+    <br>${imagesBlock}
+    <br>> -# *Made using [Dyn Flagger](https://dyn-flagger.pages.dev/ )*
+    <br>]]`;
+
+    outputText.innerHTML = luaOutput;
+}
+
+function copyOutput() {
+    const output = document.getElementById('output-text'),
+        button = document.getElementById('copy-output-btn');
+
+    navigator.clipboard.writeText(output.innerText)
+
+    button.innerText = 'Copied!'
+    button.classList.add('output-btn-copied')
+    setTimeout(() => {
+        button.innerText = 'Copy to clipboard'
+        button.classList.remove('output-btn-copied')
+    }, 1000)
+}
 
 //Buttons and inputs that already exist on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -713,6 +855,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (nationNameInput) {
         nationNameInput.addEventListener("input", (e) => {
             flagSpecifications.NationName = e.target.value;
+            updateDisplay();
         });
     }
 });
@@ -727,3 +870,4 @@ window.switchTab = switchTab;
 window.generateLawsList = generateLawsList;
 window.generateNationsList = generateNationsList;
 window.nationsSearchFilter = nationsSearchFilter;
+window.copyOutput = copyOutput;

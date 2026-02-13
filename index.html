@@ -20,7 +20,7 @@
     <div class="page-container">
 
         <header>Rise of Nations Dyn Flagger
-            <br><span style="color: red;">NOTE: WEBSITE UNDER CONSTRUCTION. v0.7</span>
+            <br><span style="color: red;">NOTE: WEBSITE UNDER CONSTRUCTION. v0.8</span>
         </header>
 
         <div class="rail-container">
@@ -65,8 +65,8 @@
             <div class="main-content">
 
                 <div class="nation-overview">
-                    <img id="nation-flag" src="images/Unknown Flag.png">
-                    <input id="nation-name">
+                    <img id="nation-flag" src="images/Unknown Flag.png"><br>
+                    <label>Nation name: </label><input id="nation-name">
                 </div>
 
                 <!-- <div class="flag">
@@ -144,14 +144,18 @@
 
 
 
-                <div class="new-flag-button"><button><svg>
+                <div class="new-flag-button"><button>
+                    <!-- <svg>
                             <line x1="16" y1="4" x2="16" y2="32" stroke="black" stroke-width="10"></line>
                             <line y1="16" x2="32" y2="16" stroke="black" stroke-width="10"></line>
-                        </svg>
+                        </svg> -->
                         Add New Flag</button>
                 </div>
 
-                <div class="output">Output goes here<div class="output-text">Code Examplellllliiiii\t\t     t</div></div>
+                <div class="output">
+                    <button id="copy-output-btn" onclick="copyOutput()">Copy to Clipboard</button>
+                    <div id="output-text">Code Examplellllliiiii\t\t t</div>
+                </div>
             </div>
 
             <footer>
