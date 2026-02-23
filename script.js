@@ -1,13 +1,10 @@
-/**
- * flagSpecifications.js
- * Manages flag spec data and UI rendering for Dyn Flagger.
- */
+// script.js
 
 import { getFandomImageUrl } from './fandomProcessor.js';
 import { getRobloxThumbnailURL } from './robloxProcessor.js';
 import unknownFlag from './images/Unknown Flag.png';
 
-// ─── State ────────────────────────────────────────────────────────────────────
+// Config
 
 let Lawnames, Flagdata, Nationdata, Tagdata;
 let dataLoadedPromise = null;
@@ -20,8 +17,7 @@ const flagSpecifications = {
 const IMAGE_SCALE = 36;
 const ITEMS_PER_IMAGE_ROW = 3;
 
-// ─── Data Loading ─────────────────────────────────────────────────────────────
-
+/** Fetches fandom data, and generates nations list */
 async function loadFandomData() {
     dataLoadedPromise ??= (async () => {
         const response = await fetch('/api/fandom-data');
@@ -36,13 +32,12 @@ async function loadFandomData() {
     return dataLoadedPromise;
 }
 
-/** Ensure fandom data is available before proceeding. */
+/** wait until fandom data fetched. */
 async function ensureDataLoaded() {
     if (!Lawnames && dataLoadedPromise) await dataLoadedPromise;
 }
 
-// ─── Tab Switching ────────────────────────────────────────────────────────────
-
+/** nationslist tab switching */
 function switchTab(evt, tabId) {
     for (const el of document.getElementsByClassName('tabcontent')) {
         el.classList.remove('tabcontent-visible');
@@ -55,8 +50,7 @@ function switchTab(evt, tabId) {
     evt.currentTarget.classList.add('active');
 }
 
-// ─── Nations List ─────────────────────────────────────────────────────────────
-
+/** Generates the nations list based on the loaded fandom data, then gives them events so you can click on them. */
 async function generateNationsList() {
     await ensureDataLoaded();
 
@@ -126,8 +120,10 @@ export function nationsSearchFilter() {
     }
 }
 
-// ─── Laws List ────────────────────────────────────────────────────────────────
-
+/**
+ * Generates the list of laws available in RoN. eg. Conscriptionm, Press Freedom, Centralisation etc.
+ * @param {*} flagDiv 
+ */
 async function generateLawsList(flagDiv) {
     await ensureDataLoaded();
 
@@ -156,22 +152,42 @@ async function generateLawsList(flagDiv) {
     }
 }
 
-///////////Law Translation Functions ////////////////
-
+//=================== Law Translation Functions START =====================
+/**
+ * "Monarch Power" -> "Unique_Monarchy" 
+ * @param {string} lawName "Monarch Power"
+ * @returns string
+ */
 function getLawCodeFromName(lawName) {
     return Object.keys(Lawnames.lawNames).find(
         k => Lawnames.lawNames[k].Name === lawName
     ) ?? null;
 }
 
+/**
+ * "Unique_Monarchy" -> "Monarch Power"
+ * @param {string} lawCode "Unique_Monarchy"
+ * @returns string
+ */
 function getLawNameFromCode(lawCode) {
     return Lawnames.lawNames[lawCode]?.Name;
 }
 
+/**
+ * ("Unique_Monarchy", 1) -> ("Limited")
+ * @param {string} lawCode "Unique_Monarchy"
+ * @param {int} level 1
+ * @returns string
+ */
 function translateLawLeveltoText(lawCode, level) {
     return Lawnames.lawNames[lawCode]?.Types[level] ?? 'Law Not Found';
 }
 
+/** ("Monarch Power", "Limited") -> 1
+ * @param {string} lawText "Monarch Power"
+ * @param {string} levelText "Limited"
+ * @returns string/int
+ */
 function translateLawTexttoLevel(lawText, levelText) {
     for (const [, law] of Object.entries(Lawnames.lawNames)) {
         if (law.Name === lawText) {
@@ -182,9 +198,12 @@ function translateLawTexttoLevel(lawText, levelText) {
     console.warn('Law Not Found for', lawText, levelText);
     return 'Law Not Found';
 }
+//=================== Law Translation Functions END =====================
 
-// ─── Flag Data Model ──────────────────────────────────────────────────────────
-
+/**
+ * Returns a new flag object with default values, and adds it flagSpecifications
+ * @returns newFlag
+ */
 function addFlag(flagData = {}) {
     const newFlag = {
         FlagName: flagData.FlagName ?? '',
@@ -198,6 +217,10 @@ function addFlag(flagData = {}) {
     return newFlag;
 }
 
+/**
+ * Removes a flag from flagSpecifications based on index
+ * @param {int} index 
+ */
 function removeFlag(index) {
     flagSpecifications.Flags.splice(index, 1);
 }
@@ -504,7 +527,7 @@ function updateDisplay() {
     updateOutput();
 }
 
-// ─── Output Generation ────────────────────────────────────────────────────────
+// =================== Output Box START ===================
 
 async function updateOutput() {
     const outputText = document.querySelector('#output-text');
@@ -597,6 +620,7 @@ function copyOutput() {
         }, 1000);
     });
 }
+// =================== Output Box END ===================
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 
@@ -606,7 +630,7 @@ function chunk(arr, size) {
     );
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+// Run
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.new-flag-button button')

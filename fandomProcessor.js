@@ -1,3 +1,5 @@
+// fandomProcessor.js
+
 import luaparse from 'luaparse';
 
 const fandomModules = {

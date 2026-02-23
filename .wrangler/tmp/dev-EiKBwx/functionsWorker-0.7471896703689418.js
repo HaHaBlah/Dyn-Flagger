@@ -1,37 +1,39 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// .wrangler/tmp/pages-UtXpBj/functionsWorker-0.7471896703689418.mjs
+var __create = Object.create;
+var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-var __esm = (fn, res) => function __init() {
+var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
+var __esm = /* @__PURE__ */ __name((fn, res) => /* @__PURE__ */ __name(function __init() {
   return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
-};
-var __commonJS = (cb, mod) => function __require() {
+}, "__init"), "__esm");
+var __commonJS = /* @__PURE__ */ __name((cb, mod) => /* @__PURE__ */ __name(function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
-var __copyProps = (to, from, except, desc) => {
+}, "__require"), "__commonJS");
+var __copyProps = /* @__PURE__ */ __name((to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp2(to, key, { get: /* @__PURE__ */ __name(() => from[key], "get"), enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
   }
   return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+}, "__copyProps");
+var __toESM = /* @__PURE__ */ __name((mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
   // If the importer is in node compatibility mode or this is not an ESM
   // file that has been converted to a CommonJS file using a Babel-
   // compatible transform (i.e. "__esModule" has not been set), then set
   // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
   mod
-));
-
-// ../node_modules/luaparse/luaparse.js
+)), "__toESM");
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_43480395324914645();
+    init_functionsRoutes_0_6122643749777842();
     (function(root, name, factory) {
       "use strict";
       var objectTypes = {
@@ -99,6 +101,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(encodeUTF8, "encodeUTF8");
+      __name2(encodeUTF8, "encodeUTF8");
       function toHex(num, digits) {
         var result = num.toString(16);
         while (result.length < digits)
@@ -106,6 +109,7 @@ var require_luaparse = __commonJS({
         return result;
       }
       __name(toHex, "toHex");
+      __name2(toHex, "toHex");
       function checkChars(rx) {
         return function(s) {
           var m = rx.exec(s);
@@ -115,45 +119,46 @@ var require_luaparse = __commonJS({
         };
       }
       __name(checkChars, "checkChars");
+      __name2(checkChars, "checkChars");
       var encodingModes = {
         // `pseudo-latin1` encoding mode: assume the input was decoded with the latin1 encoding
         // WARNING: latin1 does **NOT** mean cp1252 here like in the bone-headed WHATWG standard;
         // it means true ISO/IEC 8859-1 identity-mapped to Basic Latin and Latin-1 Supplement blocks
         "pseudo-latin1": {
           fixup: checkChars(/[^\x00-\xff]/),
-          encodeByte: /* @__PURE__ */ __name(function(value) {
+          encodeByte: /* @__PURE__ */ __name2(function(value) {
             if (value === null)
               return "";
             return String.fromCharCode(value);
           }, "encodeByte"),
-          encodeUTF8: /* @__PURE__ */ __name(function(codepoint) {
+          encodeUTF8: /* @__PURE__ */ __name2(function(codepoint) {
             return encodeUTF8(codepoint);
           }, "encodeUTF8")
         },
         // `x-user-defined` encoding mode: assume the input was decoded with the WHATWG `x-user-defined` encoding
         "x-user-defined": {
           fixup: checkChars(/[^\x00-\x7f\uf780-\uf7ff]/),
-          encodeByte: /* @__PURE__ */ __name(function(value) {
+          encodeByte: /* @__PURE__ */ __name2(function(value) {
             if (value === null)
               return "";
             if (value >= 128)
               return String.fromCharCode(value | 63232);
             return String.fromCharCode(value);
           }, "encodeByte"),
-          encodeUTF8: /* @__PURE__ */ __name(function(codepoint) {
+          encodeUTF8: /* @__PURE__ */ __name2(function(codepoint) {
             return encodeUTF8(codepoint, 63232);
           }, "encodeUTF8")
         },
         // `none` encoding mode: disregard intrepretation of string literals, leave identifiers as-is
         "none": {
           discardStrings: true,
-          fixup: /* @__PURE__ */ __name(function(s) {
+          fixup: /* @__PURE__ */ __name2(function(s) {
             return s;
           }, "fixup"),
-          encodeByte: /* @__PURE__ */ __name(function(value) {
+          encodeByte: /* @__PURE__ */ __name2(function(value) {
             return "";
           }, "encodeByte"),
-          encodeUTF8: /* @__PURE__ */ __name(function(codepoint) {
+          encodeUTF8: /* @__PURE__ */ __name2(function(codepoint) {
             return "";
           }, "encodeUTF8")
         }
@@ -193,96 +198,96 @@ var require_luaparse = __commonJS({
         invalidCodeUnit: "code unit U+%1 is not allowed in the current encoding mode"
       };
       var ast = exports2.ast = {
-        labelStatement: /* @__PURE__ */ __name(function(label) {
+        labelStatement: /* @__PURE__ */ __name2(function(label) {
           return {
             type: "LabelStatement",
             label
           };
         }, "labelStatement"),
-        breakStatement: /* @__PURE__ */ __name(function() {
+        breakStatement: /* @__PURE__ */ __name2(function() {
           return {
             type: "BreakStatement"
           };
         }, "breakStatement"),
-        gotoStatement: /* @__PURE__ */ __name(function(label) {
+        gotoStatement: /* @__PURE__ */ __name2(function(label) {
           return {
             type: "GotoStatement",
             label
           };
         }, "gotoStatement"),
-        returnStatement: /* @__PURE__ */ __name(function(args) {
+        returnStatement: /* @__PURE__ */ __name2(function(args) {
           return {
             type: "ReturnStatement",
             "arguments": args
           };
         }, "returnStatement"),
-        ifStatement: /* @__PURE__ */ __name(function(clauses) {
+        ifStatement: /* @__PURE__ */ __name2(function(clauses) {
           return {
             type: "IfStatement",
             clauses
           };
         }, "ifStatement"),
-        ifClause: /* @__PURE__ */ __name(function(condition, body) {
+        ifClause: /* @__PURE__ */ __name2(function(condition, body) {
           return {
             type: "IfClause",
             condition,
             body
           };
         }, "ifClause"),
-        elseifClause: /* @__PURE__ */ __name(function(condition, body) {
+        elseifClause: /* @__PURE__ */ __name2(function(condition, body) {
           return {
             type: "ElseifClause",
             condition,
             body
           };
         }, "elseifClause"),
-        elseClause: /* @__PURE__ */ __name(function(body) {
+        elseClause: /* @__PURE__ */ __name2(function(body) {
           return {
             type: "ElseClause",
             body
           };
         }, "elseClause"),
-        whileStatement: /* @__PURE__ */ __name(function(condition, body) {
+        whileStatement: /* @__PURE__ */ __name2(function(condition, body) {
           return {
             type: "WhileStatement",
             condition,
             body
           };
         }, "whileStatement"),
-        doStatement: /* @__PURE__ */ __name(function(body) {
+        doStatement: /* @__PURE__ */ __name2(function(body) {
           return {
             type: "DoStatement",
             body
           };
         }, "doStatement"),
-        repeatStatement: /* @__PURE__ */ __name(function(condition, body) {
+        repeatStatement: /* @__PURE__ */ __name2(function(condition, body) {
           return {
             type: "RepeatStatement",
             condition,
             body
           };
         }, "repeatStatement"),
-        localStatement: /* @__PURE__ */ __name(function(variables, init) {
+        localStatement: /* @__PURE__ */ __name2(function(variables, init) {
           return {
             type: "LocalStatement",
             variables,
             init
           };
         }, "localStatement"),
-        assignmentStatement: /* @__PURE__ */ __name(function(variables, init) {
+        assignmentStatement: /* @__PURE__ */ __name2(function(variables, init) {
           return {
             type: "AssignmentStatement",
             variables,
             init
           };
         }, "assignmentStatement"),
-        callStatement: /* @__PURE__ */ __name(function(expression) {
+        callStatement: /* @__PURE__ */ __name2(function(expression) {
           return {
             type: "CallStatement",
             expression
           };
         }, "callStatement"),
-        functionStatement: /* @__PURE__ */ __name(function(identifier, parameters, isLocal, body) {
+        functionStatement: /* @__PURE__ */ __name2(function(identifier, parameters, isLocal, body) {
           return {
             type: "FunctionDeclaration",
             identifier,
@@ -291,7 +296,7 @@ var require_luaparse = __commonJS({
             body
           };
         }, "functionStatement"),
-        forNumericStatement: /* @__PURE__ */ __name(function(variable, start, end2, step, body) {
+        forNumericStatement: /* @__PURE__ */ __name2(function(variable, start, end2, step, body) {
           return {
             type: "ForNumericStatement",
             variable,
@@ -301,7 +306,7 @@ var require_luaparse = __commonJS({
             body
           };
         }, "forNumericStatement"),
-        forGenericStatement: /* @__PURE__ */ __name(function(variables, iterators, body) {
+        forGenericStatement: /* @__PURE__ */ __name2(function(variables, iterators, body) {
           return {
             type: "ForGenericStatement",
             variables,
@@ -309,19 +314,19 @@ var require_luaparse = __commonJS({
             body
           };
         }, "forGenericStatement"),
-        chunk: /* @__PURE__ */ __name(function(body) {
+        chunk: /* @__PURE__ */ __name2(function(body) {
           return {
             type: "Chunk",
             body
           };
         }, "chunk"),
-        identifier: /* @__PURE__ */ __name(function(name) {
+        identifier: /* @__PURE__ */ __name2(function(name) {
           return {
             type: "Identifier",
             name
           };
         }, "identifier"),
-        literal: /* @__PURE__ */ __name(function(type, value, raw) {
+        literal: /* @__PURE__ */ __name2(function(type, value, raw) {
           type = type === StringLiteral ? "StringLiteral" : type === NumericLiteral ? "NumericLiteral" : type === BooleanLiteral ? "BooleanLiteral" : type === NilLiteral ? "NilLiteral" : "VarargLiteral";
           return {
             type,
@@ -329,33 +334,33 @@ var require_luaparse = __commonJS({
             raw
           };
         }, "literal"),
-        tableKey: /* @__PURE__ */ __name(function(key, value) {
+        tableKey: /* @__PURE__ */ __name2(function(key, value) {
           return {
             type: "TableKey",
             key,
             value
           };
         }, "tableKey"),
-        tableKeyString: /* @__PURE__ */ __name(function(key, value) {
+        tableKeyString: /* @__PURE__ */ __name2(function(key, value) {
           return {
             type: "TableKeyString",
             key,
             value
           };
         }, "tableKeyString"),
-        tableValue: /* @__PURE__ */ __name(function(value) {
+        tableValue: /* @__PURE__ */ __name2(function(value) {
           return {
             type: "TableValue",
             value
           };
         }, "tableValue"),
-        tableConstructorExpression: /* @__PURE__ */ __name(function(fields) {
+        tableConstructorExpression: /* @__PURE__ */ __name2(function(fields) {
           return {
             type: "TableConstructorExpression",
             fields
           };
         }, "tableConstructorExpression"),
-        binaryExpression: /* @__PURE__ */ __name(function(operator, left, right) {
+        binaryExpression: /* @__PURE__ */ __name2(function(operator, left, right) {
           var type = "and" === operator || "or" === operator ? "LogicalExpression" : "BinaryExpression";
           return {
             type,
@@ -364,14 +369,14 @@ var require_luaparse = __commonJS({
             right
           };
         }, "binaryExpression"),
-        unaryExpression: /* @__PURE__ */ __name(function(operator, argument) {
+        unaryExpression: /* @__PURE__ */ __name2(function(operator, argument) {
           return {
             type: "UnaryExpression",
             operator,
             argument
           };
         }, "unaryExpression"),
-        memberExpression: /* @__PURE__ */ __name(function(base, indexer, identifier) {
+        memberExpression: /* @__PURE__ */ __name2(function(base, indexer, identifier) {
           return {
             type: "MemberExpression",
             indexer,
@@ -379,35 +384,35 @@ var require_luaparse = __commonJS({
             base
           };
         }, "memberExpression"),
-        indexExpression: /* @__PURE__ */ __name(function(base, index2) {
+        indexExpression: /* @__PURE__ */ __name2(function(base, index2) {
           return {
             type: "IndexExpression",
             base,
             index: index2
           };
         }, "indexExpression"),
-        callExpression: /* @__PURE__ */ __name(function(base, args) {
+        callExpression: /* @__PURE__ */ __name2(function(base, args) {
           return {
             type: "CallExpression",
             base,
             "arguments": args
           };
         }, "callExpression"),
-        tableCallExpression: /* @__PURE__ */ __name(function(base, args) {
+        tableCallExpression: /* @__PURE__ */ __name2(function(base, args) {
           return {
             type: "TableCallExpression",
             base,
             "arguments": args
           };
         }, "tableCallExpression"),
-        stringCallExpression: /* @__PURE__ */ __name(function(base, argument) {
+        stringCallExpression: /* @__PURE__ */ __name2(function(base, argument) {
           return {
             type: "StringCallExpression",
             base,
             argument
           };
         }, "stringCallExpression"),
-        comment: /* @__PURE__ */ __name(function(value, raw) {
+        comment: /* @__PURE__ */ __name2(function(value, raw) {
           return {
             type: "Comment",
             value,
@@ -425,10 +430,11 @@ var require_luaparse = __commonJS({
         return node;
       }
       __name(finishNode, "finishNode");
+      __name2(finishNode, "finishNode");
       var slice = Array.prototype.slice, toString = Object.prototype.toString;
       var indexOf = (
         /* istanbul ignore next */
-        /* @__PURE__ */ __name(function(array, element) {
+        /* @__PURE__ */ __name2(function(array, element) {
           for (var i = 0, length2 = array.length; i < length2; ++i) {
             if (array[i] === element) return i;
           }
@@ -436,7 +442,7 @@ var require_luaparse = __commonJS({
         }, "indexOf")
       );
       if (Array.prototype.indexOf)
-        indexOf = /* @__PURE__ */ __name(function(array, element) {
+        indexOf = /* @__PURE__ */ __name2(function(array, element) {
           return array.indexOf(element);
         }, "indexOf");
       function indexOfObject(array, property, element) {
@@ -446,6 +452,7 @@ var require_luaparse = __commonJS({
         return -1;
       }
       __name(indexOfObject, "indexOfObject");
+      __name2(indexOfObject, "indexOfObject");
       function sprintf(format) {
         var args = slice.call(arguments, 1);
         format = format.replace(/%(\d)/g, function(match2, index2) {
@@ -455,9 +462,10 @@ var require_luaparse = __commonJS({
         return format;
       }
       __name(sprintf, "sprintf");
+      __name2(sprintf, "sprintf");
       var assign = (
         /* istanbul ignore next */
-        /* @__PURE__ */ __name(function(dest) {
+        /* @__PURE__ */ __name2(function(dest) {
           var args = slice.call(arguments, 1), src, prop;
           for (var i = 0, length2 = args.length; i < length2; ++i) {
             src = args[i];
@@ -482,6 +490,7 @@ var require_luaparse = __commonJS({
         });
       }
       __name(fixupError, "fixupError");
+      __name2(fixupError, "fixupError");
       function raise(token2) {
         var message = sprintf.apply(null, slice.call(arguments, 1)), error, col;
         if (token2 === null || typeof token2.line === "undefined") {
@@ -500,6 +509,7 @@ var require_luaparse = __commonJS({
         throw error;
       }
       __name(raise, "raise");
+      __name2(raise, "raise");
       function tokenValue(token2) {
         var raw = input.slice(token2.range[0], token2.range[1]);
         if (raw)
@@ -507,10 +517,12 @@ var require_luaparse = __commonJS({
         return token2.value;
       }
       __name(tokenValue, "tokenValue");
+      __name2(tokenValue, "tokenValue");
       function raiseUnexpectedToken(type, token2) {
         raise(token2, errors.expectedToken, type, tokenValue(token2));
       }
       __name(raiseUnexpectedToken, "raiseUnexpectedToken");
+      __name2(raiseUnexpectedToken, "raiseUnexpectedToken");
       function unexpected(found) {
         var near = tokenValue(lookahead);
         if ("undefined" !== typeof found.type) {
@@ -544,6 +556,7 @@ var require_luaparse = __commonJS({
         return raise(found, errors.unexpected, "symbol", found, near);
       }
       __name(unexpected, "unexpected");
+      __name2(unexpected, "unexpected");
       var index, token, previousToken, lookahead, comments, tokenStart, line, lineStart;
       exports2.lex = lex;
       function lex() {
@@ -640,6 +653,7 @@ var require_luaparse = __commonJS({
         return unexpected(input.charAt(index));
       }
       __name(lex, "lex");
+      __name2(lex, "lex");
       function consumeEOL() {
         var charCode = input.charCodeAt(index), peekCharCode = input.charCodeAt(index + 1);
         if (isLineTerminator(charCode)) {
@@ -652,6 +666,7 @@ var require_luaparse = __commonJS({
         return false;
       }
       __name(consumeEOL, "consumeEOL");
+      __name2(consumeEOL, "consumeEOL");
       function skipWhiteSpace() {
         while (index < length) {
           var charCode = input.charCodeAt(index);
@@ -663,6 +678,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(skipWhiteSpace, "skipWhiteSpace");
+      __name2(skipWhiteSpace, "skipWhiteSpace");
       function scanIdentifierOrKeyword() {
         var value, type;
         while (isIdentifierPart(input.charCodeAt(++index))) ;
@@ -687,6 +703,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(scanIdentifierOrKeyword, "scanIdentifierOrKeyword");
+      __name2(scanIdentifierOrKeyword, "scanIdentifierOrKeyword");
       function scanPunctuator(value) {
         index += value.length;
         return {
@@ -698,6 +715,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(scanPunctuator, "scanPunctuator");
+      __name2(scanPunctuator, "scanPunctuator");
       function scanVarargLiteral() {
         index += 3;
         return {
@@ -709,6 +727,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(scanVarargLiteral, "scanVarargLiteral");
+      __name2(scanVarargLiteral, "scanVarargLiteral");
       function scanStringLiteral() {
         var delimiter = input.charCodeAt(index++), beginLine = line, beginLineStart = lineStart, stringStart = index, string = encodingMode.discardStrings ? null : "", charCode;
         for (; ; ) {
@@ -744,6 +763,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(scanStringLiteral, "scanStringLiteral");
+      __name2(scanStringLiteral, "scanStringLiteral");
       function scanLongStringLiteral() {
         var beginLine = line, beginLineStart = lineStart, string = readLongString(false);
         if (false === string) raise(token, errors.expected, "[", tokenValue(token));
@@ -758,6 +778,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(scanLongStringLiteral, "scanLongStringLiteral");
+      __name2(scanLongStringLiteral, "scanLongStringLiteral");
       function scanNumericLiteral() {
         var character = input.charAt(index), next2 = input.charAt(index + 1);
         var literal = "0" === character && "xX".indexOf(next2 || null) >= 0 ? readHexLiteral() : readDecLiteral();
@@ -774,6 +795,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(scanNumericLiteral, "scanNumericLiteral");
+      __name2(scanNumericLiteral, "scanNumericLiteral");
       function readImaginaryUnitSuffix() {
         if (!features.imaginaryNumbers) return;
         if ("iI".indexOf(input.charAt(index) || null) >= 0) {
@@ -784,6 +806,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(readImaginaryUnitSuffix, "readImaginaryUnitSuffix");
+      __name2(readImaginaryUnitSuffix, "readImaginaryUnitSuffix");
       function readInt64Suffix() {
         if (!features.integerSuffixes) return;
         if ("uU".indexOf(input.charAt(index) || null) >= 0) {
@@ -810,6 +833,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(readInt64Suffix, "readInt64Suffix");
+      __name2(readInt64Suffix, "readInt64Suffix");
       function readHexLiteral() {
         var fraction = 0, binaryExponent = 1, binarySign = 1, digit, fractionStart, exponentStart, digitStart;
         digitStart = index += 2;
@@ -844,6 +868,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(readHexLiteral, "readHexLiteral");
+      __name2(readHexLiteral, "readHexLiteral");
       function readDecLiteral() {
         while (isDecDigit(input.charCodeAt(index))) ++index;
         var foundFraction = false;
@@ -867,6 +892,7 @@ var require_luaparse = __commonJS({
         };
       }
       __name(readDecLiteral, "readDecLiteral");
+      __name2(readDecLiteral, "readDecLiteral");
       function readUnicodeEscapeSequence() {
         var sequenceStart = index++;
         if (input.charAt(index++) !== "{")
@@ -895,6 +921,7 @@ var require_luaparse = __commonJS({
         return encodingMode.encodeUTF8(codepoint, frag);
       }
       __name(readUnicodeEscapeSequence, "readUnicodeEscapeSequence");
+      __name2(readUnicodeEscapeSequence, "readUnicodeEscapeSequence");
       function readEscapeSequence() {
         var sequenceStart = index;
         switch (input.charAt(index)) {
@@ -974,6 +1001,7 @@ var require_luaparse = __commonJS({
         return input.charAt(index++);
       }
       __name(readEscapeSequence, "readEscapeSequence");
+      __name2(readEscapeSequence, "readEscapeSequence");
       function scanComment() {
         tokenStart = index;
         index += 2;
@@ -1006,6 +1034,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(scanComment, "scanComment");
+      __name2(scanComment, "scanComment");
       function readLongString(isComment) {
         var level = 0, content = "", terminator = false, character, stringStart, firstLine = line;
         ++index;
@@ -1038,12 +1067,14 @@ var require_luaparse = __commonJS({
         );
       }
       __name(readLongString, "readLongString");
+      __name2(readLongString, "readLongString");
       function next() {
         previousToken = token;
         token = lookahead;
         lookahead = lex();
       }
       __name(next, "next");
+      __name2(next, "next");
       function consume(value) {
         if (value === token.value) {
           next();
@@ -1052,27 +1083,33 @@ var require_luaparse = __commonJS({
         return false;
       }
       __name(consume, "consume");
+      __name2(consume, "consume");
       function expect(value) {
         if (value === token.value) next();
         else raise(token, errors.expected, value, tokenValue(token));
       }
       __name(expect, "expect");
+      __name2(expect, "expect");
       function isWhiteSpace(charCode) {
         return 9 === charCode || 32 === charCode || 11 === charCode || 12 === charCode;
       }
       __name(isWhiteSpace, "isWhiteSpace");
+      __name2(isWhiteSpace, "isWhiteSpace");
       function isLineTerminator(charCode) {
         return 10 === charCode || 13 === charCode;
       }
       __name(isLineTerminator, "isLineTerminator");
+      __name2(isLineTerminator, "isLineTerminator");
       function isDecDigit(charCode) {
         return charCode >= 48 && charCode <= 57;
       }
       __name(isDecDigit, "isDecDigit");
+      __name2(isDecDigit, "isDecDigit");
       function isHexDigit(charCode) {
         return charCode >= 48 && charCode <= 57 || charCode >= 97 && charCode <= 102 || charCode >= 65 && charCode <= 70;
       }
       __name(isHexDigit, "isHexDigit");
+      __name2(isHexDigit, "isHexDigit");
       function isIdentifierStart(charCode) {
         if (charCode >= 65 && charCode <= 90 || charCode >= 97 && charCode <= 122 || 95 === charCode)
           return true;
@@ -1081,6 +1118,7 @@ var require_luaparse = __commonJS({
         return false;
       }
       __name(isIdentifierStart, "isIdentifierStart");
+      __name2(isIdentifierStart, "isIdentifierStart");
       function isIdentifierPart(charCode) {
         if (charCode >= 65 && charCode <= 90 || charCode >= 97 && charCode <= 122 || 95 === charCode || charCode >= 48 && charCode <= 57)
           return true;
@@ -1089,6 +1127,7 @@ var require_luaparse = __commonJS({
         return false;
       }
       __name(isIdentifierPart, "isIdentifierPart");
+      __name2(isIdentifierPart, "isIdentifierPart");
       function isKeyword(id) {
         switch (id.length) {
           case 2:
@@ -1111,12 +1150,14 @@ var require_luaparse = __commonJS({
         return false;
       }
       __name(isKeyword, "isKeyword");
+      __name2(isKeyword, "isKeyword");
       function isUnary(token2) {
         if (Punctuator === token2.type) return "#-~".indexOf(token2.value) >= 0;
         if (Keyword === token2.type) return "not" === token2.value;
         return false;
       }
       __name(isUnary, "isUnary");
+      __name2(isUnary, "isUnary");
       function isBlockFollow(token2) {
         if (EOF === token2.type) return true;
         if (Keyword !== token2.type) return false;
@@ -1131,6 +1172,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(isBlockFollow, "isBlockFollow");
+      __name2(isBlockFollow, "isBlockFollow");
       var scopes, scopeDepth, globals;
       function createScope() {
         var scope = scopes[scopeDepth++].slice();
@@ -1138,38 +1180,45 @@ var require_luaparse = __commonJS({
         if (options.onCreateScope) options.onCreateScope();
       }
       __name(createScope, "createScope");
+      __name2(createScope, "createScope");
       function destroyScope() {
         var scope = scopes.pop();
         --scopeDepth;
         if (options.onDestroyScope) options.onDestroyScope();
       }
       __name(destroyScope, "destroyScope");
+      __name2(destroyScope, "destroyScope");
       function scopeIdentifierName(name) {
         if (options.onLocalDeclaration) options.onLocalDeclaration(name);
         if (-1 !== indexOf(scopes[scopeDepth], name)) return;
         scopes[scopeDepth].push(name);
       }
       __name(scopeIdentifierName, "scopeIdentifierName");
+      __name2(scopeIdentifierName, "scopeIdentifierName");
       function scopeIdentifier(node) {
         scopeIdentifierName(node.name);
         attachScope(node, true);
       }
       __name(scopeIdentifier, "scopeIdentifier");
+      __name2(scopeIdentifier, "scopeIdentifier");
       function attachScope(node, isLocal) {
         if (!isLocal && -1 === indexOfObject(globals, "name", node.name))
           globals.push(node);
         node.isLocal = isLocal;
       }
       __name(attachScope, "attachScope");
+      __name2(attachScope, "attachScope");
       function scopeHasName(name) {
         return -1 !== indexOf(scopes[scopeDepth], name);
       }
       __name(scopeHasName, "scopeHasName");
+      __name2(scopeHasName, "scopeHasName");
       var locations = [], trackLocations;
       function createLocationMarker() {
         return new Marker(token);
       }
       __name(createLocationMarker, "createLocationMarker");
+      __name2(createLocationMarker, "createLocationMarker");
       function Marker(token2) {
         if (options.locations) {
           this.loc = {
@@ -1186,6 +1235,7 @@ var require_luaparse = __commonJS({
         if (options.ranges) this.range = [token2.range[0], 0];
       }
       __name(Marker, "Marker");
+      __name2(Marker, "Marker");
       Marker.prototype.complete = function() {
         if (options.locations) {
           this.loc.end.line = previousToken.lastLine || previousToken.line;
@@ -1220,15 +1270,18 @@ var require_luaparse = __commonJS({
         if (trackLocations) locations.push(createLocationMarker());
       }
       __name(markLocation, "markLocation");
+      __name2(markLocation, "markLocation");
       function pushLocation(marker) {
         if (trackLocations) locations.push(marker);
       }
       __name(pushLocation, "pushLocation");
+      __name2(pushLocation, "pushLocation");
       function FullFlowContext() {
         this.scopes = [];
         this.pendingGotos = [];
       }
       __name(FullFlowContext, "FullFlowContext");
+      __name2(FullFlowContext, "FullFlowContext");
       FullFlowContext.prototype.isInLoop = function() {
         var i = this.scopes.length;
         while (i-- > 0) {
@@ -1316,6 +1369,7 @@ var require_luaparse = __commonJS({
         this.loopLevels = [];
       }
       __name(LoopFlowContext, "LoopFlowContext");
+      __name2(LoopFlowContext, "LoopFlowContext");
       LoopFlowContext.prototype.isInLoop = function() {
         return !!this.loopLevels.length;
       };
@@ -1343,6 +1397,7 @@ var require_luaparse = __commonJS({
         return features.labels ? new FullFlowContext() : new LoopFlowContext();
       }
       __name(makeFlowContext, "makeFlowContext");
+      __name2(makeFlowContext, "makeFlowContext");
       function parseChunk() {
         next();
         markLocation();
@@ -1358,6 +1413,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.chunk(body));
       }
       __name(parseChunk, "parseChunk");
+      __name2(parseChunk, "parseChunk");
       function parseBlock(flowContext) {
         var block = [], statement;
         while (!isBlockFollow(token)) {
@@ -1372,6 +1428,7 @@ var require_luaparse = __commonJS({
         return block;
       }
       __name(parseBlock, "parseBlock");
+      __name2(parseBlock, "parseBlock");
       function parseStatement(flowContext) {
         markLocation();
         if (Punctuator === token.type) {
@@ -1429,6 +1486,7 @@ var require_luaparse = __commonJS({
         return parseAssignmentOrCallStatement(flowContext);
       }
       __name(parseStatement, "parseStatement");
+      __name2(parseStatement, "parseStatement");
       function parseLabelStatement(flowContext) {
         var nameToken = token, label = parseIdentifier();
         if (options.scope) {
@@ -1440,16 +1498,19 @@ var require_luaparse = __commonJS({
         return finishNode(ast.labelStatement(label));
       }
       __name(parseLabelStatement, "parseLabelStatement");
+      __name2(parseLabelStatement, "parseLabelStatement");
       function parseBreakStatement() {
         return finishNode(ast.breakStatement());
       }
       __name(parseBreakStatement, "parseBreakStatement");
+      __name2(parseBreakStatement, "parseBreakStatement");
       function parseGotoStatement(flowContext) {
         var name = token.value, gotoToken = previousToken, label = parseIdentifier();
         flowContext.addGoto(name, gotoToken);
         return finishNode(ast.gotoStatement(label));
       }
       __name(parseGotoStatement, "parseGotoStatement");
+      __name2(parseGotoStatement, "parseGotoStatement");
       function parseDoStatement(flowContext) {
         if (options.scope) createScope();
         flowContext.pushScope();
@@ -1460,6 +1521,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.doStatement(body));
       }
       __name(parseDoStatement, "parseDoStatement");
+      __name2(parseDoStatement, "parseDoStatement");
       function parseWhileStatement(flowContext) {
         var condition = parseExpectedExpression(flowContext);
         expect("do");
@@ -1472,6 +1534,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.whileStatement(condition, body));
       }
       __name(parseWhileStatement, "parseWhileStatement");
+      __name2(parseWhileStatement, "parseWhileStatement");
       function parseRepeatStatement(flowContext) {
         if (options.scope) createScope();
         flowContext.pushScope(true);
@@ -1484,6 +1547,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.repeatStatement(condition, body));
       }
       __name(parseRepeatStatement, "parseRepeatStatement");
+      __name2(parseRepeatStatement, "parseRepeatStatement");
       function parseReturnStatement(flowContext) {
         var expressions = [];
         if ("end" !== token.value) {
@@ -1498,6 +1562,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.returnStatement(expressions));
       }
       __name(parseReturnStatement, "parseReturnStatement");
+      __name2(parseReturnStatement, "parseReturnStatement");
       function parseIfStatement(flowContext) {
         var clauses = [], condition, body, marker;
         if (trackLocations) {
@@ -1541,6 +1606,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.ifStatement(clauses));
       }
       __name(parseIfStatement, "parseIfStatement");
+      __name2(parseIfStatement, "parseIfStatement");
       function parseForStatement(flowContext) {
         var variable = parseIdentifier(), body;
         if (options.scope) {
@@ -1582,6 +1648,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(parseForStatement, "parseForStatement");
+      __name2(parseForStatement, "parseForStatement");
       function parseLocalStatement(flowContext) {
         var name, declToken = previousToken;
         if (Identifier === token.type) {
@@ -1617,6 +1684,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(parseLocalStatement, "parseLocalStatement");
+      __name2(parseLocalStatement, "parseLocalStatement");
       function parseAssignmentOrCallStatement(flowContext) {
         var previous = token, marker, startMarker;
         var lvalue, base, name;
@@ -1678,6 +1746,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.assignmentStatement(targets, values));
       }
       __name(parseAssignmentOrCallStatement, "parseAssignmentOrCallStatement");
+      __name2(parseAssignmentOrCallStatement, "parseAssignmentOrCallStatement");
       function parseIdentifier() {
         markLocation();
         var identifier = token.value;
@@ -1686,6 +1755,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.identifier(identifier));
       }
       __name(parseIdentifier, "parseIdentifier");
+      __name2(parseIdentifier, "parseIdentifier");
       function parseFunctionDeclaration(name, isLocal) {
         var flowContext = makeFlowContext();
         flowContext.pushScope();
@@ -1716,6 +1786,7 @@ var require_luaparse = __commonJS({
         return finishNode(ast.functionStatement(name, parameters, isLocal, body));
       }
       __name(parseFunctionDeclaration, "parseFunctionDeclaration");
+      __name2(parseFunctionDeclaration, "parseFunctionDeclaration");
       function parseFunctionName() {
         var base, name, marker;
         if (trackLocations) marker = createLocationMarker();
@@ -1738,6 +1809,7 @@ var require_luaparse = __commonJS({
         return base;
       }
       __name(parseFunctionName, "parseFunctionName");
+      __name2(parseFunctionName, "parseFunctionName");
       function parseTableConstructor(flowContext) {
         var fields = [], key, value;
         while (true) {
@@ -1775,17 +1847,20 @@ var require_luaparse = __commonJS({
         return finishNode(ast.tableConstructorExpression(fields));
       }
       __name(parseTableConstructor, "parseTableConstructor");
+      __name2(parseTableConstructor, "parseTableConstructor");
       function parseExpression(flowContext) {
         var expression = parseSubExpression(0, flowContext);
         return expression;
       }
       __name(parseExpression, "parseExpression");
+      __name2(parseExpression, "parseExpression");
       function parseExpectedExpression(flowContext) {
         var expression = parseExpression(flowContext);
         if (null == expression) raiseUnexpectedToken("<expression>", token);
         else return expression;
       }
       __name(parseExpectedExpression, "parseExpectedExpression");
+      __name2(parseExpectedExpression, "parseExpectedExpression");
       function binaryPrecedence(operator) {
         var charCode = operator.charCodeAt(0), length2 = operator.length;
         if (1 === length2) {
@@ -1839,6 +1914,7 @@ var require_luaparse = __commonJS({
         return 0;
       }
       __name(binaryPrecedence, "binaryPrecedence");
+      __name2(binaryPrecedence, "binaryPrecedence");
       function parseSubExpression(minPrecedence, flowContext) {
         var operator = token.value, expression, marker;
         if (trackLocations) marker = createLocationMarker();
@@ -1871,6 +1947,7 @@ var require_luaparse = __commonJS({
         return expression;
       }
       __name(parseSubExpression, "parseSubExpression");
+      __name2(parseSubExpression, "parseSubExpression");
       function parsePrefixExpressionPart(base, marker, flowContext) {
         var expression, identifier;
         if (Punctuator === token.type) {
@@ -1905,6 +1982,7 @@ var require_luaparse = __commonJS({
         return null;
       }
       __name(parsePrefixExpressionPart, "parsePrefixExpressionPart");
+      __name2(parsePrefixExpressionPart, "parsePrefixExpressionPart");
       function parsePrefixExpression(flowContext) {
         var base, name, marker;
         if (trackLocations) marker = createLocationMarker();
@@ -1927,6 +2005,7 @@ var require_luaparse = __commonJS({
         return base;
       }
       __name(parsePrefixExpression, "parsePrefixExpression");
+      __name2(parsePrefixExpression, "parsePrefixExpression");
       function parseCallExpression(base, flowContext) {
         if (Punctuator === token.type) {
           switch (token.value) {
@@ -1957,6 +2036,7 @@ var require_luaparse = __commonJS({
         raiseUnexpectedToken("function arguments", token);
       }
       __name(parseCallExpression, "parseCallExpression");
+      __name2(parseCallExpression, "parseCallExpression");
       function parsePrimaryExpression(flowContext) {
         var literals = StringLiteral | NumericLiteral | BooleanLiteral | NilLiteral | VarargLiteral, value = token.value, type = token.type, marker;
         if (trackLocations) marker = createLocationMarker();
@@ -1979,6 +2059,7 @@ var require_luaparse = __commonJS({
         }
       }
       __name(parsePrimaryExpression, "parsePrimaryExpression");
+      __name2(parsePrimaryExpression, "parsePrimaryExpression");
       exports2.parse = parse2;
       var versionFeatures = {
         "5.1": {},
@@ -2045,7 +2126,8 @@ var require_luaparse = __commonJS({
         if (!options.wait) return end();
         return exports2;
       }
-      __name(parse2, "parse");
+      __name(parse2, "parse2");
+      __name2(parse2, "parse");
       exports2.write = write;
       function write(_input) {
         input += String(_input);
@@ -2053,6 +2135,7 @@ var require_luaparse = __commonJS({
         return exports2;
       }
       __name(write, "write");
+      __name2(write, "write");
       exports2.end = end;
       function end(_input) {
         if ("undefined" !== typeof _input) write(_input);
@@ -2070,11 +2153,10 @@ var require_luaparse = __commonJS({
         return chunk;
       }
       __name(end, "end");
+      __name2(end, "end");
     });
   }
 });
-
-// ../fandomProcessor.js
 async function loadAllModules() {
   const modulePromises = Object.entries(fandomModules2).map(async ([name, moduleName]) => {
     const url = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${moduleName}`;
@@ -2090,6 +2172,7 @@ async function loadAllModules() {
   const moduleEntries = await Promise.all(modulePromises);
   return Object.fromEntries(moduleEntries);
 }
+__name(loadAllModules, "loadAllModules");
 async function extractValue(node) {
   if (!node) return null;
   switch (node.type) {
@@ -2137,6 +2220,7 @@ async function extractValue(node) {
       return null;
   }
 }
+__name(extractValue, "extractValue");
 async function extractTable(tableNode) {
   const obj = {};
   for (const field of tableNode.fields) {
@@ -2155,6 +2239,7 @@ async function extractTable(tableNode) {
   }
   return obj;
 }
+__name(extractTable, "extractTable");
 async function getFandomData() {
   const allModules = await loadAllModules();
   const extractedData = {};
@@ -2168,6 +2253,7 @@ async function getFandomData() {
   }
   return extractedData;
 }
+__name(getFandomData, "getFandomData");
 async function extractDataFromAST(ast) {
   const result = {};
   for (const statement of ast.body) {
@@ -2179,10 +2265,12 @@ async function extractDataFromAST(ast) {
   }
   return result;
 }
-var import_luaparse, fandomModules2;
+__name(extractDataFromAST, "extractDataFromAST");
+var import_luaparse;
+var fandomModules2;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_43480395324914645();
+    init_functionsRoutes_0_6122643749777842();
     import_luaparse = __toESM(require_luaparse());
     fandomModules2 = {
       Lawnames: "Lawnames",
@@ -2190,15 +2278,13 @@ var init_fandomProcessor = __esm({
       Nationdata: "Nationdata",
       Tagdata: "Tagdata"
     };
-    __name(loadAllModules, "loadAllModules");
-    __name(extractValue, "extractValue");
-    __name(extractTable, "extractTable");
-    __name(getFandomData, "getFandomData");
-    __name(extractDataFromAST, "extractDataFromAST");
+    __name2(loadAllModules, "loadAllModules");
+    __name2(extractValue, "extractValue");
+    __name2(extractTable, "extractTable");
+    __name2(getFandomData, "getFandomData");
+    __name2(extractDataFromAST, "extractDataFromAST");
   }
 });
-
-// api/fandom-data.js
 async function onRequest(context) {
   try {
     if (cachedFandomData && cacheTime && Date.now() - cacheTime < CACHE_DURATION) {
@@ -2228,19 +2314,20 @@ async function onRequest(context) {
     });
   }
 }
-var cachedFandomData, cacheTime, CACHE_DURATION;
+__name(onRequest, "onRequest");
+var cachedFandomData;
+var cacheTime;
+var CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_43480395324914645();
+    init_functionsRoutes_0_6122643749777842();
     init_fandomProcessor();
     cachedFandomData = null;
     cacheTime = null;
     CACHE_DURATION = 5 * 60 * 1e3;
-    __name(onRequest, "onRequest");
+    __name2(onRequest, "onRequest");
   }
 });
-
-// api/fandom-image.js
 async function onRequest2(context) {
   const { request } = context;
   const url = new URL(request.url);
@@ -2308,14 +2395,13 @@ async function onRequest2(context) {
     });
   }
 }
+__name(onRequest2, "onRequest2");
 var init_fandom_image = __esm({
   "api/fandom-image.js"() {
-    init_functionsRoutes_0_43480395324914645();
-    __name(onRequest2, "onRequest");
+    init_functionsRoutes_0_6122643749777842();
+    __name2(onRequest2, "onRequest");
   }
 });
-
-// api/fandom-module.js
 async function onRequest3(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -2368,14 +2454,13 @@ async function onRequest3(context) {
     });
   }
 }
+__name(onRequest3, "onRequest3");
 var init_fandom_module = __esm({
   "api/fandom-module.js"() {
-    init_functionsRoutes_0_43480395324914645();
-    __name(onRequest3, "onRequest");
+    init_functionsRoutes_0_6122643749777842();
+    __name2(onRequest3, "onRequest");
   }
 });
-
-// api/roblox-thumbnail.js
 async function onRequest4(context) {
   const { request } = context;
   const url = new URL(request.url);
@@ -2435,17 +2520,16 @@ async function onRequest4(context) {
     });
   }
 }
+__name(onRequest4, "onRequest4");
 var init_roblox_thumbnail = __esm({
   "api/roblox-thumbnail.js"() {
-    init_functionsRoutes_0_43480395324914645();
-    __name(onRequest4, "onRequest");
+    init_functionsRoutes_0_6122643749777842();
+    __name2(onRequest4, "onRequest");
   }
 });
-
-// ../.wrangler/tmp/pages-zqh0X2/functionsRoutes-0.43480395324914645.mjs
 var routes;
-var init_functionsRoutes_0_43480395324914645 = __esm({
-  "../.wrangler/tmp/pages-zqh0X2/functionsRoutes-0.43480395324914645.mjs"() {
+var init_functionsRoutes_0_6122643749777842 = __esm({
+  "../.wrangler/tmp/pages-UtXpBj/functionsRoutes-0.6122643749777842.mjs"() {
     init_fandom_data();
     init_fandom_image();
     init_fandom_module();
@@ -2482,18 +2566,10 @@ var init_functionsRoutes_0_43480395324914645 = __esm({
     ];
   }
 });
-
-// ../.wrangler/tmp/bundle-InYJbF/middleware-loader.entry.ts
-init_functionsRoutes_0_43480395324914645();
-
-// ../.wrangler/tmp/bundle-InYJbF/middleware-insertion-facade.js
-init_functionsRoutes_0_43480395324914645();
-
-// ../node_modules/wrangler/templates/pages-template-worker.ts
-init_functionsRoutes_0_43480395324914645();
-
-// ../node_modules/wrangler/node_modules/path-to-regexp/dist.es2015/index.js
-init_functionsRoutes_0_43480395324914645();
+init_functionsRoutes_0_6122643749777842();
+init_functionsRoutes_0_6122643749777842();
+init_functionsRoutes_0_6122643749777842();
+init_functionsRoutes_0_6122643749777842();
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -2578,6 +2654,7 @@ function lexer(str) {
   return tokens;
 }
 __name(lexer, "lexer");
+__name2(lexer, "lexer");
 function parse(str, options) {
   if (options === void 0) {
     options = {};
@@ -2588,18 +2665,18 @@ function parse(str, options) {
   var key = 0;
   var i = 0;
   var path = "";
-  var tryConsume = /* @__PURE__ */ __name(function(type) {
+  var tryConsume = /* @__PURE__ */ __name2(function(type) {
     if (i < tokens.length && tokens[i].type === type)
       return tokens[i++].value;
   }, "tryConsume");
-  var mustConsume = /* @__PURE__ */ __name(function(type) {
+  var mustConsume = /* @__PURE__ */ __name2(function(type) {
     var value2 = tryConsume(type);
     if (value2 !== void 0)
       return value2;
     var _a2 = tokens[i], nextType = _a2.type, index = _a2.index;
     throw new TypeError("Unexpected ".concat(nextType, " at ").concat(index, ", expected ").concat(type));
   }, "mustConsume");
-  var consumeText = /* @__PURE__ */ __name(function() {
+  var consumeText = /* @__PURE__ */ __name2(function() {
     var result2 = "";
     var value2;
     while (value2 = tryConsume("CHAR") || tryConsume("ESCAPED_CHAR")) {
@@ -2607,7 +2684,7 @@ function parse(str, options) {
     }
     return result2;
   }, "consumeText");
-  var isSafe = /* @__PURE__ */ __name(function(value2) {
+  var isSafe = /* @__PURE__ */ __name2(function(value2) {
     for (var _i = 0, delimiter_1 = delimiter; _i < delimiter_1.length; _i++) {
       var char2 = delimiter_1[_i];
       if (value2.indexOf(char2) > -1)
@@ -2615,7 +2692,7 @@ function parse(str, options) {
     }
     return false;
   }, "isSafe");
-  var safePattern = /* @__PURE__ */ __name(function(prefix2) {
+  var safePattern = /* @__PURE__ */ __name2(function(prefix2) {
     var prev = result[result.length - 1];
     var prevText = prefix2 || (prev && typeof prev === "string" ? prev : "");
     if (prev && !prevText) {
@@ -2678,12 +2755,14 @@ function parse(str, options) {
   return result;
 }
 __name(parse, "parse");
+__name2(parse, "parse");
 function match(str, options) {
   var keys = [];
   var re = pathToRegexp(str, keys, options);
   return regexpToFunction(re, keys, options);
 }
 __name(match, "match");
+__name2(match, "match");
 function regexpToFunction(re, keys, options) {
   if (options === void 0) {
     options = {};
@@ -2697,7 +2776,7 @@ function regexpToFunction(re, keys, options) {
       return false;
     var path = m[0], index = m.index;
     var params = /* @__PURE__ */ Object.create(null);
-    var _loop_1 = /* @__PURE__ */ __name(function(i2) {
+    var _loop_1 = /* @__PURE__ */ __name2(function(i2) {
       if (m[i2] === void 0)
         return "continue";
       var key = keys[i2 - 1];
@@ -2716,14 +2795,17 @@ function regexpToFunction(re, keys, options) {
   };
 }
 __name(regexpToFunction, "regexpToFunction");
+__name2(regexpToFunction, "regexpToFunction");
 function escapeString(str) {
   return str.replace(/([.+*?=^!:${}()[\]|/\\])/g, "\\$1");
 }
 __name(escapeString, "escapeString");
+__name2(escapeString, "escapeString");
 function flags(options) {
   return options && options.sensitive ? "" : "i";
 }
 __name(flags, "flags");
+__name2(flags, "flags");
 function regexpToRegexp(path, keys) {
   if (!keys)
     return path;
@@ -2744,6 +2826,7 @@ function regexpToRegexp(path, keys) {
   return path;
 }
 __name(regexpToRegexp, "regexpToRegexp");
+__name2(regexpToRegexp, "regexpToRegexp");
 function arrayToRegexp(paths, keys, options) {
   var parts = paths.map(function(path) {
     return pathToRegexp(path, keys, options).source;
@@ -2751,10 +2834,12 @@ function arrayToRegexp(paths, keys, options) {
   return new RegExp("(?:".concat(parts.join("|"), ")"), flags(options));
 }
 __name(arrayToRegexp, "arrayToRegexp");
+__name2(arrayToRegexp, "arrayToRegexp");
 function stringToRegexp(path, keys, options) {
   return tokensToRegexp(parse(path, options), keys, options);
 }
 __name(stringToRegexp, "stringToRegexp");
+__name2(stringToRegexp, "stringToRegexp");
 function tokensToRegexp(tokens, keys, options) {
   if (options === void 0) {
     options = {};
@@ -2810,6 +2895,7 @@ function tokensToRegexp(tokens, keys, options) {
   return new RegExp(route, flags(options));
 }
 __name(tokensToRegexp, "tokensToRegexp");
+__name2(tokensToRegexp, "tokensToRegexp");
 function pathToRegexp(path, keys, options) {
   if (path instanceof RegExp)
     return regexpToRegexp(path, keys);
@@ -2818,8 +2904,7 @@ function pathToRegexp(path, keys, options) {
   return stringToRegexp(path, keys, options);
 }
 __name(pathToRegexp, "pathToRegexp");
-
-// ../node_modules/wrangler/templates/pages-template-worker.ts
+__name2(pathToRegexp, "pathToRegexp");
 var escapeRegex = /[.+?^${}()|[\]\\]/g;
 function* executeRequest(request) {
   const requestPath = new URL(request.url).pathname;
@@ -2870,13 +2955,14 @@ function* executeRequest(request) {
   }
 }
 __name(executeRequest, "executeRequest");
+__name2(executeRequest, "executeRequest");
 var pages_template_worker_default = {
   async fetch(originalRequest, env, workerContext) {
     let request = originalRequest;
     const handlerIterator = executeRequest(request);
     let data = {};
     let isFailOpen = false;
-    const next = /* @__PURE__ */ __name(async (input, init) => {
+    const next = /* @__PURE__ */ __name2(async (input, init) => {
       if (input !== void 0) {
         let url = input;
         if (typeof input === "string") {
@@ -2903,7 +2989,7 @@ var pages_template_worker_default = {
           },
           env,
           waitUntil: workerContext.waitUntil.bind(workerContext),
-          passThroughOnException: /* @__PURE__ */ __name(() => {
+          passThroughOnException: /* @__PURE__ */ __name2(() => {
             isFailOpen = true;
           }, "passThroughOnException")
         };
@@ -2931,17 +3017,15 @@ var pages_template_worker_default = {
     }
   }
 };
-var cloneResponse = /* @__PURE__ */ __name((response) => (
+var cloneResponse = /* @__PURE__ */ __name2((response) => (
   // https://fetch.spec.whatwg.org/#null-body-status
   new Response(
     [101, 204, 205, 304].includes(response.status) ? null : response.body,
     response
   )
 ), "cloneResponse");
-
-// ../node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-init_functionsRoutes_0_43480395324914645();
-var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+init_functionsRoutes_0_6122643749777842();
+var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
   } finally {
@@ -2957,9 +3041,7 @@ var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
   }
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
-
-// ../node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
-init_functionsRoutes_0_43480395324914645();
+init_functionsRoutes_0_6122643749777842();
 function reduceError(e) {
   return {
     name: e?.name,
@@ -2969,7 +3051,8 @@ function reduceError(e) {
   };
 }
 __name(reduceError, "reduceError");
-var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+__name2(reduceError, "reduceError");
+var jsonError = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
   } catch (e) {
@@ -2981,21 +3064,18 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
   }
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
-
-// ../.wrangler/tmp/bundle-InYJbF/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = pages_template_worker_default;
-
-// ../node_modules/wrangler/templates/middleware/common.ts
-init_functionsRoutes_0_43480395324914645();
+init_functionsRoutes_0_6122643749777842();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
 }
 __name(__facade_register__, "__facade_register__");
+__name2(__facade_register__, "__facade_register__");
 function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
   const [head, ...tail] = middlewareChain;
   const middlewareCtx = {
@@ -3007,6 +3087,7 @@ function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
   return head(request, env, ctx, middlewareCtx);
 }
 __name(__facade_invokeChain__, "__facade_invokeChain__");
+__name2(__facade_invokeChain__, "__facade_invokeChain__");
 function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   return __facade_invokeChain__(request, env, ctx, dispatch, [
     ...__facade_middleware__,
@@ -3014,16 +3095,18 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   ]);
 }
 __name(__facade_invoke__, "__facade_invoke__");
-
-// ../.wrangler/tmp/bundle-InYJbF/middleware-loader.entry.ts
+__name2(__facade_invoke__, "__facade_invoke__");
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
+  static {
+    __name(this, "___Facade_ScheduledController__");
+  }
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
     this.cron = cron;
     this.#noRetry = noRetry;
   }
   static {
-    __name(this, "__Facade_ScheduledController__");
+    __name2(this, "__Facade_ScheduledController__");
   }
   #noRetry;
   noRetry() {
@@ -3040,7 +3123,7 @@ function wrapExportedHandler(worker) {
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
-  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+  const fetchDispatcher = /* @__PURE__ */ __name2(function(request, env, ctx) {
     if (worker.fetch === void 0) {
       throw new Error("Handler does not export a fetch() function.");
     }
@@ -3049,7 +3132,7 @@ function wrapExportedHandler(worker) {
   return {
     ...worker,
     fetch(request, env, ctx) {
-      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+      const dispatcher = /* @__PURE__ */ __name2(function(type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__(
             Date.now(),
@@ -3065,6 +3148,7 @@ function wrapExportedHandler(worker) {
   };
 }
 __name(wrapExportedHandler, "wrapExportedHandler");
+__name2(wrapExportedHandler, "wrapExportedHandler");
 function wrapWorkerEntrypoint(klass) {
   if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
     return klass;
@@ -3073,7 +3157,7 @@ function wrapWorkerEntrypoint(klass) {
     __facade_register__(middleware);
   }
   return class extends klass {
-    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+    #fetchDispatcher = /* @__PURE__ */ __name2((request, env, ctx) => {
       this.env = env;
       this.ctx = ctx;
       if (super.fetch === void 0) {
@@ -3081,7 +3165,7 @@ function wrapWorkerEntrypoint(klass) {
       }
       return super.fetch(request);
     }, "#fetchDispatcher");
-    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+    #dispatcher = /* @__PURE__ */ __name2((type, init) => {
       if (type === "scheduled" && super.scheduled !== void 0) {
         const controller = new __Facade_ScheduledController__(
           Date.now(),
@@ -3104,6 +3188,7 @@ function wrapWorkerEntrypoint(klass) {
   };
 }
 __name(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
+__name2(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
 var WRAPPED_ENTRY;
 if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapExportedHandler(middleware_insertion_facade_default);
@@ -3111,8 +3196,178 @@ if (typeof middleware_insertion_facade_default === "object") {
   WRAPPED_ENTRY = wrapWorkerEntrypoint(middleware_insertion_facade_default);
 }
 var middleware_loader_entry_default = WRAPPED_ENTRY;
-export {
-  __INTERNAL_WRANGLER_MIDDLEWARE__,
-  middleware_loader_entry_default as default
+
+// node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+var drainBody2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } finally {
+    try {
+      if (request.body !== null && !request.bodyUsed) {
+        const reader = request.body.getReader();
+        while (!(await reader.read()).done) {
+        }
+      }
+    } catch (e) {
+      console.error("Failed to drain the unused request body.", e);
+    }
+  }
+}, "drainBody");
+var middleware_ensure_req_body_drained_default2 = drainBody2;
+
+// node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+function reduceError2(e) {
+  return {
+    name: e?.name,
+    message: e?.message ?? String(e),
+    stack: e?.stack,
+    cause: e?.cause === void 0 ? void 0 : reduceError2(e.cause)
+  };
+}
+__name(reduceError2, "reduceError");
+var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } catch (e) {
+    const error = reduceError2(e);
+    return Response.json(error, {
+      status: 500,
+      headers: { "MF-Experimental-Error-Stack": "true" }
+    });
+  }
+}, "jsonError");
+var middleware_miniflare3_json_error_default2 = jsonError2;
+
+// .wrangler/tmp/bundle-mTS7eK/middleware-insertion-facade.js
+var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
+  middleware_ensure_req_body_drained_default2,
+  middleware_miniflare3_json_error_default2
+];
+var middleware_insertion_facade_default2 = middleware_loader_entry_default;
+
+// node_modules/wrangler/templates/middleware/common.ts
+var __facade_middleware__2 = [];
+function __facade_register__2(...args) {
+  __facade_middleware__2.push(...args.flat());
+}
+__name(__facade_register__2, "__facade_register__");
+function __facade_invokeChain__2(request, env, ctx, dispatch, middlewareChain) {
+  const [head, ...tail] = middlewareChain;
+  const middlewareCtx = {
+    dispatch,
+    next(newRequest, newEnv) {
+      return __facade_invokeChain__2(newRequest, newEnv, ctx, dispatch, tail);
+    }
+  };
+  return head(request, env, ctx, middlewareCtx);
+}
+__name(__facade_invokeChain__2, "__facade_invokeChain__");
+function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__2(request, env, ctx, dispatch, [
+    ...__facade_middleware__2,
+    finalMiddleware
+  ]);
+}
+__name(__facade_invoke__2, "__facade_invoke__");
+
+// .wrangler/tmp/bundle-mTS7eK/middleware-loader.entry.ts
+var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
+  constructor(scheduledTime, cron, noRetry) {
+    this.scheduledTime = scheduledTime;
+    this.cron = cron;
+    this.#noRetry = noRetry;
+  }
+  static {
+    __name(this, "__Facade_ScheduledController__");
+  }
+  #noRetry;
+  noRetry() {
+    if (!(this instanceof ___Facade_ScheduledController__2)) {
+      throw new TypeError("Illegal invocation");
+    }
+    this.#noRetry();
+  }
 };
-//# sourceMappingURL=functionsWorker-0.6752544950037561.mjs.map
+function wrapExportedHandler2(worker) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__2 === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__2.length === 0) {
+    return worker;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
+    __facade_register__2(middleware);
+  }
+  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+    if (worker.fetch === void 0) {
+      throw new Error("Handler does not export a fetch() function.");
+    }
+    return worker.fetch(request, env, ctx);
+  }, "fetchDispatcher");
+  return {
+    ...worker,
+    fetch(request, env, ctx) {
+      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+        if (type === "scheduled" && worker.scheduled !== void 0) {
+          const controller = new __Facade_ScheduledController__2(
+            Date.now(),
+            init.cron ?? "",
+            () => {
+            }
+          );
+          return worker.scheduled(controller, env, ctx);
+        }
+      }, "dispatcher");
+      return __facade_invoke__2(request, env, ctx, dispatcher, fetchDispatcher);
+    }
+  };
+}
+__name(wrapExportedHandler2, "wrapExportedHandler");
+function wrapWorkerEntrypoint2(klass) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__2 === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__2.length === 0) {
+    return klass;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
+    __facade_register__2(middleware);
+  }
+  return class extends klass {
+    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+      this.env = env;
+      this.ctx = ctx;
+      if (super.fetch === void 0) {
+        throw new Error("Entrypoint class does not define a fetch() function.");
+      }
+      return super.fetch(request);
+    }, "#fetchDispatcher");
+    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+      if (type === "scheduled" && super.scheduled !== void 0) {
+        const controller = new __Facade_ScheduledController__2(
+          Date.now(),
+          init.cron ?? "",
+          () => {
+          }
+        );
+        return super.scheduled(controller);
+      }
+    }, "#dispatcher");
+    fetch(request) {
+      return __facade_invoke__2(
+        request,
+        this.env,
+        this.ctx,
+        this.#dispatcher,
+        this.#fetchDispatcher
+      );
+    }
+  };
+}
+__name(wrapWorkerEntrypoint2, "wrapWorkerEntrypoint");
+var WRAPPED_ENTRY2;
+if (typeof middleware_insertion_facade_default2 === "object") {
+  WRAPPED_ENTRY2 = wrapExportedHandler2(middleware_insertion_facade_default2);
+} else if (typeof middleware_insertion_facade_default2 === "function") {
+  WRAPPED_ENTRY2 = wrapWorkerEntrypoint2(middleware_insertion_facade_default2);
+}
+var middleware_loader_entry_default2 = WRAPPED_ENTRY2;
+export {
+  __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
+  middleware_loader_entry_default2 as default
+};
+//# sourceMappingURL=functionsWorker-0.7471896703689418.js.map
