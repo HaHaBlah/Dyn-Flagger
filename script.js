@@ -108,6 +108,7 @@ async function generateNationsList() {
     }
 }
 
+/** Searchbar that filters nationslist */
 export function nationsSearchFilter() {
     const filter = document.getElementById('nations-search-filter').value.toUpperCase();
 
@@ -183,7 +184,7 @@ function translateLawLeveltoText(lawCode, level) {
     return Lawnames.lawNames[lawCode]?.Types[level] ?? 'Law Not Found';
 }
 
-/** ("Monarch Power", "Limited") -> 1
+/** ("Monarch Power", "Limited") -> (1)
  * @param {string} lawText "Monarch Power"
  * @param {string} levelText "Limited"
  * @returns string/int
@@ -226,7 +227,12 @@ function removeFlag(index) {
 }
 
 // ─── Flag Element Creation ────────────────────────────────────────────────────
-
+/**
+ * Creates all the html for a flag, adds events
+ * @param {*} flagData 
+ * @param {*} index 
+ * @returns 
+ */
 function createFlagElement(flagData, index) {
     const flagDiv = document.createElement('div');
     flagDiv.classList.add('flag');
@@ -334,8 +340,10 @@ function createFlagElement(flagData, index) {
     return flagDiv;
 }
 
-// ─── Laws Levels ─────────────────────────────────────────────────────────────
-
+/** * Generates the buttons for different levels of the selected law, and adds events to them.
+ * @param {*} flagDiv 
+ * @param {*} lawText 
+ */
 function generateLawsLevels(flagDiv, lawText) {
     const lawCode = getLawCodeFromName(lawText);
     if (!lawCode) return;
@@ -391,6 +399,8 @@ function generateLawsLevels(flagDiv, lawText) {
     });
 }
 
+// =========================== Update UI Functions START ===========================
+/** Updates the law level buttons to reflect the current state of flagSpecifications */
 function updateLawsLevelButtons(levelsDiv, flagIndex, lawCode) {
     const flag = flagSpecifications.Flags[flagIndex];
     const lawArr = flag.Laws[lawCode] ?? [];
@@ -411,8 +421,7 @@ function updateLawsLevelButtons(levelsDiv, flagIndex, lawCode) {
     }
 }
 
-// ─── Flag Element Updates ─────────────────────────────────────────────────────
-
+/** Updates the flag element's inputs, overview, and law selection buttons to reflect the current state of flagSpecifications */
 function updateFlagElement(flagDiv, flagData, index) {
     flagDiv.dataset.flagIndex = index;
 
@@ -487,13 +496,13 @@ function updateFlagOverview(flagDiv, index) {
     updateOutput();
 }
 
-// ─── Display Update ───────────────────────────────────────────────────────────
-
+/** updateDisplay() when a nation in nationslist is clicked */
 function onNationsListButtonClick(countryName) {
     flagSpecifications.NationName = countryName;
     updateDisplay();
 }
 
+/** Updates the nation name input, flag image, and flag elements to reflect the current state of flagSpecifications */
 function updateDisplay() {
     const nationNameInput = document.querySelector('#nation-name');
     const nationFlag = document.querySelector('#nation-flag');
@@ -526,9 +535,10 @@ function updateDisplay() {
 
     updateOutput();
 }
+// =========================== Update UI Functions END ===========================
 
 // =================== Output Box START ===================
-
+/** Generates the output code based on flagSpecifications, and updates the output box. Also fetches image URLs for flags. */
 async function updateOutput() {
     const outputText = document.querySelector('#output-text');
     if (!outputText) return;
@@ -604,9 +614,7 @@ async function updateOutput() {
     ]]`.trim();
 }
 
-/**
- * Copy the the code output to clipboard 
- */
+/** Copy the the code output to clipboard */
 function copyOutput() {
     const output = document.getElementById('output-text');
     const button = document.getElementById('copy-output-btn');
@@ -622,16 +630,14 @@ function copyOutput() {
 }
 // =================== Output Box END ===================
 
-// ─── Utilities ────────────────────────────────────────────────────────────────
-
+/** Utility function to chunk an array into smaller arrays of a specified size. Used for output formatting. In other words, i have no idea what this does but i just use it. Like cFrames in Roblox */
 function chunk(arr, size) {
     return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
         arr.slice(i * size, i * size + size)
     );
 }
 
-// Run
-
+// ==================== Run on Page Load ====================
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.new-flag-button button')
         ?.addEventListener('click', () => { addFlag(); updateDisplay(); });
