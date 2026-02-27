@@ -559,6 +559,19 @@ input {
     padding: 20px;
 }
 
+/* Delete Flag Button */
+.delete-flag-button {
+    padding: 6px;
+}
+
+.delete-flag-button img {
+    width: 16px;
+    height: auto;
+    vertical-align: middle;
+    margin-right: 6px;
+    color: white;
+}
+
 /* Temp class */
 .ron-red{
     color: var(--ron-red);

@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/pages-H1IuNi/functionsWorker-0.9348283394657727.mjs
+// .wrangler/tmp/pages-REteeA/functionsWorker-0.623343509716188.mjs
 var __create = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -33,7 +33,7 @@ var __toESM = /* @__PURE__ */ __name((mod, isNodeMode, target) => (target = mod 
 )), "__toESM");
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_7449468700615183();
+    init_functionsRoutes_0_26326532965762217();
     (function(root, name, factory) {
       "use strict";
       var objectTypes = {
@@ -2157,11 +2157,14 @@ var require_luaparse = __commonJS({
     });
   }
 });
-async function loadAllModules() {
-  const modulePromises = Object.entries(fandomModules2).map(async ([name, moduleName]) => {
-    const url = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${moduleName}`;
+async function loadAllModules(baseUrl) {
+  const modulePromises = Object.entries(fandomModules).map(async ([name, moduleName]) => {
+    const url = `${baseUrl}/api/fandom-module?module=${encodeURIComponent(moduleName)}&wiki=ronroblox`;
     try {
       const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`fandom-module returned ${response.status}`);
+      }
       const data = await response.json();
       return [name, data.source];
     } catch (error) {
@@ -2181,9 +2184,6 @@ async function extractValue(node) {
       if (node.value !== null) stringValue = node.value;
       else if (node.raw) {
         stringValue = node.raw.slice(1, -1);
-      }
-      if (stringValue?.startsWith("File:")) {
-        return await resolveFileUrl(stringValue);
       }
       return stringValue;
     case "NumericLiteral":
@@ -2240,8 +2240,8 @@ async function extractTable(tableNode) {
   return obj;
 }
 __name(extractTable, "extractTable");
-async function getFandomData() {
-  const allModules = await loadAllModules();
+async function getFandomData(baseUrl = "") {
+  const allModules = await loadAllModules(baseUrl);
   const extractedData = {};
   for (const [name, source] of Object.entries(allModules)) {
     try {
@@ -2267,12 +2267,12 @@ async function extractDataFromAST(ast) {
 }
 __name(extractDataFromAST, "extractDataFromAST");
 var import_luaparse;
-var fandomModules2;
+var fandomModules;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_7449468700615183();
+    init_functionsRoutes_0_26326532965762217();
     import_luaparse = __toESM(require_luaparse());
-    fandomModules2 = {
+    fandomModules = {
       Lawnames: "Lawnames",
       Flagdata: "Flagdata",
       Nationdata: "Nationdata",
@@ -2295,7 +2295,8 @@ async function onRequest(context) {
         }
       });
     }
-    cachedFandomData = await getFandomData();
+    const origin = new URL(context.request.url).origin;
+    cachedFandomData = await getFandomData(origin);
     cacheTime = Date.now();
     return new Response(JSON.stringify(cachedFandomData), {
       headers: {
@@ -2320,7 +2321,7 @@ var cacheTime;
 var CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_7449468700615183();
+    init_functionsRoutes_0_26326532965762217();
     init_fandomProcessor();
     cachedFandomData = null;
     cacheTime = null;
@@ -2341,9 +2342,8 @@ async function onRequest2(context) {
     });
   }
   const filename = url.searchParams.get("filename");
-  const wikiDomain = url.searchParams.get("wiki") || "ronroblox";
   if (!filename) {
-    return new Response(JSON.stringify({ error: "I parameter required" }), {
+    return new Response(JSON.stringify({ error: "filename parameter required" }), {
       status: 400,
       headers: {
         "Content-Type": "application/json",
@@ -2352,13 +2352,20 @@ async function onRequest2(context) {
     });
   }
   try {
-    const extensionMatch = filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i);
-    const extension = extensionMatch ? extensionMatch[1] : "png";
-    const baseFilename = filename.replace(/\.(png|jpg|jpeg|gif|svg|webp)$/i, "");
-    const fullFilename = `${baseFilename}.${extension}`;
-    const fandomApiUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/file/File:${encodeURIComponent(fullFilename)}`;
-    const response = await fetch(fandomApiUrl);
+    const fandomApiUrl = `https://ronroblox.fandom.com/rest.php/v1/file/File:${encodeURIComponent(filename)}`;
+    const response = await fetch(fandomApiUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/json"
+      },
+      cf: {
+        cacheTtl: 3600,
+        cacheEverything: true
+      }
+    });
     if (!response.ok) {
+      const body = await response.text();
+      console.error(`Fandom API error body: ${body.slice(0, 500)}`);
       throw new Error(`Fandom API returned ${response.status}`);
     }
     const data = await response.json();
@@ -2367,15 +2374,12 @@ async function onRequest2(context) {
         url: data.preferred.url,
         width: data.preferred.width,
         height: data.preferred.height,
-        mediatype: data.preferred.mediatype,
-        fullData: data
-        // Include full data if needed
+        mediatype: data.preferred.mediatype
       }), {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
           "Cache-Control": "public, max-age=3600"
-          // Cache for 1 hour
         }
       });
     } else {
@@ -2398,7 +2402,7 @@ async function onRequest2(context) {
 __name(onRequest2, "onRequest2");
 var init_fandom_image = __esm({
   "api/fandom-image.js"() {
-    init_functionsRoutes_0_7449468700615183();
+    init_functionsRoutes_0_26326532965762217();
     __name2(onRequest2, "onRequest");
   }
 });
@@ -2406,7 +2410,6 @@ async function onRequest3(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const moduleName = url.searchParams.get("module");
-  const wikiDomain = url.searchParams.get("wiki") || "ronroblox";
   if (!moduleName) {
     return new Response(JSON.stringify({ error: "Module name is required" }), {
       status: 400,
@@ -2414,28 +2417,7 @@ async function onRequest3(context) {
     });
   }
   try {
-    const fandomUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/page/Module%3A${encodeURIComponent(moduleName)}`;
-    const response = await fetch(fandomUrl, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Accept": "application/json"
-      },
-      // OPTIMIZATION: Use Cloudflare's cache
-      cf: {
-        cacheTtl: 3600,
-        // Cache for 1 hour
-        cacheEverything: true
-      }
-    });
-    if (!response.ok) {
-      throw new Error(`Fandom API returned ${response.status}`);
-    }
-    const data = await response.json();
-    const result = {
-      module: moduleName,
-      source: data.source,
-      timestamp: data.latest?.timestamp
-    };
+    const result = await fetchWithFallback(moduleName);
     return new Response(JSON.stringify(result), {
       headers: {
         "Content-Type": "application/json",
@@ -2455,10 +2437,67 @@ async function onRequest3(context) {
   }
 }
 __name(onRequest3, "onRequest3");
+async function fetchWithFallback(moduleName) {
+  try {
+    const primaryUrl = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${encodeURIComponent(moduleName)}`;
+    const primaryResponse = await fetch(primaryUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/json"
+      },
+      cf: {
+        cacheTtl: 3600,
+        cacheEverything: true
+      }
+    });
+    if (!primaryResponse.ok) {
+      throw new Error(`Primary API returned ${primaryResponse.status}`);
+    }
+    const data = await primaryResponse.json();
+    return {
+      module: moduleName,
+      source: data.source,
+      timestamp: data.latest?.timestamp
+    };
+  } catch (primaryError) {
+    console.warn(`Primary API failed for "${moduleName}", trying fallback:`, primaryError.message);
+    const fallbackUrl = `https://ronroblox.fandom.com/api.php?action=query&prop=revisions&titles=Module%3A${encodeURIComponent(moduleName)}&rvslots=main&rvprop=content&format=json`;
+    const fallbackResponse = await fetch(fallbackUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "application/json"
+      },
+      cf: {
+        cacheTtl: 3600,
+        cacheEverything: true
+      }
+    });
+    if (!fallbackResponse.ok) {
+      throw new Error(`Fallback API also failed with ${fallbackResponse.status}`);
+    }
+    const fallbackData = await fallbackResponse.json();
+    const pages = fallbackData?.query?.pages;
+    if (!pages) {
+      throw new Error("Fallback API returned unexpected structure");
+    }
+    const page = Object.values(pages)[0];
+    const source = page?.revisions?.[0]?.slots?.main?.["*"];
+    if (!source) {
+      throw new Error(`No content found in fallback response for module "${moduleName}"`);
+    }
+    return {
+      module: moduleName,
+      source,
+      timestamp: null
+    };
+  }
+}
+__name(fetchWithFallback, "fetchWithFallback");
 var init_fandom_module = __esm({
   "api/fandom-module.js"() {
-    init_functionsRoutes_0_7449468700615183();
+    init_functionsRoutes_0_26326532965762217();
     __name2(onRequest3, "onRequest");
+    __name2(fetchWithFallback, "fetchWithFallback");
   }
 });
 async function onRequest4(context) {
@@ -2523,13 +2562,13 @@ async function onRequest4(context) {
 __name(onRequest4, "onRequest4");
 var init_roblox_thumbnail = __esm({
   "api/roblox-thumbnail.js"() {
-    init_functionsRoutes_0_7449468700615183();
+    init_functionsRoutes_0_26326532965762217();
     __name2(onRequest4, "onRequest");
   }
 });
 var routes;
-var init_functionsRoutes_0_7449468700615183 = __esm({
-  "../.wrangler/tmp/pages-H1IuNi/functionsRoutes-0.7449468700615183.mjs"() {
+var init_functionsRoutes_0_26326532965762217 = __esm({
+  "../.wrangler/tmp/pages-REteeA/functionsRoutes-0.26326532965762217.mjs"() {
     init_fandom_data();
     init_fandom_image();
     init_fandom_module();
@@ -2566,10 +2605,10 @@ var init_functionsRoutes_0_7449468700615183 = __esm({
     ];
   }
 });
-init_functionsRoutes_0_7449468700615183();
-init_functionsRoutes_0_7449468700615183();
-init_functionsRoutes_0_7449468700615183();
-init_functionsRoutes_0_7449468700615183();
+init_functionsRoutes_0_26326532965762217();
+init_functionsRoutes_0_26326532965762217();
+init_functionsRoutes_0_26326532965762217();
+init_functionsRoutes_0_26326532965762217();
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -3024,7 +3063,7 @@ var cloneResponse = /* @__PURE__ */ __name2((response) => (
     response
   )
 ), "cloneResponse");
-init_functionsRoutes_0_7449468700615183();
+init_functionsRoutes_0_26326532965762217();
 var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
@@ -3041,7 +3080,7 @@ var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx
   }
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
-init_functionsRoutes_0_7449468700615183();
+init_functionsRoutes_0_26326532965762217();
 function reduceError(e) {
   return {
     name: e?.name,
@@ -3069,7 +3108,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = pages_template_worker_default;
-init_functionsRoutes_0_7449468700615183();
+init_functionsRoutes_0_26326532965762217();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -3238,7 +3277,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-9xbRgy/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-LvGYAq/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -3270,7 +3309,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-9xbRgy/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-LvGYAq/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -3370,4 +3409,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=functionsWorker-0.9348283394657727.js.map
+//# sourceMappingURL=functionsWorker-0.623343509716188.js.map

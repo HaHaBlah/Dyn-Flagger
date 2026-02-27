@@ -1,8 +1,9 @@
+// fandom-image.js
 export async function onRequest(context) {
     const { request } = context;
     const url = new URL(request.url);
 
-    // Handle CORS preflight
+    // OPTIONS must be first
     if (request.method === 'OPTIONS') {
         return new Response(null, {
             headers: {
@@ -13,12 +14,10 @@ export async function onRequest(context) {
         });
     }
 
-    // Get filename from query parameter
     const filename = url.searchParams.get('filename');
-    const wikiDomain = url.searchParams.get('wiki') || 'ronroblox';
 
     if (!filename) {
-        return new Response(JSON.stringify({ error: 'I parameter required' }), {
+        return new Response(JSON.stringify({ error: 'filename parameter required' }), {
             status: 400,
             headers: {
                 'Content-Type': 'application/json',
@@ -28,41 +27,38 @@ export async function onRequest(context) {
     }
 
     try {
-        // Extract the extension
-        const extensionMatch = filename.match(/\.(png|jpg|jpeg|gif|svg|webp)$/i);
-        const extension = extensionMatch ? extensionMatch[1] : 'png';
+        const fandomApiUrl = `https://ronroblox.fandom.com/rest.php/v1/file/File:${encodeURIComponent(filename)}`;
 
-        // Remove extension from filename
-        const baseFilename = filename.replace(/\.(png|jpg|jpeg|gif|svg|webp)$/i, '');
-
-        // Construct the full filename with proper extension
-        const fullFilename = `${baseFilename}.${extension}`;
-
-        // Construct the Fandom API URL
-        const fandomApiUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/file/File:${encodeURIComponent(fullFilename)}`;
-
-        // Fetch from Fandom API (server-side, no CORS issues)
-        const response = await fetch(fandomApiUrl);
+        const response = await fetch(fandomApiUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': 'application/json'
+            },
+            cf: {
+                cacheTtl: 3600,
+                cacheEverything: true
+            }
+        });
 
         if (!response.ok) {
+            const body = await response.text();
+            console.error(`Fandom API error body: ${body.slice(0, 500)}`);
             throw new Error(`Fandom API returned ${response.status}`);
         }
 
         const data = await response.json();
 
-        // Extract the preferred URL
         if (data.preferred && data.preferred.url) {
             return new Response(JSON.stringify({
                 url: data.preferred.url,
                 width: data.preferred.width,
                 height: data.preferred.height,
                 mediatype: data.preferred.mediatype,
-                fullData: data // Include full data if needed
             }), {
                 headers: {
                     'Content-Type': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Cache-Control': 'public, max-age=3600' // Cache for 1 hour
+                    'Cache-Control': 'public, max-age=3600'
                 }
             });
         } else {

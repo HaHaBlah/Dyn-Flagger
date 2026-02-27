@@ -1,27 +1,9 @@
-// OPTIMIZATION 3: Parallel module fetching is ALREADY implemented in your code!
-// Your fandomProcessor.js already does this:
-
-async function loadAllModules(baseUrl) {
-  // ✅ This is already parallel! All modules fetch at the same time
-  const modulePromises = Object.entries(fandomModules).map(async ([name, moduleName]) => {
-    const url = `${baseUrl}/api/fandom-module?module=${encodeURIComponent(moduleName)}&wiki=ronroblox`;
-    // ... fetch logic
-  });
-
-  // All 4 modules (Lawnames, Flagdata, Nationdata, Tagdata) fetch simultaneously
-  const moduleEntries = await Promise.all(modulePromises);
-  return Object.fromEntries(moduleEntries);
-}
-
-// However, you could also optimize the Fandom API calls themselves by adding caching
-// to /functions/api/fandom-module.js:
-
+// fandom-module.js
 export async function onRequest(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   
   const moduleName = url.searchParams.get('module');
-  const wikiDomain = url.searchParams.get('wiki') || 'ronroblox';
   
   if (!moduleName) {
     return new Response(JSON.stringify({ error: 'Module name is required' }), {
@@ -31,43 +13,7 @@ export async function onRequest(context) {
   }
   
   try {
-    // Check KV cache first (if you have KV configured)
-    // const cacheKey = `module:${wikiDomain}:${moduleName}`;
-    // const cached = await env.MY_KV.get(cacheKey, 'json');
-    // if (cached) {
-    //   return new Response(JSON.stringify(cached), {
-    //     headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
-    //   });
-    // }
-    
-    const fandomUrl = `https://${wikiDomain}.fandom.com/rest.php/v1/page/Module%3A${encodeURIComponent(moduleName)}`;
-    
-    const response = await fetch(fandomUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'application/json'
-      },
-      // OPTIMIZATION: Use Cloudflare's cache
-      cf: {
-        cacheTtl: 3600, // Cache for 1 hour
-        cacheEverything: true
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Fandom API returned ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    const result = {
-      module: moduleName,
-      source: data.source,
-      timestamp: data.latest?.timestamp
-    };
-    
-    // Store in KV cache (optional)
-    // await env.MY_KV.put(cacheKey, JSON.stringify(result), { expirationTtl: 3600 });
+    const result = await fetchWithFallback(moduleName);
     
     return new Response(JSON.stringify(result), {
       headers: {
@@ -86,5 +32,78 @@ export async function onRequest(context) {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
+  }
+}
+
+async function fetchWithFallback(moduleName) {
+  // --- Primary: REST API ---
+  try {
+    const primaryUrl = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${encodeURIComponent(moduleName)}`;
+
+    const primaryResponse = await fetch(primaryUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json'
+      },
+      cf: {
+        cacheTtl: 3600,
+        cacheEverything: true
+      }
+    });
+
+    if (!primaryResponse.ok) {
+      throw new Error(`Primary API returned ${primaryResponse.status}`);
+    }
+
+    const data = await primaryResponse.json();
+
+    return {
+      module: moduleName,
+      source: data.source,
+      timestamp: data.latest?.timestamp
+    };
+
+  } catch (primaryError) {
+    console.warn(`Primary API failed for "${moduleName}", trying fallback:`, primaryError.message);
+
+    // Fallback API. The one that i hate using cuz it's not as pretty
+    const fallbackUrl = `https://ronroblox.fandom.com/api.php?action=query&prop=revisions&titles=Module%3A${encodeURIComponent(moduleName)}&rvslots=main&rvprop=content&format=json`;
+
+    const fallbackResponse = await fetch(fallbackUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/json'
+      },
+      cf: {
+        cacheTtl: 3600,
+        cacheEverything: true
+      }
+    });
+
+    if (!fallbackResponse.ok) {
+      throw new Error(`Fallback API also failed with ${fallbackResponse.status}`);
+    }
+
+    const fallbackData = await fallbackResponse.json();
+
+    // Navigate the nested query API response structure
+    const pages = fallbackData?.query?.pages;
+    if (!pages) {
+      throw new Error('Fallback API returned unexpected structure');
+    }
+
+    // Pages is a map of pageId -> page object; grab the first (and only) entry
+    const page = Object.values(pages)[0];
+    const source = page?.revisions?.[0]?.slots?.main?.['*'];
+
+    if (!source) {
+      throw new Error(`No content found in fallback response for module "${moduleName}"`);
+    }
+
+    return {
+      module: moduleName,
+      source,
+      timestamp: null 
+    };
   }
 }

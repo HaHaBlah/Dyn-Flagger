@@ -1,3 +1,4 @@
+// fandom-data.js
 import { getFandomData } from '../../fandomProcessor.js';
 
 let cachedFandomData = null;
@@ -17,7 +18,8 @@ export async function onRequest(context) {
     }
 
     // Fetch fresh data
-    cachedFandomData = await getFandomData();
+    const origin = new URL(context.request.url).origin;
+    cachedFandomData = await getFandomData(origin);
     cacheTime = Date.now();
 
     return new Response(JSON.stringify(cachedFandomData), {
@@ -30,7 +32,7 @@ export async function onRequest(context) {
     console.error('Error in fandom-data endpoint:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       }

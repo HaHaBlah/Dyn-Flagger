@@ -1,8 +1,8 @@
+// roblox-thumbnail.js
 export async function onRequest(context) {
     const { request } = context;
     const url = new URL(request.url);
 
-    // Handle CORS preflight
     if (request.method === 'OPTIONS') {
         return new Response(null, {
             headers: {
@@ -30,7 +30,6 @@ export async function onRequest(context) {
     try {
         const robloxThumbnailApiUrl = `https://thumbnails.roblox.com/v1/assets?assetIds=${encodeURIComponent(imageID)}&size=${encodeURIComponent(size)}&format=Png&isCircular=false`;
 
-        // Fetch from Roblox Thumbnails API (server-side, no CORS issues)
         const response = await fetch(robloxThumbnailApiUrl);
 
         if (!response.ok) {

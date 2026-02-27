@@ -12,26 +12,25 @@ const fandomModules = {
 /**
  * Fetches the preferred image URL from Fandom via your Cloudflare Workers proxy
  * @param {string} filename - The filename (e.g., "Afghanistan_Flag.png")
- * @param {string} [wikiDomain='ronroblox'] - The Fandom wiki domain
  * @returns {Promise<string>} The preferred image URL
  */
-export async function getFandomImageUrl(filename, wikiDomain = 'ronroblox') {
+export async function getFandomImageUrl(filename, baseUrl = '') {
   try {
     // Call your Cloudflare Workers endpoint
     const response = await fetch(
-      `/api/fandom-image?filename=${encodeURIComponent(filename)}&wiki=${encodeURIComponent(wikiDomain)}`
+      `${baseUrl}/api/fandom-image?filename=${encodeURIComponent(filename)}`
     );
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch image data: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     if (data.error) {
       throw new Error(data.error);
     }
-    
+
     return data.url;
   } catch (error) {
     console.error(`Error fetching Fandom image URL for ${filename}:`, error);
@@ -40,11 +39,17 @@ export async function getFandomImageUrl(filename, wikiDomain = 'ronroblox') {
 }
 
 // fetch lua modules directly from fandom
-async function loadAllModules() {
+async function loadAllModules(baseUrl) {
   const modulePromises = Object.entries(fandomModules).map(async ([name, moduleName]) => {
-    const url = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${moduleName}`;
+    const url = `${baseUrl}/api/fandom-module?module=${encodeURIComponent(moduleName)}&wiki=ronroblox`;
+
     try {
       const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`fandom-module returned ${response.status}`);
+      }
+
       const data = await response.json();
       return [name, data.source];
     } catch (error) {
@@ -68,11 +73,6 @@ async function extractValue(node) {
       if (node.value !== null) stringValue = node.value;
       else if (node.raw) {
         stringValue = node.raw.slice(1, -1);
-      }
-
-      // Resolve file URLs
-      if (stringValue?.startsWith('File:')) {
-        return await resolveFileUrl(stringValue);
       }
       return stringValue;
 
@@ -134,8 +134,8 @@ async function extractTable(tableNode) {
 }
 
 // Export the extracted data
-export async function getFandomData() {
-  const allModules = await loadAllModules();
+export async function getFandomData(baseUrl = '') {
+  const allModules = await loadAllModules(baseUrl);
   const extractedData = {};
 
   for (const [name, source] of Object.entries(allModules)) {

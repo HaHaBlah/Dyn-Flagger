@@ -2,7 +2,10 @@
 
 import { getFandomImageUrl } from './fandomProcessor.js';
 import { getRobloxThumbnailURL } from './robloxProcessor.js';
-import unknownFlag from './images/Unknown Flag.png';
+
+//Images
+import IMG_unknownFlag from './images/Unknown Flag.png';
+import IMG_trashCan from './images/trash-can.svg';
 
 // Config
 
@@ -55,6 +58,7 @@ async function generateNationsList() {
     await ensureDataLoaded();
 
     const scaleUrl = url =>
+        //Adds image scaling
         url.includes('scale-to-width-down')
             ? url.replace(/scale-to-width-down\/\d+/, `scale-to-width-down/${IMAGE_SCALE}`)
             : url.replace(/\/revision\/latest/, `/revision/latest/scale-to-width-down/${IMAGE_SCALE}`);
@@ -242,7 +246,7 @@ function createFlagElement(flagData, index) {
         <button class="collapse-flag-overview-button">
             <div class="flag-overview">
                 <div class="flag-overview-left">
-                    <img class="dyn-flag" src="${unknownFlag}">
+                    <img class="dyn-flag" src="${IMG_unknownFlag}">
                     <p id="flag-name">${flagData.FlagName || 'Flag Name'}</p>
                 </div>
                 <div class="flag-overview-right">
@@ -255,7 +259,7 @@ function createFlagElement(flagData, index) {
             </div>
         </button>
         <div class="flag-contents">
-            <button class="delete-flag-button">Delete Flag</button>
+            <button class="delete-flag-button"><img src="${IMG_trashCan}" alt="Delete Flag">Delete Flag</button>
             <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input flag-name-input" value="${flagData.FlagName}"></div>
             <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input flag-image-input" value="${flagData.FlagID}"></div>
             <div class="flag-label"><span class="flag-title">Description/Sources: </span><input class="flag-input flag-description-input" value="${flagData.Description}"></div>
@@ -469,7 +473,7 @@ function updateFlagOverview(flagDiv, index) {
     if (flagImg && flagData.FlagID) {
         getRobloxThumbnailURL(flagData.FlagID, '700x700')
             .then(url => { flagImg.src = url; })
-            .catch(() => { flagImg.src = unknownFlag; });
+            .catch(() => { flagImg.src = IMG_unknownFlag; });
     }
 
     const buildLawsHtml = (lawsObj, titleClass = '', titleText) => {
@@ -513,7 +517,7 @@ function updateDisplay() {
         if (flagSpecifications.NationName && nationFlag) {
             getFandomImageUrl(`${flagSpecifications.NationName}_Flag.png`)
                 .then(url => { nationFlag.src = url; })
-                .catch(() => { nationFlag.src = unknownFlag; });
+                .catch(() => { nationFlag.src = IMG_unknownFlag; });
         }
     }
 
