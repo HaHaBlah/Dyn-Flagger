@@ -36,7 +36,7 @@ export async function onRequest(context) {
 }
 
 async function fetchWithFallback(moduleName) {
-  // --- Primary: REST API ---
+  // Primary API. Rest
   try {
     const primaryUrl = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${encodeURIComponent(moduleName)}`;
 
@@ -64,9 +64,9 @@ async function fetchWithFallback(moduleName) {
     };
 
   } catch (primaryError) {
-    console.warn(`Primary API failed for "${moduleName}", trying fallback:`, primaryError.message);
+    console.warn(`Primary API failed for "${moduleName}", trying Backup:`, primaryError.message);
 
-    // Fallback API. The one that i hate using cuz it's not as pretty
+    // Backup API. The one that i hate using cuz it's not as pretty
     const fallbackUrl = `https://ronroblox.fandom.com/api.php?action=query&prop=revisions&titles=Module%3A${encodeURIComponent(moduleName)}&rvslots=main&rvprop=content&format=json`;
 
     const fallbackResponse = await fetch(fallbackUrl, {
@@ -86,18 +86,18 @@ async function fetchWithFallback(moduleName) {
 
     const fallbackData = await fallbackResponse.json();
 
-    // Navigate the nested query API response structure
+    // Navigate the json
     const pages = fallbackData?.query?.pages;
     if (!pages) {
       throw new Error('Fallback API returned unexpected structure');
     }
 
-    // Pages is a map of pageId -> page object; grab the first (and only) entry
+    // Grab the first thing in pages since it's a random number so we can't exactly do a clean path now can we
     const page = Object.values(pages)[0];
     const source = page?.revisions?.[0]?.slots?.main?.['*'];
 
     if (!source) {
-      throw new Error(`No content found in fallback response for module "${moduleName}"`);
+      throw new Error(`No content found in backup api response for module "${moduleName}"`);
     }
 
     return {

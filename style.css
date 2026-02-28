@@ -562,14 +562,31 @@ input {
 /* Delete Flag Button */
 .delete-flag-button {
     padding: 6px;
+    color: var(--ron-red);
+    transition: 0.3s;
 }
 
-.delete-flag-button img {
+.delete-flag-button:hover {
+    background-color: var(--ron-red);
+    color: white;
+}
+
+.trash-can::before {
+    content: '';
+    display: inline-block;
     width: 16px;
-    height: auto;
+    height: 16px;
+    background-color: var(--ron-red); /* svg colour */
+    -webkit-mask: url('./images/trash-can.svg') no-repeat center;
+    mask: url('./images/trash-can.svg') no-repeat center;
+    mask-size: contain;
     vertical-align: middle;
     margin-right: 6px;
-    color: white;
+    transition: 0.3s;
+}
+
+.trash-can:hover::before {
+    background-color: white;
 }
 
 /* Temp class */
