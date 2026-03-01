@@ -259,7 +259,7 @@ function createFlagElement(flagData, index) {
             </div>
         </button>
         <div class="flag-contents">
-            <button class="delete-flag-button trash-can">Delete Flag</button>
+            <button class="delete-flag-button trash-can"><span>Delete Flag</span></button>
             <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input flag-name-input" value="${flagData.FlagName}"></div>
             <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input flag-image-input" value="${flagData.FlagID}"></div>
             <div class="flag-label"><span class="flag-title">Description/Sources: </span><input class="flag-input flag-description-input" value="${flagData.Description}"></div>

@@ -530,6 +530,7 @@ input {
     padding: 10px;
     justify-content: center;
     border-top: 6px solid var(--button-color);
+    position: relative;
 }
 
 .flag-contents.is-hidden {
@@ -563,7 +564,17 @@ input {
 .delete-flag-button {
     padding: 6px;
     color: var(--ron-red);
-    transition: 0.3s;
+    font-weight: bold;
+
+    transition: max-width 0.3s;
+    align-items: center;
+    display: flex;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 5px;
+    margin-right: 5px;
 }
 
 .delete-flag-button:hover {
@@ -571,7 +582,24 @@ input {
     color: white;
 }
 
-.trash-can::before {
+.delete-flag-button:active{
+    background-color: #F9A189;
+}
+
+.delete-flag-button span {
+    max-width: 0;
+    display: inline-block;
+    overflow: hidden;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.delete-flag-button:hover span {
+    max-width: 7rem;
+    margin-right: 5px;
+}
+
+.trash-can::after {
     content: '';
     display: inline-block;
     width: 16px;
@@ -581,11 +609,9 @@ input {
     mask: url('./images/trash-can.svg') no-repeat center;
     mask-size: contain;
     vertical-align: middle;
-    margin-right: 6px;
-    transition: 0.3s;
 }
 
-.trash-can:hover::before {
+.trash-can:hover::after {
     background-color: white;
 }
 
@@ -594,7 +620,7 @@ input {
     color: var(--ron-red);
 }
 
-.new-flag-button button, #copy-output-btn, .delete-flag-button{
+.new-flag-button button, #copy-output-btn{
     font-weight: bold;
     font-size: 1.1em;
     padding: 2px 4px;
