@@ -16,7 +16,7 @@ const fandomModules = {
  */
 export async function getFandomImageUrl(filename, baseUrl = '') {
   try {
-    // Call your Cloudflare Workers endpoint
+    // Call the Cloudflare Workers endpoint
     const response = await fetch(
       `${baseUrl}/api/fandom-image?filename=${encodeURIComponent(filename)}`
     );
@@ -31,7 +31,7 @@ export async function getFandomImageUrl(filename, baseUrl = '') {
       throw new Error(data.error);
     }
 
-    return data.url;
+    return `${baseUrl}/api/fandom-image-proxy?url=${encodeURIComponent(data.url)}`;
   } catch (error) {
     console.error(`Error fetching Fandom image URL for ${filename}:`, error);
     throw error;
