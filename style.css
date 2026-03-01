@@ -573,8 +573,8 @@ input {
     position: absolute;
     top: 0;
     right: 0;
-    margin-top: 5px;
-    margin-right: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
 }
 
 .delete-flag-button:hover {
@@ -611,11 +611,11 @@ input {
     vertical-align: middle;
 }
 
-.trash-can:hover::after {
+.trash-can:hover::after, .trash-can:active::after {
     background-color: white;
 }
 
-/* Temp class */
+/* Temp classes before i built out the more official ones */
 .ron-red{
     color: var(--ron-red);
 }
