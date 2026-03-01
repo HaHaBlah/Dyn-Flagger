@@ -31,7 +31,7 @@ export async function getFandomImageUrl(filename, baseUrl = '') {
       throw new Error(data.error);
     }
 
-    return `${baseUrl}/api/fandom-image-proxy?url=${encodeURIComponent(data.url)}`;
+    return `/api/fandom-image?proxy=true&url=${encodeURIComponent(data.url)}`;
   } catch (error) {
     console.error(`Error fetching Fandom image URL for ${filename}:`, error);
     throw error;

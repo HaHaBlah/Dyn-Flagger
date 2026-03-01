@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/pages-BbZbkG/functionsWorker-0.37356012292637897.mjs
+// .wrangler/tmp/pages-jmE48S/functionsWorker-0.7731484598008882.mjs
 var __create = Object.create;
 var __defProp2 = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -33,7 +33,7 @@ var __toESM = /* @__PURE__ */ __name((mod, isNodeMode, target) => (target = mod 
 )), "__toESM");
 var require_luaparse = __commonJS({
   "../node_modules/luaparse/luaparse.js"(exports, module) {
-    init_functionsRoutes_0_07979123788211062();
+    init_functionsRoutes_0_25653983658124224();
     (function(root, name, factory) {
       "use strict";
       var objectTypes = {
@@ -2270,7 +2270,7 @@ var import_luaparse;
 var fandomModules;
 var init_fandomProcessor = __esm({
   "../fandomProcessor.js"() {
-    init_functionsRoutes_0_07979123788211062();
+    init_functionsRoutes_0_25653983658124224();
     import_luaparse = __toESM(require_luaparse());
     fandomModules = {
       Lawnames: "Lawnames",
@@ -2321,7 +2321,7 @@ var cacheTime;
 var CACHE_DURATION;
 var init_fandom_data = __esm({
   "api/fandom-data.js"() {
-    init_functionsRoutes_0_07979123788211062();
+    init_functionsRoutes_0_25653983658124224();
     init_fandomProcessor();
     cachedFandomData = null;
     cacheTime = null;
@@ -2338,6 +2338,26 @@ async function onRequest2(context) {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "GET, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type"
+      }
+    });
+  }
+  if (url.searchParams.get("proxy") === "true") {
+    const imageUrl = url.searchParams.get("url");
+    if (!imageUrl || !imageUrl.startsWith("https://static.wikia.nocookie.net/")) {
+      return new Response("Invalid url", { status: 400, headers: { "Access-Control-Allow-Origin": "*" } });
+    }
+    const imgResponse = await fetch(imageUrl, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Referer": "https://ronroblox.fandom.com/"
+      },
+      cf: { cacheTtl: 3600, cacheEverything: true }
+    });
+    return new Response(imgResponse.body, {
+      headers: {
+        "Content-Type": imgResponse.headers.get("Content-Type") ?? "image/png",
+        "Cache-Control": "public, max-age=3600",
+        "Access-Control-Allow-Origin": "*"
       }
     });
   }
@@ -2402,49 +2422,11 @@ async function onRequest2(context) {
 __name(onRequest2, "onRequest2");
 var init_fandom_image = __esm({
   "api/fandom-image.js"() {
-    init_functionsRoutes_0_07979123788211062();
+    init_functionsRoutes_0_25653983658124224();
     __name2(onRequest2, "onRequest");
   }
 });
 async function onRequest3(context) {
-  const { request } = context;
-  const url = new URL(request.url);
-  const imageUrl = url.searchParams.get("url");
-  if (!imageUrl) {
-    return new Response("Missing url param", { status: 400 });
-  }
-  if (!imageUrl.startsWith("https://static.wikia.nocookie.net/")) {
-    return new Response("Forbidden", { status: 403 });
-  }
-  const response = await fetch(imageUrl, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-      "Referer": "https://ronroblox.fandom.com/"
-    },
-    cf: {
-      cacheTtl: 3600,
-      cacheEverything: true
-    }
-  });
-  if (!response.ok) {
-    return new Response(`Image fetch failed: ${response.status}`, { status: response.status });
-  }
-  return new Response(response.body, {
-    headers: {
-      "Content-Type": response.headers.get("Content-Type") ?? "image/png",
-      "Cache-Control": "public, max-age=3600",
-      "Access-Control-Allow-Origin": "*"
-    }
-  });
-}
-__name(onRequest3, "onRequest3");
-var init_fandom_image_proxy = __esm({
-  "api/fandom-image-proxy.js"() {
-    init_functionsRoutes_0_07979123788211062();
-    __name2(onRequest3, "onRequest");
-  }
-});
-async function onRequest4(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const moduleName = url.searchParams.get("module");
@@ -2474,7 +2456,7 @@ async function onRequest4(context) {
     });
   }
 }
-__name(onRequest4, "onRequest4");
+__name(onRequest3, "onRequest3");
 async function fetchWithFallback(moduleName) {
   try {
     const primaryUrl = `https://ronroblox.fandom.com/rest.php/v1/page/Module%3A${encodeURIComponent(moduleName)}`;
@@ -2533,12 +2515,12 @@ async function fetchWithFallback(moduleName) {
 __name(fetchWithFallback, "fetchWithFallback");
 var init_fandom_module = __esm({
   "api/fandom-module.js"() {
-    init_functionsRoutes_0_07979123788211062();
-    __name2(onRequest4, "onRequest");
+    init_functionsRoutes_0_25653983658124224();
+    __name2(onRequest3, "onRequest");
     __name2(fetchWithFallback, "fetchWithFallback");
   }
 });
-async function onRequest5(context) {
+async function onRequest4(context) {
   const { request } = context;
   const url = new URL(request.url);
   if (request.method === "OPTIONS") {
@@ -2597,19 +2579,18 @@ async function onRequest5(context) {
     });
   }
 }
-__name(onRequest5, "onRequest5");
+__name(onRequest4, "onRequest4");
 var init_roblox_thumbnail = __esm({
   "api/roblox-thumbnail.js"() {
-    init_functionsRoutes_0_07979123788211062();
-    __name2(onRequest5, "onRequest");
+    init_functionsRoutes_0_25653983658124224();
+    __name2(onRequest4, "onRequest");
   }
 });
 var routes;
-var init_functionsRoutes_0_07979123788211062 = __esm({
-  "../.wrangler/tmp/pages-BbZbkG/functionsRoutes-0.07979123788211062.mjs"() {
+var init_functionsRoutes_0_25653983658124224 = __esm({
+  "../.wrangler/tmp/pages-jmE48S/functionsRoutes-0.25653983658124224.mjs"() {
     init_fandom_data();
     init_fandom_image();
-    init_fandom_image_proxy();
     init_fandom_module();
     init_roblox_thumbnail();
     routes = [
@@ -2628,33 +2609,26 @@ var init_functionsRoutes_0_07979123788211062 = __esm({
         modules: [onRequest2]
       },
       {
-        routePath: "/api/fandom-image-proxy",
+        routePath: "/api/fandom-module",
         mountPath: "/api",
         method: "",
         middlewares: [],
         modules: [onRequest3]
       },
       {
-        routePath: "/api/fandom-module",
-        mountPath: "/api",
-        method: "",
-        middlewares: [],
-        modules: [onRequest4]
-      },
-      {
         routePath: "/api/roblox-thumbnail",
         mountPath: "/api",
         method: "",
         middlewares: [],
-        modules: [onRequest5]
+        modules: [onRequest4]
       }
     ];
   }
 });
-init_functionsRoutes_0_07979123788211062();
-init_functionsRoutes_0_07979123788211062();
-init_functionsRoutes_0_07979123788211062();
-init_functionsRoutes_0_07979123788211062();
+init_functionsRoutes_0_25653983658124224();
+init_functionsRoutes_0_25653983658124224();
+init_functionsRoutes_0_25653983658124224();
+init_functionsRoutes_0_25653983658124224();
 function lexer(str) {
   var tokens = [];
   var i = 0;
@@ -3109,7 +3083,7 @@ var cloneResponse = /* @__PURE__ */ __name2((response) => (
     response
   )
 ), "cloneResponse");
-init_functionsRoutes_0_07979123788211062();
+init_functionsRoutes_0_25653983658124224();
 var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
   try {
     return await middlewareCtx.next(request, env);
@@ -3126,7 +3100,7 @@ var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx
   }
 }, "drainBody");
 var middleware_ensure_req_body_drained_default = drainBody;
-init_functionsRoutes_0_07979123788211062();
+init_functionsRoutes_0_25653983658124224();
 function reduceError(e) {
   return {
     name: e?.name,
@@ -3154,7 +3128,7 @@ var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_miniflare3_json_error_default
 ];
 var middleware_insertion_facade_default = pages_template_worker_default;
-init_functionsRoutes_0_07979123788211062();
+init_functionsRoutes_0_25653983658124224();
 var __facade_middleware__ = [];
 function __facade_register__(...args) {
   __facade_middleware__.push(...args.flat());
@@ -3323,7 +3297,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-EN0qel/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-dSyLs9/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -3355,7 +3329,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-EN0qel/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-dSyLs9/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -3455,4 +3429,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=functionsWorker-0.37356012292637897.js.map
+//# sourceMappingURL=functionsWorker-0.7731484598008882.js.map

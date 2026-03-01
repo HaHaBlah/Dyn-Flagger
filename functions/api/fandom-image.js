@@ -14,6 +14,28 @@ export async function onRequest(context) {
         });
     }
 
+    // If proxy=true, fetch and return the actual image bytes
+    if (url.searchParams.get('proxy') === 'true') {
+        const imageUrl = url.searchParams.get('url');
+        if (!imageUrl || !imageUrl.startsWith('https://static.wikia.nocookie.net/')) {
+            return new Response('Invalid url', { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } });
+        }
+        const imgResponse = await fetch(imageUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0',
+                'Referer': 'https://ronroblox.fandom.com/',
+            },
+            cf: { cacheTtl: 3600, cacheEverything: true }
+        });
+        return new Response(imgResponse.body, {
+            headers: {
+                'Content-Type': imgResponse.headers.get('Content-Type') ?? 'image/png',
+                'Cache-Control': 'public, max-age=3600',
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+    }
+
     const filename = url.searchParams.get('filename');
 
     if (!filename) {
