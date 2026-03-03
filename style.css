@@ -541,7 +541,8 @@ input {
 .output {
     overflow: auto;
     background-color: var(--background-color);
-    height: 150px;
+    max-height: 300px;
+    position: relative;
 }
 
 #copy-output-btn.output-btn-copied {
@@ -550,14 +551,46 @@ input {
 }
 
 #copy-output-btn {
-    cursor: pointer;
     background-color: var(--button-color);
-    color: white;
+    font-weight: bold;
+    padding: 6px;
+    font-size: 1.1em;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 15px;
+    margin-right: 15px;
+
+    transition: max-width 0.3s;
+    align-items: center;
+    display: flex;
+}
+
+#copy-output-btn::after {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: lightblue; /* svg colour */
+    -webkit-mask: url('./images/copy-to-clipboard.svg') no-repeat center;
+    mask: url('./images/copy-to-clipboard.svg') no-repeat center;
+    mask-size: contain;
+    vertical-align: middle;
+}
+
+#copy-output-btn:hover::after, #copy-output-btn:active::after {
+    background-color: white;
+}
+
+#copy-output-btn:hover span {
+    max-width: 10em;
+    margin-right: 5px;
 }
 
 #output-text {
     font-family: 'Roboto Mono', monospace;
-    padding: 20px;
+    padding: 15px;
 }
 
 /* Delete Flag Button */
@@ -565,6 +598,7 @@ input {
     padding: 6px;
     color: var(--ron-red);
     font-weight: bold;
+    font-size: 1.1em;
 
     transition: max-width 0.3s;
     align-items: center;
@@ -586,7 +620,7 @@ input {
     background-color: #F9A189;
 }
 
-.delete-flag-button span {
+.delete-flag-button span,  #copy-output-btn span {
     max-width: 0;
     display: inline-block;
     overflow: hidden;
@@ -595,15 +629,15 @@ input {
 }
 
 .delete-flag-button:hover span {
-    max-width: 7rem;
+    max-width: 7em;
     margin-right: 5px;
 }
 
 .trash-can::after {
     content: '';
     display: inline-block;
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
     background-color: var(--ron-red); /* svg colour */
     -webkit-mask: url('./images/trash-can.svg') no-repeat center;
     mask: url('./images/trash-can.svg') no-repeat center;
@@ -620,7 +654,7 @@ input {
     color: var(--ron-red);
 }
 
-.new-flag-button button, #copy-output-btn{
+.new-flag-button button{
     font-weight: bold;
     font-size: 1.1em;
     padding: 2px 4px;

@@ -20,6 +20,8 @@ const flagSpecifications = {
 const IMAGE_SCALE = 36;
 const ITEMS_PER_IMAGE_ROW = 3;
 
+const IDEOLOGY_SORT_ORDER = ['Non-Aligned', 'Socialism', 'Communism', 'Liberalism', 'Democracy', 'Nationalism', 'Fascism']
+
 /** Fetches fandom data, and generates nations list */
 async function loadFandomData() {
     dataLoadedPromise ??= (async () => {
