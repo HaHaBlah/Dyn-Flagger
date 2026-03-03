@@ -624,12 +624,13 @@ async function updateOutput() {
 function copyOutput() {
     const output = document.getElementById('output-text');
     const button = document.getElementById('copy-output-btn');
+    const span = button.querySelector('span');
 
     navigator.clipboard.writeText(output.innerText).then(() => {
-        button.textContent = 'Copied!';
+        span.textContent = 'Copied!';
         button.classList.add('output-btn-copied');
         setTimeout(() => {
-            button.textContent = 'Copy to clipboard';
+            span.textContent = 'Copy to Clipboard';
             button.classList.remove('output-btn-copied');
         }, 1000);
     });
