@@ -1,0 +1,11 @@
+# Local env secrets
+.dev.vars
+
+# Wrangler build output
+.wrangler/
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
