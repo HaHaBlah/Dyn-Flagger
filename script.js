@@ -659,7 +659,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rail = document.querySelector('.left-rail');
     const overlay = document.querySelector('.rail-overlay');
     const toggleBtn = document.querySelector('.left-rail-toggle');
-    const openBtn = document.querySelector('.rail-open-btn');
     const railContainer = document.querySelector('.rail-container');
 
     const isMobile = () => window.innerWidth <= 850;
@@ -684,17 +683,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isMobile()) closeRail();
     });
 
-    openBtn?.addEventListener('click', () => openRail());
-
     window.addEventListener('resize', () => {
         if (!isMobile()) {
             railContainer.classList.remove('rail-is-open');
             rail.classList.remove('is-hidden');
         }
-    });
-
-    openBtn?.addEventListener('click', () => {
-        rail.classList.remove('is-hidden');
     });
 });
 

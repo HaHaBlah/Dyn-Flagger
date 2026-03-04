@@ -294,32 +294,6 @@ header {
     transition: transform .3s;
 }
 
-.rail-open-btn {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 98;
-    align-items: center;
-    border: none;
-    border-bottom-right-radius: 18px;
-    border-top-right-radius: 18px;
-    color: white;
-    cursor: pointer;
-    height: 36px;
-    justify-content: flex-start;
-    padding: 0 12px 0 8px;
-    background-color: var(--button-color);
-}
-
-.rail-open-btn img {
-    display: block;
-    width: 12px;
-    height: auto;
-    transform: rotate(90deg);
-    /* arrow points right = "open" */
-}
-
 /*Search Bar*/
 .search-bar {
     width: 100%;
@@ -749,26 +723,27 @@ input {
         display: none;
     }
 
-    /* Show a permanent open-button when rail is hidden on mobile */
-    .rail-open-btn {
-        display: flex;
+    /* Toggle stays fixed on-screen at all times on mobile */
+    .left-rail-toggle {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: auto;
+        border-radius: 0 18px 18px 0;
+        z-index: 101;
+        transition: left 0.3s;
+        /* slides with the rail opening */
     }
 
-    /* Toggle tab pokes out from right edge of the rail */
-    .left-rail-toggle {
-        right: -26px;
-        left: auto;
-        border-radius: 0 18px 18px 0;
-        border-bottom-left-radius: 0;
-        border-top-left-radius: 0;
+    /* When rail is open, toggle sits at the right edge of the rail */
+    .rail-container.rail-is-open .left-rail-toggle {
+        left: 280px;
     }
 
     /* Show the dim overlay when rail is open */
     .rail-container.rail-is-open .rail-overlay {
         display: block;
     }
-
-    .left-rail:not(.is-hidden) ~ * .rail-overlay,
 
     .tabcontent {
         max-height: 70dvh;
