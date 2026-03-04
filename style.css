@@ -546,8 +546,17 @@ input {
 }
 
 #copy-output-btn.output-btn-copied {
-    background-color: var(--ron-green);
+    background-color: lightblue;
     color: black;
+}
+
+#copy-output-btn.output-btn-copied::after,
+#copy-output-btn.output-btn-copied:hover:after {
+    background-color: black;
+}
+
+#copy-output-btn.output-btn-copied span {
+    max-width: 10rem;
 }
 
 #copy-output-btn {
@@ -572,14 +581,16 @@ input {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background-color: lightblue; /* svg colour */
+    background-color: lightblue;
+    /* svg colour */
     -webkit-mask: url('./images/copy-to-clipboard.svg') no-repeat center;
     mask: url('./images/copy-to-clipboard.svg') no-repeat center;
     mask-size: contain;
     vertical-align: middle;
 }
 
-#copy-output-btn:hover::after, #copy-output-btn:active::after {
+#copy-output-btn:hover::after,
+#copy-output-btn:active::after {
     background-color: white;
 }
 
@@ -616,11 +627,12 @@ input {
     color: white;
 }
 
-.delete-flag-button:active{
+.delete-flag-button:active {
     background-color: #F9A189;
 }
 
-.delete-flag-button span,  #copy-output-btn span {
+.delete-flag-button span,
+#copy-output-btn span {
     max-width: 0;
     display: inline-block;
     overflow: hidden;
@@ -638,25 +650,39 @@ input {
     display: inline-block;
     width: 24px;
     height: 24px;
-    background-color: var(--ron-red); /* svg colour */
+    background-color: var(--ron-red);
+    /* svg colour */
     -webkit-mask: url('./images/trash-can.svg') no-repeat center;
     mask: url('./images/trash-can.svg') no-repeat center;
     mask-size: contain;
     vertical-align: middle;
 }
 
-.trash-can:hover::after, .trash-can:active::after {
+.trash-can:hover::after,
+.trash-can:active::after {
     background-color: white;
 }
 
-/* Temp classes before i built out the more official ones */
-.ron-red{
-    color: var(--ron-red);
+/* New Flag Button */
+.new-flag-button {
+    margin: 6px 0;
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
-.new-flag-button button{
+.new-flag-button button {
     font-weight: bold;
     font-size: 1.1em;
-    padding: 2px 4px;
-    margin: 2px 0;
+    padding: 6px;
+    color: var(--ron-green);
+}
+
+.new-flag-button svg {
+    color: var(--ron-green);
+}
+
+/* Temp classes before i built out the more official ones */
+.ron-red {
+    color: var(--ron-red);
 }
