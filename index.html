@@ -20,11 +20,12 @@
     <div class="page-container">
 
         <header>Rise of Nations Dyn Flagger
-            <br><span style="color: red;">NOTE: WEBSITE UNDER CONSTRUCTION. v0.8.5</span>
+            <br><span style="color: red;">NOTE: WEBSITE UNDER CONSTRUCTION. v0.9</span>
         </header>
 
         <div class="rail-container">
-
+            <div class="rail-overlay"></div>
+            <button class="rail-open-btn"><img src="images/menu-arrow.svg"></button>
             <aside class="left-rail">
                 <!-- <p>Select Nation</p> -->
                 <button class="left-rail-toggle"><img src="images/menu-arrow.svg"></button>
@@ -150,13 +151,15 @@
                             <line y1="16" x2="32" y2="16" stroke="currentColor" stroke-width="10"></line>
                         </svg> -->
                         <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="5" /></svg>
-                            <br><span>Add New Flag</span></button>
+                            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="5" />
+                        </svg>
+                        <br><span>Add New Flag</span></button>
                 </div>
 
                 <div class="output">
                     <button id="copy-output-btn" onclick="copyOutput()"><span>Copy to Clipboard</span></button>
-                    <div id="output-text">To run this program, input the name of a nation, and fill out all flag names flag ids</div>
+                    <div id="output-text">To run this program, input the name of a nation, and fill out all flag names
+                        flag ids</div>
                 </div>
             </div>
 

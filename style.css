@@ -282,7 +282,7 @@ header {
     top: 0px;
     transition: width .3s;
     width: 26px;
-    z-index: 1;
+    z-index: 101;
 }
 
 .left-rail-toggle img {
@@ -292,6 +292,32 @@ header {
     transform: rotate(-90deg);
     transform-origin: center;
     transition: transform .3s;
+}
+
+.rail-open-btn {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 98;
+    align-items: center;
+    border: none;
+    border-bottom-right-radius: 18px;
+    border-top-right-radius: 18px;
+    color: white;
+    cursor: pointer;
+    height: 36px;
+    justify-content: flex-start;
+    padding: 0 12px 0 8px;
+    background-color: var(--button-color);
+}
+
+.rail-open-btn img {
+    display: block;
+    width: 12px;
+    height: auto;
+    transform: rotate(90deg);
+    /* arrow points right = "open" */
 }
 
 /*Search Bar*/
@@ -680,6 +706,92 @@ input {
 
 .new-flag-button svg {
     color: var(--ron-green);
+}
+
+/* Dynamic Resizing */
+@media screen and (max-width: 850px) {
+    .page-container {
+        padding: 6px;
+    }
+
+    /* Remove rail from grid flow — it overlays instead */
+    .rail-container {
+        grid-template-columns: 1fr !important;
+        grid-template-areas:
+            'header'
+            'pageContent'
+            'footer';
+    }
+
+    /* Rail is a fixed overlay, open by default */
+    .left-rail {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100dvh;
+        z-index: 100;
+        width: 280px;
+        min-width: unset;
+        transform: translateX(0);
+        transition: transform 0.3s;
+        overflow-y: auto;
+    }
+
+    /* Hidden = slide fully off-screen left */
+    .left-rail.is-hidden {
+        transform: translateX(-280px);
+        width: 280px;
+        /* override desktop's 20px collapsed rule */
+    }
+
+    /* Keep content hidden when rail is closed (same as desktop) */
+    .left-rail.is-hidden .left-rail-content {
+        display: none;
+    }
+
+    /* Show a permanent open-button when rail is hidden on mobile */
+    .rail-open-btn {
+        display: flex;
+    }
+
+    /* Toggle tab pokes out from right edge of the rail */
+    .left-rail-toggle {
+        right: -26px;
+        left: auto;
+        border-radius: 0 18px 18px 0;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+
+    /* Show the dim overlay when rail is open */
+    .rail-container.rail-is-open .rail-overlay {
+        display: block;
+    }
+
+    .left-rail:not(.is-hidden) ~ * .rail-overlay,
+
+    .tabcontent {
+        max-height: 70dvh;
+    }
+
+    .laws-selection .btn,
+    .laws-level .btn {
+        flex: 1 1 45%;
+    }
+
+    .output {
+        max-height: 200px;
+    }
+}
+
+/* Overlay — hidden on desktop, shown on mobile when rail is open */
+.rail-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    cursor: pointer;
 }
 
 /* Temp classes before i built out the more official ones */

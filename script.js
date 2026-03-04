@@ -654,6 +654,48 @@ document.addEventListener('DOMContentLoaded', () => {
             flagSpecifications.NationName = e.target.value;
             updateDisplay();
         });
+
+    // ── Rail toggle ──────────────────────────────────────────
+    const rail = document.querySelector('.left-rail');
+    const overlay = document.querySelector('.rail-overlay');
+    const toggleBtn = document.querySelector('.left-rail-toggle');
+    const openBtn = document.querySelector('.rail-open-btn');
+    const railContainer = document.querySelector('.rail-container');
+
+    const isMobile = () => window.innerWidth <= 850;
+
+    const openRail = () => {
+        rail.classList.remove('is-hidden');
+        if (isMobile()) railContainer.classList.add('rail-is-open');
+    };
+
+    const closeRail = () => {
+        rail.classList.add('is-hidden');
+        railContainer.classList.remove('rail-is-open');
+    };
+
+    if (isMobile()) closeRail();
+
+    toggleBtn?.addEventListener('click', () => {
+        rail.classList.contains('is-hidden') ? openRail() : closeRail();
+    });
+
+    overlay?.addEventListener('click', () => {
+        if (isMobile()) closeRail();
+    });
+
+    openBtn?.addEventListener('click', () => openRail());
+
+    window.addEventListener('resize', () => {
+        if (!isMobile()) {
+            railContainer.classList.remove('rail-is-open');
+            rail.classList.remove('is-hidden');
+        }
+    });
+
+    openBtn?.addEventListener('click', () => {
+        rail.classList.remove('is-hidden');
+    });
 });
 
 loadFandomData().catch(console.error);
