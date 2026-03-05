@@ -8,7 +8,9 @@ import IMG_unknownFlag from './images/Unknown Flag.png';
 
 import { getImageIdFromDecalId } from './robloxProcessor.js';
 
-const imageId = await getImageIdFromDecalId('125185256557815');
+getImageIdFromDecalId('125185256557815').then(id => {
+    console.log(id);
+}).catch(console.error);
 
 // Config
 
@@ -585,8 +587,6 @@ async function updateOutput() {
         return lines.join('<br>');
     };
 
-    console.log(imageId)
-
     const validFlags = flagSpecifications.Flags.filter(f => f.FlagName && f.FlagID);
     const imageUrls = await Promise.all(
         validFlags.map(f => getRobloxThumbnailURL(f.FlagID, '700x700').catch(() => null))
@@ -694,11 +694,11 @@ document.addEventListener('DOMContentLoaded', () => {
             rail.classList.remove('is-hidden');
         }
     });
-});
 
-loadFandomData().catch(console.error);
-addFlag();
-updateDisplay();
+    loadFandomData().catch(console.error);
+    addFlag();
+    updateDisplay();
+});
 
 // Global scope for inline handlers
 Object.assign(window, {
