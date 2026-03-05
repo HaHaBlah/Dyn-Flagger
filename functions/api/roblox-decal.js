@@ -1,4 +1,3 @@
-// roblox-decal.js
 export async function onRequest(context) {
     const { request } = context;
     const url = new URL(request.url);
@@ -20,6 +19,7 @@ export async function onRequest(context) {
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
     }
+
     try {
         const assetResponse = await fetch(
             `https://apis.roblox.com/asset-delivery-api/v1/assetId/${encodeURIComponent(decalId)}`,
@@ -36,9 +36,6 @@ export async function onRequest(context) {
             throw new Error(`Asset delivery returned ${assetResponse.status}`);
         }
 
-
-        if (!assetResponse.ok) throw new Error(`Asset delivery returned ${assetResponse.status}`);
-
         const assetData = await assetResponse.json();
         const cdnUrl = assetData?.location;
         if (!cdnUrl) throw new Error('No CDN location found in response');
@@ -46,11 +43,10 @@ export async function onRequest(context) {
         const cdnResponse = await fetch(cdnUrl);
         if (!cdnResponse.ok) throw new Error(`CDN fetch returned ${cdnResponse.status}`);
 
-        const compressed = await cdnResponse.arrayBuffer();
-        const decompressed = await decompressZstd(compressed);
-        const xml = new TextDecoder().decode(decompressed);
+        const xml = await cdnResponse.text();
+        // console.log('XML:', xml.slice(0, 500));
 
-        const match = xml.match(/name="Texture"[^>]*>[\s\S]*?<url>\s*rbxassetid:\/\/(\d+)\s*<\/url>/);
+        const match = xml.match(/name="Texture"[\s\S]*?<url>[^<]*?id=(\d+)[^<]*<\/url>/);
         if (!match) throw new Error('Could not find Texture ID in decal XML');
 
         return new Response(JSON.stringify({ imageId: match[1], decalId }), {
@@ -68,26 +64,4 @@ export async function onRequest(context) {
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
     }
-}
-
-async function decompressZstd(buffer) {
-    const ds = new DecompressionStream('zstd');
-    const writer = ds.writable.getWriter();
-    const reader = ds.readable.getReader();
-
-    writer.write(buffer);
-    writer.close();
-
-    const chunks = [];
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-    }
-
-    const total = chunks.reduce((n, c) => n + c.length, 0);
-    const result = new Uint8Array(total);
-    let offset = 0;
-    for (const chunk of chunks) { result.set(chunk, offset); offset += chunk.length; }
-    return result;
 }

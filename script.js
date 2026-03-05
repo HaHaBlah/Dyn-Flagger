@@ -6,9 +6,9 @@ import { getRobloxThumbnailURL } from './robloxProcessor.js';
 //Images
 import IMG_unknownFlag from './images/Unknown Flag.png';
 
-// import { getImageIdFromDecalId } from './robloxProcessor.js';
+import { getImageIdFromDecalId } from './robloxProcessor.js';
 
-// const imageId = await getImageIdFromDecalId('125185256557815');
+const imageId = await getImageIdFromDecalId('125185256557815');
 
 // Config
 
@@ -585,7 +585,7 @@ async function updateOutput() {
         return lines.join('<br>');
     };
 
-    // console.log(imageId)
+    console.log(imageId)
 
     const validFlags = flagSpecifications.Flags.filter(f => f.FlagName && f.FlagID);
     const imageUrls = await Promise.all(
