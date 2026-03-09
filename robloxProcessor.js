@@ -32,8 +32,8 @@ export async function getRobloxThumbnailURL(assetID, size = '700x700') {
 
 /**
  * Resolves a Roblox Decal ID to its underlying Image/Texture ID
- * @param {string|number} decalId
- * @returns {Promise<string>} The image asset ID
+ * @param {number} decalId
+ * @returns {number} The image asset ID
  */
 export async function getImageIdFromDecalId(decalId) {
     const response = await fetch(`/api/roblox-decal?decalid=${encodeURIComponent(decalId)}`);

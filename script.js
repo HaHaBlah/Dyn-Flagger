@@ -8,7 +8,7 @@ import IMG_unknownFlag from './images/Unknown Flag.png';
 
 import { getImageIdFromDecalId } from './robloxProcessor.js';
 
-getImageIdFromDecalId('125185256557815').then(id => {
+getImageIdFromDecalId('89747006451463').then(id => {
     console.log(id);
 }).catch(console.error);
 
@@ -237,7 +237,7 @@ function removeFlag(index) {
     flagSpecifications.Flags.splice(index, 1);
 }
 
-// ─── Flag Element Creation ────────────────────────────────────────────────────
+// Flag Element Creation 
 /**
  * Creates all the html for a flag, adds events
  * @param {*} flagData 
@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDisplay();
         });
 
-    // ── Rail toggle ──────────────────────────────────────────
+    //Rail toggle
     const rail = document.querySelector('.left-rail');
     const overlay = document.querySelector('.rail-overlay');
     const toggleBtn = document.querySelector('.left-rail-toggle');

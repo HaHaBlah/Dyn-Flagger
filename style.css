@@ -555,10 +555,6 @@ input {
     background-color: black;
 }
 
-#copy-output-btn.output-btn-copied span {
-    max-width: 10rem;
-}
-
 #copy-output-btn {
     background-color: var(--button-color);
     font-weight: bold;
@@ -598,7 +594,7 @@ input {
     background-color: white;
 }
 
-#copy-output-btn:hover span {
+#copy-output-btn:hover span, #copy-output-btn.output-btn-copied span {
     max-width: 10em;
     margin-right: 5px;
 }
