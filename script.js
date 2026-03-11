@@ -340,7 +340,7 @@ function createFlagElement(flagData, index) {
 
         if (flagDiv._imageInputTimer) clearTimeout(flagDiv._imageInputTimer);
 
-        // Update everything except the flag image thumbnail (FlagID is still raw/dirty)
+        // Update everything except the flag image thumbnail. Otherwise it'll default back to unknownimg
         flagSpecifications.Flags[index].FlagID = '';
         updateFlagOverview(flagDiv, index);
 
