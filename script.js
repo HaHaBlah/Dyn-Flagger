@@ -8,10 +8,6 @@ import IMG_unknownFlag from './images/Unknown Flag.png';
 
 import { getImageIdFromDecalId } from './robloxProcessor.js';
 
-getImageIdFromDecalId('89747006451463').then(id => {
-    console.log(id);
-}).catch(console.error);
-
 // Config
 
 let Lawnames, Flagdata, Nationdata, Tagdata;
@@ -347,6 +343,7 @@ function createFlagElement(flagData, index) {
         flagDiv._imageInputTimer = setTimeout(async () => {
             const parsed = parseImageIdInput(raw);
 
+            // if not trimmed, ignore
             if (!parsed) {
                 flagSpecifications.Flags[index].FlagID = '';
                 updateFlagOverview(flagDiv, index);
@@ -354,6 +351,7 @@ function createFlagElement(flagData, index) {
                 return;
             }
 
+            // convert decal->image id, else procede
             try {
                 const imageId = await getImageIdFromDecalId(parsed);
                 if (flagDiv.querySelector('.flag-image-input').value === raw) {
@@ -617,8 +615,8 @@ async function updateOutput() {
         ];
 
         if (hasIdeologies) {
-            const arr = flag.Ideologies.map(i => `"${i}"`).join(', ');
-            lines.push(`${TAB}${TAB}${TAB}${TAB}["Ideology"] = '[${arr}]',`);
+            const array = flag.Ideologies.map(i => `"${i}"`).join(', ');
+            lines.push(`${TAB}${TAB}${TAB}${TAB}["Ideology"] = '[${array}]',`);
         }
         if (hasLaws) {
             lines.push(`${TAB}${TAB}${TAB}${TAB}["Political_Law"] = '${JSON.stringify(flag.Laws)}',`);
@@ -654,19 +652,23 @@ async function updateOutput() {
         .map(buildSingleFlag)
         .join('<br>');
 
-    outputText.innerHTML = `
-    \`\`\`lua<br>
-    ["${flagSpecifications.NationName}"] = {<br>
-    ${flagLines}<br>
-    },<br>
-    \`\`\`<br>
-    --[[<br>
-    # __Description/Sources__<br>
-    ${descriptions}<br>
-    # __Images__<br>
-    ${imagesBlock}<br>
-    > -# *Made using [Dyn Flagger](https://dyn-flagger.pages.dev/ )*<br>
-    ]]`.trim();
+    if (flagLines && flagSpecifications.NationName) {
+        outputText.innerHTML = `
+        \`\`\`lua<br>
+        ["${flagSpecifications.NationName}"] = {<br>
+        ${flagLines}<br>
+        },<br>
+        \`\`\`<br>
+        --[[<br>
+        # __Description/Sources__<br>
+        ${descriptions}<br>
+        # __Images__<br>
+        ${imagesBlock}<br>
+        > -# *Made using [Dyn Flagger](https://dyn-flagger.pages.dev/ )*<br>
+        ]]`.trim();
+    } else {
+        outputText.innerHTML = `Please input the Nation Name. As well as all the flag names and image ids.`
+    }
 }
 
 /** Copy the the code output to clipboard */
@@ -687,9 +689,9 @@ function copyOutput() {
 // =================== Output Box END ===================
 
 /** Utility function to chunk an array into smaller arrays of a specified size. Used for output formatting. In other words, i have no idea what this does but i just use it. Like cFrames in Roblox */
-function chunk(arr, size) {
-    return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
-        arr.slice(i * size, i * size + size)
+function chunk(array, size) {
+    return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
+        array.slice(i * size, i * size + size)
     );
 }
 
