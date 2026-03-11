@@ -314,6 +314,20 @@ function createFlagElement(flagData, index) {
             updateDisplay();
         });
 
+    // Extract numbers ID from url
+    function parseImageIdInput(raw) {
+        const trimmed = raw.trim();
+
+        // URL format: extract first numeric sequence between slashes e.g. "https://example.com/123456789/something"
+        const urlMatch = trimmed.match(/\/(\d+)\//);
+        if (urlMatch) return urlMatch[1];
+
+        // Already a plain numeric ID
+        if (/^\d+$/.test(trimmed)) return trimmed;
+
+        return trimmed; // Fall back to whatever was typed
+    }
+
     // Inputs
     const bindInput = (selector, field) => {
         flagDiv.querySelector(selector).addEventListener('input', e => {
@@ -322,8 +336,48 @@ function createFlagElement(flagData, index) {
         });
     };
     bindInput('.flag-name-input', 'FlagName');
-    bindInput('.flag-image-input', 'FlagID');
     bindInput('.flag-description-input', 'Description');
+    flagDiv.querySelector('.flag-image-input').addEventListener('input', async e => {
+        const raw = e.target.value;
+
+        // Clear any pending debounce
+        if (flagDiv._imageInputTimer) clearTimeout(flagDiv._imageInputTimer);
+
+        // Store the raw value immediately so output isn't stale
+        flagSpecifications.Flags[index].FlagID = raw;
+        updateFlagOverview(flagDiv, index);
+
+        // Only process after user pauses for 600ms
+        flagDiv.querySelector('.flag-image-input').addEventListener('input', async e => {
+            const raw = e.target.value;
+
+            if (flagDiv._imageInputTimer) clearTimeout(flagDiv._imageInputTimer);
+
+            flagSpecifications.Flags[index].FlagID = raw;
+            updateFlagOverview(flagDiv, index);
+
+            flagDiv._imageInputTimer = setTimeout(async () => {
+                const parsed = parseImageIdInput(raw);
+
+                if (!parsed) {
+                    flagSpecifications.Flags[index].FlagID = '';
+                    updateFlagOverview(flagDiv, index);
+                    return;
+                }
+
+                try {
+                    const imageId = await getImageIdFromDecalId(parsed);
+                    if (flagDiv.querySelector('.flag-image-input').value === raw) {
+                        flagSpecifications.Flags[index].FlagID = imageId; // Store resolved ID...
+                        updateFlagOverview(flagDiv, index);               // ...but don't touch the input
+                    }
+                } catch {
+                    flagSpecifications.Flags[index].FlagID = parsed;
+                    updateFlagOverview(flagDiv, index);
+                }
+            }, 600);
+        });
+    });
 
     // Ideologies
     flagDiv.querySelector('.ideologies').addEventListener('click', e => {
@@ -437,6 +491,9 @@ function updateFlagElement(flagDiv, flagData, index) {
     flagDiv.dataset.flagIndex = index;
 
     const setIfChanged = (selector, value) => {
+        //skip the image input if debounce is active
+        if (!flagDiv._imageInputTimer) setIfChanged('.flag-image-input', flagData.FlagID);
+
         const el = flagDiv.querySelector(selector);
         if (el && el.value !== value) el.value = value;
     };
@@ -473,8 +530,8 @@ function updateLawsSelectionButtons(flagDiv, flagData) {
 function updateFlagOverview(flagDiv, index) {
     const flagData = flagSpecifications.Flags[index];
 
-    const flagNameEl = flagDiv.querySelector('.flag-overview-left #flag-name');
-    if (flagNameEl) flagNameEl.textContent = flagData.FlagName || 'Flag Name';
+    const flagNameElem = flagDiv.querySelector('.flag-overview-left #flag-name');
+    if (flagNameElem) flagNameElem.textContent = flagData.FlagName || 'Flag Name';
 
     const flagImg = flagDiv.querySelector('.flag-overview-left .dyn-flag');
     if (flagImg && flagData.FlagID) {
