@@ -45,12 +45,12 @@ async function ensureDataLoaded() {
 
 /** nationslist tab switching */
 function switchTab(evt, tabId) {
-    for (const el of document.getElementsByClassName('tabcontent')) {
-        el.classList.remove('tabcontent-visible');
-        el.classList.add('tabcontent-hidden');
+    for (const element of document.getElementsByClassName('tabcontent')) {
+        element.classList.remove('tabcontent-visible');
+        element.classList.add('tabcontent-hidden');
     }
-    for (const el of document.getElementsByClassName('tablinks')) {
-        el.classList.remove('active');
+    for (const element of document.getElementsByClassName('tablinks')) {
+        element.classList.remove('active');
     }
     document.getElementById(tabId).classList.replace('tabcontent-hidden', 'tabcontent-visible');
     evt.currentTarget.classList.add('active');
@@ -265,7 +265,7 @@ function createFlagElement(flagData, index) {
             <button class="delete-flag-button trash-can"><span>Delete Flag</span></button>
             <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input flag-name-input" value="${flagData.FlagName}"></div>
             <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input flag-image-input" value="${flagData.FlagID}"></div>
-            <div class="flag-label"><span class="flag-title">Description/Sources: </span><input class="flag-input flag-description-input" value="${flagData.Description}"></div>
+            <div class="flag-label"><span class="flag-title">Description/Sources: </span><textarea class="flag-input flag-description-input">${flagData.Description}</textarea></div>
             <div class="ideologies">
                 <ul>
                     <li>
@@ -479,8 +479,8 @@ function updateFlagElement(flagDiv, flagData, index) {
     flagDiv.dataset.flagIndex = index;
 
     const setIfChanged = (selector, value) => {
-        const el = flagDiv.querySelector(selector);
-        if (el && el.value !== value) el.value = value;
+        const element = flagDiv.querySelector(selector);
+        if (element && element.value !== value) element.value = value;
     };
     setIfChanged('.flag-name-input', flagData.FlagName);
     if (!flagDiv._imageInputTimer) setIfChanged('.flag-image-input', flagData.FlagID);
@@ -543,7 +543,7 @@ function updateFlagOverview(flagDiv, index) {
         overviewDivs[1].innerHTML = `<span class="flag-overview-title">Ideologies: </span>${flagData.Ideologies.join(', ')}<span class="flag-overview-content"></span>`;
         overviewDivs[2].innerHTML = buildLawsHtml(flagData.Laws, '', 'Laws: ');
         overviewDivs[3].innerHTML = buildLawsHtml(flagData.NOTLaws, 'ron-red', 'NOT Laws: ');
-        overviewDivs[4].innerHTML = `<span class="flag-overview-title">Description: </span>${flagData.Description}<span class="flag-overview-content"></span>`;
+        overviewDivs[4].innerHTML = `<span class="flag-overview-title">Description: </span>${flagData.Description.replace(/\n/g, '<br>')}<span class="flag-overview-content"></span>`; //allows newlines
     }
 
     updateOutput();
@@ -575,7 +575,7 @@ function updateDisplay() {
     const existingFlags = [...document.querySelectorAll('.flag')];
 
     // Remove surplus flag elements
-    existingFlags.slice(flagSpecifications.Flags.length).forEach(el => el.remove());
+    existingFlags.slice(flagSpecifications.Flags.length).forEach(element => element.remove());
 
     // Update existing or create new flag elements
     flagSpecifications.Flags.forEach((flagData, index) => {
@@ -644,7 +644,7 @@ async function updateOutput() {
 
     const descriptions = flagSpecifications.Flags
         .filter(f => f.Description)
-        .map(f => `**${f.FlagName}:** ${f.Description}`)
+        .map(f => `**${f.FlagName}:** ${f.Description.replace(/\n/g, '<br>')}`)
         .join('<br>');
 
     const flagLines = flagSpecifications.Flags
