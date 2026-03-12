@@ -464,7 +464,7 @@ header {
     height: auto;
 }
 
-input {
+input, textarea {
     background-color: var(--button-color);
     border: none;
     color: white;
