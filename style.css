@@ -279,20 +279,36 @@ header {
     padding: 0 0 0 12px;
     position: absolute;
     right: 100%;
-    top: 0px;
+    top: 5%;
     transition: width .3s;
     width: 26px;
     z-index: 101;
 }
 
-.left-rail-toggle img {
+.left-rail-toggle::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    /* svg colour */
+    -webkit-mask: url('./images/menu-arrow.svg') no-repeat center;
+    mask: url('./images/menu-arrow.svg') no-repeat center;
+    mask-size: contain;
+    vertical-align: middle;
+    
+    transform: rotate(-90deg);
+    transform-origin: center;
+}
+
+/* .left-rail-toggle img {
     display: block;
     width: 12px;
     height: auto;
     transform: rotate(-90deg);
     transform-origin: center;
     transition: transform .3s;
-}
+} */
 
 /*Search Bar*/
 .search-bar {
@@ -464,7 +480,8 @@ header {
     height: auto;
 }
 
-input, textarea {
+input,
+textarea {
     background-color: var(--button-color);
     border: none;
     color: white;
@@ -594,7 +611,8 @@ input, textarea {
     background-color: white;
 }
 
-#copy-output-btn:hover span, #copy-output-btn.output-btn-copied span {
+#copy-output-btn:hover span,
+#copy-output-btn.output-btn-copied span {
     max-width: 10em;
     margin-right: 5px;
 }
@@ -726,7 +744,7 @@ input, textarea {
     /* Toggle stays fixed on-screen at all times on mobile */
     .left-rail-toggle {
         position: fixed;
-        top: 0;
+        top: 5%;
         left: 0;
         right: auto;
         border-radius: 0 18px 18px 0;
@@ -734,6 +752,8 @@ input, textarea {
         transition: left 0.3s;
         /* slides with the rail opening */
     }
+
+
 
     /* When rail is open, toggle sits at the right edge of the rail */
     .rail-container.rail-is-open .left-rail-toggle {
