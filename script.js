@@ -263,9 +263,9 @@ function createFlagElement(flagData, index) {
         </button>
         <div class="flag-contents">
             <button class="delete-flag-button trash-can"><span>Delete Flag</span></button>
-            <div class="flag-label"><span class="flag-title">Name: </span><input class="flag-input flag-name-input" value="${flagData.FlagName}"></div>
-            <div class="flag-label"><span class="flag-title">Image ID: </span><input class="flag-input flag-image-input" value="${flagData.FlagID}"></div>
-            <div class="flag-label"><span class="flag-title">Description/Sources: </span><textarea class="flag-input flag-description-input">${flagData.Description}</textarea></div>
+            <div class="flag-label"><label for="flag-name-input" class="flag-title">Name: </span><input class="flag-input" id="flag-name-input" placeholder="Input Flag Name here" value="${flagData.FlagName}"></div>
+            <div class="flag-label"><label for="flag-image-input" class="flag-title">Image ID: </span><input class="flag-input" id="flag-image-input" placeholder="Input Flag ImageID here" value="${flagData.FlagID}"></div>
+            <div class="flag-label"><label for="flag-description-input" class="flag-title">Description/Sources: </span><textarea class="flag-input" id="flag-description-input" placeholder="Input Flag Description here">${flagData.Description}</textarea></div>
             <div class="ideologies">
                 <ul>
                     <li>
@@ -328,10 +328,10 @@ function createFlagElement(flagData, index) {
             updateFlagOverview(flagDiv, index);
         });
     };
-    bindInput('.flag-name-input', 'FlagName');
-    bindInput('.flag-description-input', 'Description');
+    bindInput('#flag-name-input', 'FlagName');
+    bindInput('#flag-description-input', 'Description');
     //Another bindinput, but for flagid preprocessing
-    flagDiv.querySelector('.flag-image-input').addEventListener('input', async e => {
+    flagDiv.querySelector('#flag-image-input').addEventListener('input', async e => {
         const raw = e.target.value;
 
         if (flagDiv._imageInputTimer) clearTimeout(flagDiv._imageInputTimer);
@@ -354,7 +354,7 @@ function createFlagElement(flagData, index) {
             // convert decal->image id, else procede
             try {
                 const imageId = await getImageIdFromDecalId(parsed);
-                if (flagDiv.querySelector('.flag-image-input').value === raw) {
+                if (flagDiv.querySelector('#flag-image-input').value === raw) {
                     flagSpecifications.Flags[index].FlagID = imageId;
                     updateFlagOverview(flagDiv, index);
                 }
@@ -364,7 +364,7 @@ function createFlagElement(flagData, index) {
             }
 
             flagDiv._imageInputTimer = null;
-        }, 600);
+        }, 300);
     });
 
     // Ideologies
@@ -482,9 +482,9 @@ function updateFlagElement(flagDiv, flagData, index) {
         const element = flagDiv.querySelector(selector);
         if (element && element.value !== value) element.value = value;
     };
-    setIfChanged('.flag-name-input', flagData.FlagName);
-    if (!flagDiv._imageInputTimer) setIfChanged('.flag-image-input', flagData.FlagID);
-    setIfChanged('.flag-description-input', flagData.Description);
+    setIfChanged('#flag-name-input', flagData.FlagName);
+    if (!flagDiv._imageInputTimer) setIfChanged('#flag-image-input', flagData.FlagID);
+    setIfChanged('#flag-description-input', flagData.Description);
 
     const hasIdeologies = flagData.Ideologies.length > 0;
     for (const button of flagDiv.querySelectorAll('.ideologies button')) {
@@ -703,7 +703,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#nation-name')
         ?.addEventListener('input', e => {
             flagSpecifications.NationName = e.target.value;
-            updateDisplay();
+            clearTimeout(window._nationNameTimer);
+            window._nationNameTimer = setTimeout(updateDisplay, 300);
         });
 
     //Rail toggle
