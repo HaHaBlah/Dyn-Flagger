@@ -23,6 +23,8 @@ const ITEMS_PER_IMAGE_ROW = 3;
 
 const IDEOLOGY_SORT_ORDER = ['Non-Aligned', 'Socialism', 'Communism', 'Liberalism', 'Democracy', 'Nationalism', 'Fascism']
 
+let nationFlagController = null;
+
 /** Fetches fandom data, and generates nations list */
 async function loadFandomData() {
     dataLoadedPromise ??= (async () => {
@@ -241,6 +243,7 @@ function removeFlag(index) {
  * @returns 
  */
 function createFlagElement(flagData, index) {
+    let imageInputController = null;
     const flagDiv = document.createElement('div');
     flagDiv.classList.add('flag');
     flagDiv.dataset.flagIndex = index;
@@ -334,37 +337,26 @@ function createFlagElement(flagData, index) {
     flagDiv.querySelector('#flag-image-input').addEventListener('input', async e => {
         const raw = e.target.value;
 
-        if (flagDiv._imageInputTimer) clearTimeout(flagDiv._imageInputTimer);
+        // Cancel previous in-flight request
+        imageInputController?.abort();
+        imageInputController = new AbortController();
+        const { signal } = imageInputController;
 
-        // Update everything except the flag image thumbnail. Otherwise it'll default back to unknownimg
         flagSpecifications.Flags[index].FlagID = '';
         updateFlagOverview(flagDiv, index);
 
-        flagDiv._imageInputTimer = setTimeout(async () => {
-            const parsed = parseImageIdInput(raw);
+        const parsed = parseImageIdInput(raw);
+        if (!parsed) return;
 
-            // if not trimmed, ignore
-            if (!parsed) {
-                flagSpecifications.Flags[index].FlagID = '';
-                updateFlagOverview(flagDiv, index);
-                flagDiv._imageInputTimer = null;
-                return;
-            }
-
-            // convert decal->image id, else procede
-            try {
-                const imageId = await getImageIdFromDecalId(parsed);
-                if (flagDiv.querySelector('#flag-image-input').value === raw) {
-                    flagSpecifications.Flags[index].FlagID = imageId;
-                    updateFlagOverview(flagDiv, index);
-                }
-            } catch {
-                flagSpecifications.Flags[index].FlagID = parsed;
-                updateFlagOverview(flagDiv, index);
-            }
-
-            flagDiv._imageInputTimer = null;
-        }, 300);
+        try {
+            const imageId = await getImageIdFromDecalId(parsed, signal);
+            flagSpecifications.Flags[index].FlagID = imageId;
+            updateFlagOverview(flagDiv, index);
+        } catch (e) {
+            if (e.name === 'AbortError') return; // Stale request, ignore
+            flagSpecifications.Flags[index].FlagID = parsed;
+            updateFlagOverview(flagDiv, index);
+        }
     });
 
     // Ideologies
@@ -564,9 +556,13 @@ function updateDisplay() {
         nationNameInput.value = flagSpecifications.NationName;
 
         if (flagSpecifications.NationName && nationFlag) {
-            getFandomImageUrl(`${flagSpecifications.NationName}_Flag.png`)
+            nationFlagController?.abort();
+            nationFlagController = new AbortController();
+            const { signal } = nationFlagController;
+
+            getFandomImageUrl(`${flagSpecifications.NationName}_Flag.png`, '', signal)
                 .then(url => { nationFlag.src = url; })
-                .catch(() => { nationFlag.src = IMG_unknownFlag; });
+                .catch(e => { if (e.name !== 'AbortError') nationFlag.src = IMG_unknownFlag; });
         }
     }
 
@@ -703,8 +699,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#nation-name')
         ?.addEventListener('input', e => {
             flagSpecifications.NationName = e.target.value;
-            clearTimeout(window._nationNameTimer);
-            window._nationNameTimer = setTimeout(updateDisplay, 300);
+            updateDisplay();
         });
 
     //Rail toggle

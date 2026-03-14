@@ -14,11 +14,12 @@ const fandomModules = {
  * @param {string} filename - The filename (e.g., "Afghanistan_Flag.png")
  * @returns {Promise<string>} The preferred image URL
  */
-export async function getFandomImageUrl(filename, baseUrl = '') {
+export async function getFandomImageUrl(filename, baseUrl = '', signal) {
   try {
     // Call the Cloudflare Workers endpoint
     const response = await fetch(
-      `${baseUrl}/api/fandom-image?filename=${encodeURIComponent(filename)}`
+      `${baseUrl}/api/fandom-image?filename=${encodeURIComponent(filename)}`,
+      { signal }
     );
 
     if (!response.ok) {
